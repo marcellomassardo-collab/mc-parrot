@@ -678,7 +678,8 @@
   var ROOT_HZ = 130.81;
   var GENRES = {
     House: { bpm: 124, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1, hatRate: 1.6, motif: [0, 0, 3, 5], melSteps: [0, 4, 8, 12], noteDur: 0.45, voice: 0.3, seventh: false, arp: false, padGain: 0.22 },
-    Techno: { bpm: 138, structure: "dance", kick: [0, 4, 8, 12], snare: [], hatStep: 2, kickRate: 0.7, snareRate: 1, hatRate: 2, motif: [0, 0, 0, 3], melSteps: [0, 8], noteDur: 0.3, voice: 0.1, seventh: false, arp: false, padGain: 0.15, chords: [0, 0, 6, 6] },
+    Tekno: { bpm: 180, structure: "dance", kick: [0, 4, 8, 12], snare: [], hatStep: 2, kickRate: 0.7, snareRate: 1, hatRate: 2, motif: [0, 0, 0, 3], melSteps: [0, 8], noteDur: 0.3, voice: 0.1, seventh: false, arp: false, padGain: 0.15, chords: [0, 0, 6, 6], halfTime: true },
+    // halfTime:true = NON dimezzare → spinge a 180 pieno (kick four-on-floor veloce)
     EDM: { bpm: 128, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.1, hatRate: 1.7, motif: [0, 4, 7, 4], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.22, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
     Trance: { bpm: 138, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1, hatRate: 1.8, motif: [0, 4, 7, 11], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.2, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
     Dubstep: { bpm: 140, structure: "dance", kick: [0, 8], snare: [8], hatStep: 4, kickRate: 0.7, snareRate: 0.9, hatRate: 2, motif: [0, 1, 0, 6], melSteps: [0, 6, 8, 11], noteDur: 0.5, voice: 0.3, seventh: false, arp: false, padGain: 0.18, chords: [0, 0, 5, 5], bassSteps: [0, 1, 2, 4, 8, 9, 10, 12], halfTime: true },
@@ -695,6 +696,32 @@
     Jazz: { bpm: 110, structure: "chill", kick: [0], snare: [4, 12], hatStep: 2, kickRate: 0.7, snareRate: 0.8, hatRate: 1.2, motif: [0, 2, 4, 6], melSteps: [0, 4, 8, 12], noteDur: 0.35, voice: 0.3, seventh: true, arp: false, padGain: 0.2, swing: 0.33 }
     // swing + settime
   };
+  for (const g of ["House", "Tekno", "EDM", "Trance", "Dubstep", "DnB"]) {
+    if (GENRES[g]) GENRES[g].vocoder = 1;
+  }
+  GENRES.Pop.vocoder = 0.28;
+  GENRES.Pop.vocoderGain = 0.55;
+  GENRES["Hip-hop"].vocoder = 0.28;
+  GENRES["Hip-hop"].vocoderGain = 0.55;
+  GENRES.Trance.reverb = 0.24;
+  GENRES.Trance.roll = 0.85;
+  GENRES.EDM.reverb = 0.2;
+  GENRES.EDM.roll = 0.75;
+  GENRES.Tekno.reverb = 0.18;
+  GENRES.Tekno.roll = 0.8;
+  GENRES.House.reverb = 0.12;
+  GENRES.House.thin = 0.5;
+  GENRES.Dubstep.reverb = 0.14;
+  GENRES.Dubstep.thin = 0.45;
+  GENRES.DnB.reverb = 0.12;
+  GENRES.DnB.thin = 0.4;
+  GENRES.Pop.thin = 0.5;
+  GENRES["Hip-hop"].thin = 0.5;
+  GENRES.RnB.thin = 0.5;
+  GENRES["Lo-fi"].thin = 0.55;
+  GENRES.Reggae.thin = 0.5;
+  GENRES.Rock.thin = 0.45;
+  GENRES.Jazz.thin = 0.5;
   var PROGRESSIONS = {
     dance: [0, 5, 3, 4],
     // i–vi–IV–V (epico da club)
@@ -890,7 +917,7 @@
       }
       let end = r.end;
       let j = i + 1;
-      while (j < raws.length && raws[j].role === "voice" && raws[j].start - end < sr * 0.35 && raws[j].end - r.start < sr * 6) {
+      while (j < raws.length && raws[j].role === "voice" && raws[j].start - end < sr * 0.35 && raws[j].end - r.start < sr * 8) {
         end = raws[j].end;
         j++;
       }
@@ -899,7 +926,7 @@
     }
     const segs = [];
     for (const m of merged) {
-      const cap = m.role === "voice" ? 6 : m.role === "tonal" ? 3 : m.role === "other" ? 1.5 : 1.5;
+      const cap = m.role === "voice" ? 8 : m.role === "tonal" ? 3 : m.role === "other" ? 1.5 : 1.5;
       const len = Math.min(m.end - m.start, Math.floor(sr * cap));
       if (len < Math.floor(sr * 0.03)) continue;
       let slice = data.slice(m.start, m.start + len);
@@ -957,8 +984,8 @@
         return { steps: 16, kickSteps: cfg.kick, snareSteps: cfg.snare };
     }
   }
-  function buildEvents(segs, opts, seconds) {
-    var _a, _b;
+  function buildEvents(segs, opts, seconds, sr = 48e3) {
+    var _a, _b, _c;
     const summary = { kick: 0, snare: 0, hat: 0, tonal: 0, voice: 0, other: 0 };
     for (const s of segs) summary[s.role]++;
     const pool = (r) => segs.filter((s) => s.role === r);
@@ -997,6 +1024,17 @@
     const vSpeech = voices.filter((v) => v.pitchHz && v.pitchHz >= 75 && v.pitchHz <= 260);
     const vHookSrc = vSpeech.length ? vSpeech : voices;
     const vHook = vHookSrc.slice().sort((a, b) => b.data.length - a.data.length).slice(0, Math.min(4, vHookSrc.length));
+    const vocCache = /* @__PURE__ */ new Map();
+    const vocodeSeg = (src, root) => {
+      const key = `${src.pos}_${src.data.length}_${root}`;
+      const hit = vocCache.get(key);
+      if (hit) return hit;
+      const chordHz = [scaleFreq(semis, root), scaleFreq(semis, root + 2), scaleFreq(semis, root + 4)];
+      const data = vocode(src.data, sr, chordHz);
+      const seg = { data, role: "voice", pitchHz: chordHz[0], energy: src.energy, pos: src.pos, bright: src.bright };
+      vocCache.set(key, seg);
+      return seg;
+    };
     const prog = cfg.chords || PROGRESSIONS[cfg.structure] || PROGRESSIONS.pop;
     const baseTone = cfg.seventh ? [0, 2, 4, 6] : [0, 2, 4];
     const extLen = baseTone.length * 2;
@@ -1054,6 +1092,7 @@
     const hatOffset = Math.floor(cfg.hatStep / 2);
     let bar = 0;
     let vhIdx = 0;
+    let voiceDebt = 0;
     let lastLeadEnd = -1;
     for (let si = 0; si < structure.length; si++) {
       const S = structure[si];
@@ -1075,8 +1114,16 @@
             const swing = (rnd() < 0.12 ? sixteenth * 0.12 : 0) + (swingAmt > 0 && s % 4 === 2 ? swingAmt * sixteenth : 0);
             push(pick(hatPool, bar * 2 + s), when + swing, cfg.hatRate * 1.1, 0.42 * vol, 0.1);
           }
-          if (S.hat && brightPool.length && s % 8 === 4) {
-            push(brightPool[(bar + Math.floor(s / 8)) % brightPool.length], when, 1.5, 0.3 * vol, 0.2);
+          if (S.hat && brightPool.length) {
+            const roll = cfg.roll || 0;
+            if (roll > 0) {
+              if (s % 4 < 3 && rnd() < 0.35 + 0.55 * roll * S.intensity) {
+                const rate = 1.2 + 0.4 * (s % 4);
+                push(brightPool[(bar * 3 + s) % brightPool.length], when, rate, 0.2 * vol, sixteenth * 0.95);
+              }
+            } else if (s % 8 === 4 && !(cfg.thin && rnd() < cfg.thin)) {
+              push(brightPool[(bar + Math.floor(s / 8)) % brightPool.length], when, 1.5, 0.3 * vol, 0.2);
+            }
           }
         }
         if (isSectionEnd && (S.snare || S.kick)) {
@@ -1146,17 +1193,22 @@
         }
         if (S.voice && vSorted.length) {
           const vocal = cfg.voice >= 0.7;
-          const vMax = vocal ? 5 : 1.6;
+          const vMax = vocal ? 7 : 1.6;
           const vGap = vocal ? 2.2 : cfg.voice >= 0.35 ? 3 : 5;
-          const nInBar = Math.max(1, Math.round(barDur / vGap));
-          const slot = barDur / nInBar;
+          voiceDebt += barDur / vGap;
+          const nInBar = Math.floor(voiceDebt);
+          voiceDebt -= nInBar;
+          const slot = nInBar > 0 ? barDur / nInBar : barDur;
           for (let vi = 0; vi < nInBar; vi++) {
             const vwhen = barStart + vi * slot;
             if (vwhen < lastLeadEnd - 0.05) continue;
-            const vseg = isChorus && vHook.length ? vHook[vhIdx % vHook.length] : vSorted[(vhIdx + si) % vSorted.length];
+            const rawVseg = isChorus && vHook.length ? vHook[vhIdx % vHook.length] : vSorted[(vhIdx + si) % vSorted.length];
             vhIdx++;
+            const doVoc = cfg.vocoder ? cfg.vocoder >= 1 ? true : rnd() < cfg.vocoder : false;
+            const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot) : rawVseg;
+            const vGainMul = doVoc ? (_c = cfg.vocoderGain) != null ? _c : 1 : 1;
             const vdur = Math.min(vMax, slot * 0.92);
-            push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol, vdur);
+            push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol * vGainMul, vdur);
             lastLeadEnd = vwhen + vdur;
           }
           if (vocal && isChorus && vSorted.length) {
@@ -1217,6 +1269,56 @@
     const A = Math.pow(10, dB / 40), w0 = 2 * Math.PI * fc / sr, cs = Math.cos(w0), sn = Math.sin(w0), al = sn / (2 * Q);
     biquadInplace(x, 1 + al * A, -2 * cs, 1 - al * A, 1 + al / A, -2 * cs, 1 - al / A);
   }
+  function bpfInplace(x, sr, fc, Q) {
+    const w0 = 2 * Math.PI * fc / sr, cs = Math.cos(w0), sn = Math.sin(w0), al = sn / (2 * Q);
+    biquadInplace(x, al, 0, -al, 1 + al, -2 * cs, 1 - al);
+  }
+  function vocode(voice, sr, chordHz, bands = 14) {
+    const n = voice.length;
+    if (n < 64) return Float32Array.from(voice);
+    const out = new Float32Array(n);
+    const carrier = new Float32Array(n);
+    for (const f of chordHz) {
+      if (!(f > 20)) continue;
+      const inc = f / sr;
+      let ph = 0;
+      for (let i = 0; i < n; i++) {
+        carrier[i] += 2 * ph - 1;
+        ph += inc;
+        if (ph >= 1) ph -= 1;
+      }
+    }
+    const fLo = 150, fHi = Math.min(7e3, sr * 0.45);
+    const relA = Math.exp(-1 / (0.015 * sr));
+    const vb = new Float32Array(n);
+    const cb = new Float32Array(n);
+    for (let b = 0; b < bands; b++) {
+      const f0 = fLo * Math.pow(fHi / fLo, b / (bands - 1));
+      const f1 = fLo * Math.pow(fHi / fLo, (b + 1) / (bands - 1));
+      const fc = Math.sqrt(f0 * f1);
+      const Q = Math.max(1.5, fc / Math.max(1, f1 - f0));
+      vb.set(voice);
+      bpfInplace(vb, sr, fc, Q);
+      cb.set(carrier);
+      bpfInplace(cb, sr, fc, Q);
+      let env = 0;
+      for (let i = 0; i < n; i++) {
+        const a = vb[i] < 0 ? -vb[i] : vb[i];
+        env = a > env ? a : relA * env + (1 - relA) * a;
+        out[i] += cb[i] * env;
+      }
+    }
+    let pk = 0;
+    for (let i = 0; i < n; i++) {
+      const a = out[i] < 0 ? -out[i] : out[i];
+      if (a > pk) pk = a;
+    }
+    if (pk > 1e-6) {
+      const g = 0.9 / pk;
+      for (let i = 0; i < n; i++) out[i] *= g;
+    }
+    return out;
+  }
   var MASTER = {
     "Hip-hop": { hpf: 72, bassHz: 200, bassDb: 1.5, presHz: 2500, presDb: 3, airHz: 8500, airDb: 1.5 },
     // bassi avanti, voce rap nei medi
@@ -1227,7 +1329,7 @@
     Pop: { hpf: 95, bassHz: 220, bassDb: -4, presHz: 3500, presDb: 5, airHz: 1e4, airDb: 4 },
     // voce presente + brillante
     House: { hpf: 82, bassHz: 200, bassDb: -2, presHz: 3e3, presDb: 3, airHz: 1e4, airDb: 4.5 },
-    Techno: { hpf: 82, bassHz: 200, bassDb: -1.5, presHz: 3e3, presDb: 2.5, airHz: 11e3, airDb: 5 },
+    Tekno: { hpf: 82, bassHz: 200, bassDb: -1.5, presHz: 3e3, presDb: 2.5, airHz: 11e3, airDb: 5 },
     EDM: { hpf: 85, bassHz: 220, bassDb: -3, presHz: 3500, presDb: 4, airHz: 11e3, airDb: 5.5 },
     Trance: { hpf: 88, bassHz: 220, bassDb: -3, presHz: 3500, presDb: 4, airHz: 12e3, airDb: 5.5 },
     Dubstep: { hpf: 62, bassHz: 180, bassDb: 2, presHz: 3e3, presDb: 3, airHz: 9500, airDb: 3.5 },
@@ -1248,7 +1350,55 @@
     peakInplace(pcm, sr, p.presHz, p.presDb, 1);
     shelfInplace(pcm, sr, p.airHz, p.airDb, true);
   }
+  function masterReverb(pcm, sr, wet) {
+    const n = pcm.length;
+    if (!n || wet <= 0) return;
+    const scale2 = sr / 44100;
+    const combTuning = [1557, 1617, 1491, 1422, 1277, 1356];
+    const apTuning = [225, 556, 441, 341];
+    const feedback = 0.84;
+    const damp = 0.2;
+    const send = new Float32Array(n);
+    const rc = 1 / (2 * Math.PI * 250), dt = 1 / sr, a = rc / (rc + dt);
+    let px = pcm[0], py = pcm[0];
+    for (let i = 1; i < n; i++) {
+      const x = pcm[i];
+      const y = a * (py + x - px);
+      send[i] = y;
+      px = x;
+      py = y;
+    }
+    const wetBuf = new Float32Array(n);
+    for (const ct of combTuning) {
+      const L = Math.max(1, Math.round(ct * scale2));
+      const buf = new Float32Array(L);
+      let idx = 0, filt = 0;
+      for (let i = 0; i < n; i++) {
+        const y = buf[idx];
+        filt = y * (1 - damp) + filt * damp;
+        buf[idx] = send[i] + filt * feedback;
+        idx = idx + 1 >= L ? 0 : idx + 1;
+        wetBuf[i] += y;
+      }
+    }
+    const norm = 1 / combTuning.length;
+    for (let i = 0; i < n; i++) wetBuf[i] *= norm;
+    for (const at of apTuning) {
+      const L = Math.max(1, Math.round(at * scale2));
+      const buf = new Float32Array(L);
+      let idx = 0;
+      for (let i = 0; i < n; i++) {
+        const bufout = buf[idx];
+        const inp = wetBuf[i];
+        buf[idx] = inp + bufout * 0.5;
+        wetBuf[i] = bufout - inp;
+        idx = idx + 1 >= L ? 0 : idx + 1;
+      }
+    }
+    for (let i = 0; i < n; i++) pcm[i] += wetBuf[i] * wet;
+  }
   function masterPCM(pcm, sr, genre2) {
+    var _a;
     const n = pcm.length;
     if (!n) return;
     let peak = 0;
@@ -1261,6 +1411,8 @@
       for (let i = 0; i < n; i++) pcm[i] *= g;
     }
     masterEq(pcm, sr, genre2);
+    const rvb = genre2 && ((_a = GENRES[genre2]) == null ? void 0 : _a.reverb) || 0;
+    if (rvb > 0) masterReverb(pcm, sr, rvb);
     const msC = Math.exp(-1 / (0.01 * sr));
     const aC = Math.exp(-1 / (0.03 * sr));
     const rC = Math.exp(-1 / (0.25 * sr));
@@ -1347,11 +1499,11 @@
   }
 
   // web/main.ts
-  var GENRES2 = ["Pop", "Hip-hop", "RnB", "Lo-fi", "House", "Techno", "EDM", "Trance", "Dubstep", "DnB", "Reggae", "Rock", "Jazz"];
+  var GENRES2 = ["Pop", "Hip-hop", "RnB", "Lo-fi", "House", "Tekno", "EDM", "Trance", "Dubstep", "DnB", "Reggae", "Rock", "Jazz"];
   var SCALES2 = ["Major", "Minor", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Locrian", "Harmonic Minor", "Pentatonic", "Chromatic"];
   var DEF = {
     House: { bpm: 124, scale: "Minor" },
-    Techno: { bpm: 138, scale: "Dorian" },
+    Tekno: { bpm: 180, scale: "Dorian" },
     EDM: { bpm: 128, scale: "Minor" },
     Trance: { bpm: 138, scale: "Minor" },
     Dubstep: { bpm: 140, scale: "Harmonic Minor" },
@@ -1468,7 +1620,7 @@
           return;
         }
         const opts = { bpm, scale, genre, meter };
-        const { events, durationSec } = buildEvents(segs, opts, 60);
+        const { events, durationSec } = buildEvents(segs, opts, 60, recSR);
         const out = new Float32Array(Math.ceil((durationSec + 2) * recSR));
         for (const ev of events) mixInto(out, ev.seg.data, Math.floor(ev.when * recSR), ev.rate, ev.gain, Math.floor(ev.dur * recSR), recSR, ev.sustain);
         masterPCM(out, recSR, genre);
