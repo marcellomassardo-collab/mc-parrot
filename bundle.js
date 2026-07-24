@@ -555,9 +555,10 @@
     const steadyTone = voicing.medianF0 > 0 && voicing.f0stdSemi < 0.22 && peaks < 2;
     const isVoice = durationSec >= 0.15 && voicing.voicedFrac >= 0.4 && voicing.medianF0 >= 80 && voicing.medianF0 <= 350 && harmonicCount >= 2 && formantRatio >= 0.15 && !steadyTone;
     const transient = attackSec < 0.05 && envCv > 0.5 && decays;
-    const isTonal = !!pitchHz && !isVoice && (flatness < 0.22 || flatness < 0.32 && harmonicCount >= 3);
-    const isBreath = !isVoice && !transient && durationSec > 0.05 && (flatness > 0.5 || flatness > 0.3 && voicing.voicedFrac < 0.25);
-    const isHum = !isVoice && !transient && durationSec > 0.2 && envCv < 0.35 && peaks < 2 && lowRatio > 0.5;
+    const pitchedDrone = !isVoice && !transient && durationSec > 0.25 && voicing.medianF0 > 0 && voicing.f0stdSemi < 0.35 && flatness < 0.5 && centroid < 3e3;
+    const isTonal = !isVoice && (!!pitchHz && (flatness < 0.22 || flatness < 0.32 && harmonicCount >= 3) || pitchedDrone);
+    const isBreath = !isVoice && !isTonal && !transient && durationSec > 0.05 && (flatness > 0.5 || flatness > 0.3 && voicing.voicedFrac < 0.25);
+    const isHum = !isVoice && !isTonal && !transient && durationSec > 0.2 && envCv < 0.35 && peaks < 2 && lowRatio > 0.5;
     const isDrone = !isVoice && !isTonal && !transient && durationSec > 0.25 && voicing.voicedFrac < 0.3;
     const isHiss = !isVoice && !isTonal && !transient && centroid > 3500 && durationSec > 0.08;
     const isNoise = isBreath || isHum || isDrone || isHiss;
@@ -571,7 +572,7 @@
     else role = "other";
     return {
       role,
-      pitchHz: role === "voice" ? voicing.medianF0 || pitchHz : role === "tonal" ? pitchHz : null,
+      pitchHz: role === "voice" ? voicing.medianF0 || pitchHz : role === "tonal" ? pitchedDrone && voicing.medianF0 > 0 ? voicing.medianF0 : pitchHz : null,
       isNoise
     };
   }
@@ -677,7 +678,7 @@
   var ROOT_HZ = 130.81;
   var GENRES = {
     House: { bpm: 124, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1, hatRate: 1.6, motif: [0, 0, 3, 5], melSteps: [0, 4, 8, 12], noteDur: 0.45, voice: 0.3, seventh: false, arp: false, padGain: 0.22 },
-    Techno: { bpm: 130, structure: "dance", kick: [0, 4, 8, 12], snare: [], hatStep: 2, kickRate: 0.7, snareRate: 1, hatRate: 2, motif: [0, 0, 0, 3], melSteps: [0, 8], noteDur: 0.3, voice: 0.1, seventh: false, arp: false, padGain: 0.15, chords: [0, 0, 6, 6] },
+    Techno: { bpm: 138, structure: "dance", kick: [0, 4, 8, 12], snare: [], hatStep: 2, kickRate: 0.7, snareRate: 1, hatRate: 2, motif: [0, 0, 0, 3], melSteps: [0, 8], noteDur: 0.3, voice: 0.1, seventh: false, arp: false, padGain: 0.15, chords: [0, 0, 6, 6] },
     EDM: { bpm: 128, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.1, hatRate: 1.7, motif: [0, 4, 7, 4], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.22, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
     Trance: { bpm: 138, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1, hatRate: 1.8, motif: [0, 4, 7, 11], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.2, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
     Dubstep: { bpm: 140, structure: "dance", kick: [0, 8], snare: [8], hatStep: 4, kickRate: 0.7, snareRate: 0.9, hatRate: 2, motif: [0, 1, 0, 6], melSteps: [0, 6, 8, 11], noteDur: 0.5, voice: 0.3, seventh: false, arp: false, padGain: 0.18, chords: [0, 0, 5, 5], bassSteps: [0, 1, 2, 4, 8, 9, 10, 12], halfTime: true },
@@ -685,7 +686,7 @@
     "Hip-hop": { bpm: 74, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 0.95, hatRate: 1.4, motif: [0, 3, 2, 0], melSteps: [0, 10], noteDur: 0.5, voice: 0.8, seventh: true, arp: false, padGain: 0.18 },
     RnB: { bpm: 82, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 0.9, hatRate: 1.2, motif: [0, 2, 6, 4], melSteps: [0, 6, 12], noteDur: 0.6, voice: 0.85, seventh: true, arp: false, padGain: 0.22 },
     "Lo-fi": { bpm: 80, structure: "chill", kick: [0, 10], snare: [4, 12], hatStep: 4, kickRate: 0.9, snareRate: 0.85, hatRate: 1.3, motif: [0, 6, 4, 2], melSteps: [0, 4, 10], noteDur: 0.6, voice: 0.4, seventh: true, arp: false, padGain: 0.22 },
-    Pop: { bpm: 100, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.9, snareRate: 1, hatRate: 1.4, motif: [0, 2, 4, 5], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.75, seventh: false, arp: false, padGain: 0.22 },
+    Pop: { bpm: 116, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.9, snareRate: 1, hatRate: 1.4, motif: [0, 2, 4, 5], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.75, seventh: false, arp: false, padGain: 0.22 },
     // --- generi aggiunti dai riferimenti (Marley/Doors/Queen/Miles/Norah) ---
     Reggae: { bpm: 80, structure: "pop", kick: [8], snare: [8], hatStep: 2, kickRate: 0.85, snareRate: 0.95, hatRate: 1.3, motif: [0, 2, 4, 2], melSteps: [8], noteDur: 0.25, voice: 0.55, seventh: false, arp: false, padGain: 0.05, skankSteps: [2, 6, 10, 14] },
     // one-drop + skank in levare
@@ -767,7 +768,7 @@
       for (let i = 0; i < data.length; i++) data[i] *= g;
     }
   }
-  function highpass(data, sr, fc = 70) {
+  function highpass(data, sr, fc = 40) {
     const rc = 1 / (2 * Math.PI * fc);
     const dt = 1 / sr;
     const a = rc / (rc + dt);
@@ -848,7 +849,7 @@
     }
     return tot > 0 ? hi / tot : 0;
   }
-  function extractAndClassify(data, sr) {
+  function extractAndClassify(data, sr, outStats) {
     let starts = detectOnsetSamples(data, sr);
     if (starts.length < 4) {
       starts = [];
@@ -863,14 +864,20 @@
       starts = reduced;
     }
     const raws = [];
+    let nClassified = 0;
+    let nNoise = 0;
     for (let i = 0; i < starts.length; i++) {
       const start = starts[i];
       const next = i + 1 < starts.length ? starts[i + 1] : data.length;
-      const rawLen = Math.min(Math.floor(sr * 2), next - start);
+      const rawLen = Math.min(Math.floor(sr * 3), next - start);
       if (rawLen < Math.floor(sr * 0.03)) continue;
       const probe = data.slice(start, start + rawLen);
       const { role, pitchHz, isNoise } = classifySegment(probe, sr);
-      if (isNoise) continue;
+      nClassified++;
+      if (isNoise) {
+        nNoise++;
+        continue;
+      }
       raws.push({ start, end: start + rawLen, role, pitchHz });
     }
     const merged = [];
@@ -883,7 +890,7 @@
       }
       let end = r.end;
       let j = i + 1;
-      while (j < raws.length && raws[j].role === "voice" && raws[j].start - end < sr * 0.35 && raws[j].end - r.start < sr * 5) {
+      while (j < raws.length && raws[j].role === "voice" && raws[j].start - end < sr * 0.35 && raws[j].end - r.start < sr * 6) {
         end = raws[j].end;
         j++;
       }
@@ -892,10 +899,23 @@
     }
     const segs = [];
     for (const m of merged) {
-      const cap = m.role === "voice" ? 5 : m.role === "tonal" ? 1.4 : m.role === "other" ? 0.5 : 0.3;
+      const cap = m.role === "voice" ? 6 : m.role === "tonal" ? 3 : m.role === "other" ? 1.5 : 1.5;
       const len = Math.min(m.end - m.start, Math.floor(sr * cap));
       if (len < Math.floor(sr * 0.03)) continue;
-      const slice = data.slice(m.start, m.start + len);
+      let slice = data.slice(m.start, m.start + len);
+      let pk = 0;
+      for (let k = 0; k < slice.length; k++) {
+        const a = Math.abs(slice[k]);
+        if (a > pk) pk = a;
+      }
+      if (pk > 1e-4) {
+        const tThr = pk * 0.03;
+        const minLen = Math.floor(sr * 0.03);
+        let last = slice.length - 1;
+        while (last > minLen && Math.abs(slice[last]) < tThr) last--;
+        const keep = Math.min(slice.length, last + 1 + Math.floor(sr * 0.015));
+        if (keep < slice.length) slice = slice.slice(0, keep);
+      }
       normalize(slice, 0.95);
       applyFades(slice, sr);
       let e = 0;
@@ -903,6 +923,26 @@
       segs.push({ data: slice, role: m.role, pitchHz: m.pitchHz, energy: e, pos: m.start, bright: brightness(slice, sr) });
     }
     segs.sort((a, b) => b.energy - a.energy);
+    if (outStats) {
+      const win = Math.floor(sr * 0.05) || 1;
+      const rmsArr = [];
+      for (let s = 0; s + win <= data.length; s += win) {
+        let e = 0;
+        for (let i = 0; i < win; i++) e += data[s + i] * data[s + i];
+        rmsArr.push(Math.sqrt(e / win));
+      }
+      rmsArr.sort((a, b) => a - b);
+      const floorRms = rmsArr.length ? rmsArr[Math.floor(rmsArr.length * 0.2)] : 0;
+      const sigRms = rmsArr.length ? rmsArr[Math.floor(rmsArr.length * 0.9)] : 1;
+      const floorRatio = sigRms > 1e-6 ? floorRms / sigRms : 0;
+      const noiseFrac = nClassified > 0 ? nNoise / nClassified : 0;
+      outStats.onsets = nClassified;
+      outStats.noise = nNoise;
+      outStats.kept = segs.length;
+      outStats.noiseFrac = noiseFrac;
+      outStats.floorRatio = floorRatio;
+      outStats.noisy = noiseFrac > 0.45 || floorRatio > 0.35;
+    }
     return segs.slice(0, 48);
   }
   function meterInfo(meter2, cfg) {
@@ -1006,9 +1046,9 @@
       sumBars--;
     }
     const events = [];
-    const push = (seg, when, rate, gain, dur) => {
+    const push = (seg, when, rate, gain, dur, sustain = false) => {
       if (!seg) return;
-      events.push({ seg, when, rate: Math.max(0.25, Math.min(4, rate)), gain, dur });
+      events.push({ seg, when, rate: Math.max(0.25, Math.min(4, rate)), gain, dur, sustain });
     };
     const pick = (arr, i) => arr.length ? arr[(i + gOff) % arr.length] : void 0;
     const hatOffset = Math.floor(cfg.hatStep / 2);
@@ -1051,7 +1091,7 @@
           for (let ps = 0; ps < steps; ps += pulse) {
             for (let c = 0; c < triad.length; c++) {
               const t = pickTonalFor(scaleFreq(semis, triad[c]), bar * 5 + ps + c);
-              if (t) push(t.seg, barStart + (ps + c * 0.2) * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), pulse * sixteenth * 1.4);
+              if (t) push(t.seg, barStart + (ps + c * 0.2) * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), pulse * sixteenth * 1.4, true);
             }
           }
         }
@@ -1065,10 +1105,10 @@
             }
           } else {
             const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar);
-            if (t) push(t.seg, barStart, t.rate, 0.45 * vol, Math.min(barDur * 0.5, 0.6));
+            if (t) push(t.seg, barStart, t.rate, 0.45 * vol, Math.min(barDur * 0.5, 0.6), true);
             if (steps >= 16) {
               const t2 = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar + 7);
-              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * vol, Math.min(barDur * 0.5, 0.5));
+              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * vol, Math.min(barDur * 0.5, 0.5), true);
             }
           }
         }
@@ -1081,7 +1121,7 @@
               const ci = hookContour[m % hookLen];
               const degree = tones[ci % tones.length] + lift + octave;
               const t = pickTonalFor(scaleFreq(semis, degree), bar * 31 + m);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.42 * vol, cfg.noteDur * 1.8);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.42 * vol, cfg.noteDur * 1.8, true);
             }
           } else {
             const nNotes = Math.max(1, Math.ceil(cfg.melSteps.length / 2 * density));
@@ -1091,7 +1131,7 @@
               const ci = verseContour[(b + m) % verseContour.length];
               const degree = tones[ci % tones.length] + octave;
               const t = pickTonalFor(scaleFreq(semis, degree), bar * 17 + m);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.34 * vol, cfg.noteDur * 2);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.34 * vol, cfg.noteDur * 2, true);
             }
           }
         }
@@ -1244,24 +1284,65 @@
     }
     limiter(pcm, sr, 0.891, 5, 120);
   }
-  function mixInto(out, data, startSample, rate, gain, maxOut, sr) {
+  function mixInto(out, data, startSample, rate, gain, maxOut, sr, loop = false) {
     const outLen = out.length;
     const srcLen = data.length;
-    const usable = Math.min(maxOut, Math.max(0, Math.floor((srcLen - 1) / rate)));
-    const longGrain = usable > sr * 0.2;
-    const fadeN = usable > 8 ? Math.min(Math.floor(sr * (longGrain ? 0.01 : 5e-3)), Math.floor(usable / 2)) : 0;
-    for (let j = 0; j < usable; j++) {
+    const onePass = Math.max(0, Math.floor((srcLen - 1) / rate));
+    if (onePass <= 0) return;
+    const longGrain = onePass > sr * 0.2;
+    const edge = onePass > 8 ? Math.min(Math.floor(sr * (longGrain ? 0.02 : 5e-3)), Math.floor(onePass / 2)) : 0;
+    if (!loop || maxOut <= onePass) {
+      const usable = Math.min(maxOut, onePass);
+      const fadeN = usable > 8 ? Math.min(edge, Math.floor(usable / 2)) : 0;
+      for (let j = 0; j < usable; j++) {
+        const oi = startSample + j;
+        if (oi >= outLen) break;
+        const srcPos = j * rate;
+        const si = Math.floor(srcPos);
+        const frac = srcPos - si;
+        let env = 1;
+        if (fadeN > 0) {
+          if (j < fadeN) env = j / fadeN;
+          else if (j > usable - fadeN) env = (usable - j) / fadeN;
+        }
+        out[oi] += (data[si] * (1 - frac) + data[si + 1] * frac) * gain * env;
+      }
+      return;
+    }
+    const xf = Math.max(1, Math.min(Math.floor(onePass / 3), Math.floor(sr * 0.03)));
+    const period = Math.max(1, onePass - xf);
+    const total = Math.min(maxOut, outLen - startSample);
+    const gFade = Math.min(edge, Math.floor(total / 2));
+    for (let j = 0; j < total; j++) {
       const oi = startSample + j;
       if (oi >= outLen) break;
-      const srcPos = j * rate;
-      const si = Math.floor(srcPos);
-      const frac = srcPos - si;
-      let env = 1;
-      if (fadeN > 0) {
-        if (j < fadeN) env = j / fadeN;
-        else if (j > usable - fadeN) env = (usable - j) / fadeN;
+      let gEnv = 1;
+      if (gFade > 0) {
+        if (j < gFade) gEnv = j / gFade;
+        else if (j > total - gFade) gEnv = (total - j) / gFade;
       }
-      out[oi] += (data[si] * (1 - frac) + data[si + 1] * frac) * gain * env;
+      const rep = Math.floor(j / period);
+      const local = j - rep * period;
+      let sum = 0;
+      {
+        const srcPos = local * rate;
+        const si = Math.floor(srcPos);
+        if (si + 1 < srcLen) {
+          const frac = srcPos - si;
+          const w = local < xf && rep > 0 ? local / xf : 1;
+          sum += (data[si] * (1 - frac) + data[si + 1] * frac) * w;
+        }
+      }
+      if (local < xf && rep > 0) {
+        const srcPos = (local + period) * rate;
+        const si = Math.floor(srcPos);
+        if (si + 1 < srcLen) {
+          const frac = srcPos - si;
+          const w = 1 - local / xf;
+          sum += (data[si] * (1 - frac) + data[si + 1] * frac) * w;
+        }
+      }
+      out[oi] += sum * gain * gEnv;
     }
   }
 
@@ -1270,7 +1351,7 @@
   var SCALES2 = ["Major", "Minor", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Locrian", "Harmonic Minor", "Pentatonic", "Chromatic"];
   var DEF = {
     House: { bpm: 124, scale: "Minor" },
-    Techno: { bpm: 130, scale: "Dorian" },
+    Techno: { bpm: 138, scale: "Dorian" },
     EDM: { bpm: 128, scale: "Minor" },
     Trance: { bpm: 138, scale: "Minor" },
     Dubstep: { bpm: 140, scale: "Harmonic Minor" },
@@ -1278,14 +1359,14 @@
     "Hip-hop": { bpm: 74, scale: "Minor" },
     RnB: { bpm: 82, scale: "Minor" },
     "Lo-fi": { bpm: 80, scale: "Dorian" },
-    Pop: { bpm: 100, scale: "Major" },
+    Pop: { bpm: 116, scale: "Major" },
     Reggae: { bpm: 80, scale: "Major" },
     Rock: { bpm: 120, scale: "Minor" },
     Jazz: { bpm: 110, scale: "Dorian" }
   };
   var genre = "Pop";
   var scale = "Major";
-  var bpm = 100;
+  var bpm = 116;
   var meter = "4/4";
   var recPCM = null;
   var recSR = 48e3;
@@ -1380,7 +1461,8 @@
         const mono = Float32Array.from(recPCM);
         highpass(mono, recSR);
         normalize(mono, 0.98);
-        const segs = extractAndClassify(mono, recSR);
+        const stats = { onsets: 0, noise: 0, kept: 0, noiseFrac: 0, floorRatio: 0, noisy: false };
+        const segs = extractAndClassify(mono, recSR, stats);
         if (!segs.length) {
           setStatus("No usable sound found.");
           return;
@@ -1388,14 +1470,15 @@
         const opts = { bpm, scale, genre, meter };
         const { events, durationSec } = buildEvents(segs, opts, 60);
         const out = new Float32Array(Math.ceil((durationSec + 2) * recSR));
-        for (const ev of events) mixInto(out, ev.seg.data, Math.floor(ev.when * recSR), ev.rate, ev.gain, Math.floor(ev.dur * recSR), recSR);
+        for (const ev of events) mixInto(out, ev.seg.data, Math.floor(ev.when * recSR), ev.rate, ev.gain, Math.floor(ev.dur * recSR), recSR, ev.sustain);
         masterPCM(out, recSR, genre);
         outPCM = out;
         outSR = recSR;
         $("playBtn").disabled = false;
         $("expBtn").disabled = false;
         play();
-        setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Play again or Export.`);
+        const warn = stats.noisy ? " \u26A0\uFE0F Lots of background noise \u2014 for best quality, record in a quieter spot." : "";
+        setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Play again or Export.${warn}`);
       } catch (e) {
         setStatus("Error: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
       }
