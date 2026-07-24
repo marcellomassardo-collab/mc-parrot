@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -31,28 +31,28 @@
 <body>
   <div class="wrap">
     <h1>MC Parrot 🦜</h1>
-    <div class="sub">i suoni che registri → una canzone</div>
+    <div class="sub">the sounds you record → a song</div>
 
     <div class="card">
-      <button id="recBtn" class="big rec">● Registra</button>
-      <div class="row"><span id="recTime" style="color:#9A9AA8;font-size:13px;">Registra qualche suono dell'ambiente (e un po' di voce)</span></div>
+      <button id="recBtn" class="big rec">● Record</button>
+      <div class="row"><span id="recTime" style="color:#9A9AA8;font-size:13px;">Record some ambient sounds (and a bit of voice)</span></div>
     </div>
 
     <div class="card">
-      <div class="label">Genere</div>
+      <div class="label">Genre</div>
       <div id="genres" class="chips"></div>
-      <div class="label">Scala</div>
+      <div class="label">Scale</div>
       <div id="scales" class="chips"></div>
       <div class="label">Tempo (BPM): <span id="bpmVal">100</span></div>
       <div class="row"><input id="bpm" type="range" min="50" max="180" value="100" /></div>
     </div>
 
-    <button id="genBtn" class="big gen" disabled>♪ Genera musica</button>
-    <button id="playBtn" class="big gen" disabled style="background:#3A3A46">▶ Riascolta</button>
-    <button id="expBtn" class="big exp" disabled>⤓ Esporta / Scarica (WAV)</button>
+    <button id="genBtn" class="big gen" disabled>♪ Generate music</button>
+    <button id="playBtn" class="big gen" disabled style="background:#3A3A46">▶ Play again</button>
+    <button id="expBtn" class="big exp" disabled>⤓ Export / Download (WAV)</button>
 
     <div id="status" class="status"></div>
-    <div class="note">Tutto avviene nel tuo browser: l'audio non viene mai caricato da nessuna parte. Solo microfono.</div>
+    <div class="note">Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.</div>
   </div>
   <script src="./bundle.js"></script>
 </body>

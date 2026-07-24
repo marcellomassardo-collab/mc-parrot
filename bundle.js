@@ -663,16 +663,16 @@
 
   // composer.ts
   var SCALES = {
-    Maggiore: [0, 2, 4, 5, 7, 9, 11],
-    Minore: [0, 2, 3, 5, 7, 8, 10],
-    Dorica: [0, 2, 3, 5, 7, 9, 10],
-    Frigia: [0, 1, 3, 5, 7, 8, 10],
-    Lidia: [0, 2, 4, 6, 7, 9, 11],
-    Misolidia: [0, 2, 4, 5, 7, 9, 10],
-    Locria: [0, 1, 3, 5, 6, 8, 10],
-    "Min. armonica": [0, 2, 3, 5, 7, 8, 11],
-    Pentatonica: [0, 2, 4, 7, 9],
-    Cromatica: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    Major: [0, 2, 4, 5, 7, 9, 11],
+    Minor: [0, 2, 3, 5, 7, 8, 10],
+    Dorian: [0, 2, 3, 5, 7, 9, 10],
+    Phrygian: [0, 1, 3, 5, 7, 8, 10],
+    Lydian: [0, 2, 4, 6, 7, 9, 11],
+    Mixolydian: [0, 2, 4, 5, 7, 9, 10],
+    Locrian: [0, 1, 3, 5, 6, 8, 10],
+    "Harmonic Minor": [0, 2, 3, 5, 7, 8, 11],
+    Pentatonic: [0, 2, 4, 7, 9],
+    Chromatic: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   };
   var ROOT_HZ = 130.81;
   var GENRES = {
@@ -947,7 +947,7 @@
     const swingAmt = cfg.swing || 0;
     const targetSec = Math.min(60, Math.max(20, seconds));
     const totalBars = Math.max(8, Math.floor(targetSec / barDur));
-    const semis = SCALES[opts.scale] || SCALES.Minore;
+    const semis = SCALES[opts.scale] || SCALES.Minor;
     const octave = semis.length;
     const scaleIdx = Object.keys(SCALES).indexOf(opts.scale);
     const gHash = hashStr(genreName);
@@ -1267,24 +1267,24 @@
 
   // web/main.ts
   var GENRES2 = ["Pop", "Hip-hop", "RnB", "Lo-fi", "House", "Techno", "EDM", "Trance", "Dubstep", "DnB", "Reggae", "Rock", "Jazz"];
-  var SCALES2 = ["Maggiore", "Minore", "Dorica", "Frigia", "Lidia", "Misolidia", "Locria", "Min. armonica", "Pentatonica", "Cromatica"];
+  var SCALES2 = ["Major", "Minor", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Locrian", "Harmonic Minor", "Pentatonic", "Chromatic"];
   var DEF = {
-    House: { bpm: 124, scale: "Minore" },
-    Techno: { bpm: 130, scale: "Dorica" },
-    EDM: { bpm: 128, scale: "Minore" },
-    Trance: { bpm: 138, scale: "Minore" },
-    Dubstep: { bpm: 140, scale: "Min. armonica" },
-    DnB: { bpm: 174, scale: "Minore" },
-    "Hip-hop": { bpm: 74, scale: "Minore" },
-    RnB: { bpm: 82, scale: "Minore" },
-    "Lo-fi": { bpm: 80, scale: "Dorica" },
-    Pop: { bpm: 100, scale: "Maggiore" },
-    Reggae: { bpm: 80, scale: "Maggiore" },
-    Rock: { bpm: 120, scale: "Minore" },
-    Jazz: { bpm: 110, scale: "Dorica" }
+    House: { bpm: 124, scale: "Minor" },
+    Techno: { bpm: 130, scale: "Dorian" },
+    EDM: { bpm: 128, scale: "Minor" },
+    Trance: { bpm: 138, scale: "Minor" },
+    Dubstep: { bpm: 140, scale: "Harmonic Minor" },
+    DnB: { bpm: 174, scale: "Minor" },
+    "Hip-hop": { bpm: 74, scale: "Minor" },
+    RnB: { bpm: 82, scale: "Minor" },
+    "Lo-fi": { bpm: 80, scale: "Dorian" },
+    Pop: { bpm: 100, scale: "Major" },
+    Reggae: { bpm: 80, scale: "Major" },
+    Rock: { bpm: 120, scale: "Minor" },
+    Jazz: { bpm: 110, scale: "Dorian" }
   };
   var genre = "Pop";
-  var scale = "Maggiore";
+  var scale = "Major";
   var bpm = 100;
   var meter = "4/4";
   var recPCM = null;
@@ -1341,31 +1341,31 @@
       };
       mr.onstop = async () => {
         stream.getTracks().forEach((t) => t.stop());
-        setStatus("Elaboro la registrazione\u2026");
+        setStatus("Processing recording\u2026");
         const arr = await new Blob(chunks).arrayBuffer();
         const abuf = await ctx.decodeAudioData(arr.slice(0));
         recSR = abuf.sampleRate;
         recPCM = Float32Array.from(abuf.getChannelData(0));
         $("genBtn").disabled = false;
-        setStatus(`Registrati ${(recPCM.length / recSR).toFixed(0)}s. Scegli genere e premi Genera.`);
+        setStatus(`Recorded ${(recPCM.length / recSR).toFixed(0)}s. Pick a genre and press Generate.`);
       };
       mr.start();
       recStart = performance.now();
       $("recBtn").classList.add("on");
       $("recBtn").textContent = "\u25A0 Stop";
       recTimer = window.setInterval(() => {
-        $("recTime").textContent = "Registrando\u2026 " + ((performance.now() - recStart) / 1e3).toFixed(0) + "s";
+        $("recTime").textContent = "Recording\u2026 " + ((performance.now() - recStart) / 1e3).toFixed(0) + "s";
       }, 200);
     } catch (e) {
-      setStatus("Permesso microfono negato o non disponibile: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
+      setStatus("Microphone permission denied or unavailable: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
     }
   }
   function stopRec() {
     mr == null ? void 0 : mr.stop();
     clearInterval(recTimer);
     $("recBtn").classList.remove("on");
-    $("recBtn").textContent = "\u25CF Registra";
-    $("recTime").textContent = "Registrazione fatta.";
+    $("recBtn").textContent = "\u25CF Record";
+    $("recTime").textContent = "Recording done.";
   }
   $("recBtn").onclick = () => {
     if (mr && mr.state === "recording") stopRec();
@@ -1373,7 +1373,7 @@
   };
   function generate() {
     if (!recPCM) return;
-    setStatus("Genero la musica\u2026");
+    setStatus("Generating music\u2026");
     setTimeout(() => {
       var _a;
       try {
@@ -1382,7 +1382,7 @@
         normalize(mono, 0.98);
         const segs = extractAndClassify(mono, recSR);
         if (!segs.length) {
-          setStatus("Nessun suono utilizzabile trovato.");
+          setStatus("No usable sound found.");
           return;
         }
         const opts = { bpm, scale, genre, meter };
@@ -1395,9 +1395,9 @@
         $("playBtn").disabled = false;
         $("expBtn").disabled = false;
         play();
-        setStatus(`Fatto! ${durationSec.toFixed(0)}s di ${genre}. Riascolta o Esporta.`);
+        setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Play again or Export.`);
       } catch (e) {
-        setStatus("Errore: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
+        setStatus("Error: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
       }
     }, 30);
   }
@@ -1409,7 +1409,7 @@
     } catch {
     }
     const buf = ctx.createBuffer(1, outPCM.length, outSR);
-    buf.copyToChannel(outPCM, 0);
+    buf.getChannelData(0).set(outPCM);
     playSrc = ctx.createBufferSource();
     playSrc.buffer = buf;
     playSrc.connect(ctx.destination);
@@ -1444,7 +1444,7 @@
   }
   $("expBtn").onclick = () => {
     if (!outPCM) return;
-    const blob = new Blob([pcmToWav(outPCM, outSR)], { type: "audio/wav" });
+    const blob = new Blob([pcmToWav(outPCM, outSR).buffer], { type: "audio/wav" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

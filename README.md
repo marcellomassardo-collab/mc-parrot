@@ -1,43 +1,42 @@
 # MC Parrot 🦜
 
-**Trasforma i suoni che registri in una canzone — tutto sul tuo dispositivo.**
+**Turn the sounds you record into a song — entirely on your own device.**
 
-MC Parrot registra i suoni dell'ambiente (e la tua voce) dal microfono e li ricompone
-in una breve traccia musicale, usando **solo quei suoni** come materia prima (musica
-concreta generata automaticamente). Scegli il genere, la scala e il tempo, genera, riascolta
-ed esporta un file audio.
+MC Parrot records ambient sounds (and your voice) from the microphone and recomposes them
+into a short musical track, using **only those sounds** as raw material (automatic musique
+concrète). Pick a genre, scale and tempo, generate, listen back, and export an audio file.
 
-## 🔒 Privacy garantita — leggi qui
+## 🔒 Privacy guaranteed — please read
 
-- **Non è intelligenza artificiale.** Il motore è puro **DSP algoritmico** (analisi delle
-  frequenze, riconoscimento dei suoni per timbro, ricomposizione secondo la teoria musicale).
-  Nessuna rete neurale, nessun modello, nessun "cloud AI".
-- **Nessun file viene inviato a nessuno.** L'audio che registri **non lascia mai il tuo
-  dispositivo**: viene elaborato interamente **nel tuo browser**, in locale.
-- **Nessun server esterno.** L'app è fatta di soli file statici (una pagina web): non c'è
-  nessun back-end, nessun caricamento, nessun tracciamento dell'audio.
-- **Solo il microfono.** L'unico permesso richiesto è il microfono, e serve soltanto a
-  registrare i suoni che poi diventano musica. Niente telecamera, niente altro.
+- **It is NOT artificial intelligence.** The engine is pure **algorithmic DSP** (frequency
+  analysis, sound classification by timbre, recomposition following music theory). No neural
+  network, no model, no "AI cloud".
+- **No file is ever sent to anyone.** The audio you record **never leaves your device**: it is
+  processed entirely **in your browser**, locally.
+- **No external server.** The app is just static files (a single web page): there is no
+  back-end, no upload, no audio tracking whatsoever.
+- **Microphone only.** The only permission requested is the microphone, and it is used solely to
+  record the sounds that then become music. No camera, nothing else.
 
-La tua privacy è garantita **per costruzione**: siccome tutto avviene sul tuo dispositivo,
-non c'è proprio nessun posto dove i tuoi suoni potrebbero andare.
+Your privacy is guaranteed **by design**: since everything happens on your device, there is
+simply nowhere your sounds could go.
 
-## Come si usa
+## How to use it
 
-1. Apri il link nel browser (telefono o computer).
-2. Dai il permesso al **microfono** e premi **Registra**: cattura qualche suono dell'ambiente
-   (oggetti, battiti, un po' di voce, uno strumento…).
-3. Scegli **genere**, **scala** e **tempo**.
-4. Premi **Genera musica**, riascolta, ed eventualmente **Esporta** il file WAV.
+1. Open the link in your browser (phone or computer).
+2. Allow the **microphone** and press **Record**: capture some ambient sounds (objects, taps,
+   a bit of voice, an instrument…).
+3. Choose **genre**, **scale** and **tempo**.
+4. Press **Generate music**, listen back, and optionally **Export** the WAV file.
 
-## Come funziona (in breve)
+## How it works (in short)
 
-Il "cervello" (`composer.ts` + `classify.ts`) analizza la registrazione, classifica ogni
-frammento per ruolo (cassa, rullante, hi-hat, strumento intonato, voce, e scarta i rumori
-di fondo), e costruisce una canzone strutturata (con ritornello, armonia e mastering) per il
-genere scelto. È lo **stesso identico motore** della versione Android — cambia solo il "guscio"
-(qui usa le API audio del browser).
+The "brain" (`composer.ts` + `classify.ts`) analyzes the recording, classifies each fragment by
+role (kick, snare, hi-hat, pitched instrument, voice — discarding background noise), and builds a
+structured song (with a chorus, harmony and mastering) for the chosen genre. It is the **exact
+same engine** as the Android version — only the "shell" differs (here it uses the browser's audio
+APIs).
 
 ---
 
-*Progetto personale, senza scopo di lucro. Fatto per divertirsi con i suoni. 🎶*
+*Personal, non-commercial project. Made for the fun of playing with sounds. 🎶*
