@@ -553,7 +553,7 @@
     const speechRatio = totalE > 0 ? speechE / totalE : 0;
     const formantRatio = totalE > 0 ? formE / totalE : 0;
     const steadyTone = voicing.medianF0 > 0 && voicing.f0stdSemi < 0.22 && peaks < 2;
-    const isVoice = durationSec >= 0.15 && voicing.voicedFrac >= 0.4 && voicing.medianF0 >= 80 && voicing.medianF0 <= 350 && harmonicCount >= 2 && formantRatio >= 0.15 && !steadyTone;
+    const isVoice = durationSec >= 0.12 && voicing.voicedFrac >= 0.33 && voicing.medianF0 >= 80 && voicing.medianF0 <= 350 && harmonicCount >= 2 && formantRatio >= 0.12 && !steadyTone;
     const transient = attackSec < 0.05 && envCv > 0.5 && decays;
     const pitchedDrone = !isVoice && !transient && durationSec > 0.25 && voicing.medianF0 > 0 && voicing.f0stdSemi < 0.35 && flatness < 0.5 && centroid < 3e3;
     const isTonal = !isVoice && (!!pitchHz && (flatness < 0.22 || flatness < 0.32 && harmonicCount >= 3) || pitchedDrone);
@@ -697,29 +697,35 @@
     // swing + settime
   };
   for (const g of ["House", "Tekno", "EDM", "Trance", "Dubstep", "DnB"]) {
-    if (GENRES[g]) GENRES[g].vocoder = 1;
+    if (GENRES[g]) {
+      GENRES[g].vocoder = 1;
+      GENRES[g].vocoderGain = 1.3;
+    }
   }
   GENRES.Pop.vocoder = 0.28;
-  GENRES.Pop.vocoderGain = 0.55;
+  GENRES.Pop.vocoderGain = 0.75;
   GENRES["Hip-hop"].vocoder = 0.28;
-  GENRES["Hip-hop"].vocoderGain = 0.55;
+  GENRES["Hip-hop"].vocoderGain = 0.75;
   GENRES.Trance.reverb = 0.24;
   GENRES.Trance.roll = 0.85;
   GENRES.EDM.reverb = 0.2;
   GENRES.EDM.roll = 0.75;
   GENRES.Tekno.reverb = 0.18;
   GENRES.Tekno.roll = 0.8;
-  GENRES.House.reverb = 0.12;
+  GENRES.House.reverb = 0.11;
   GENRES.House.thin = 0.5;
-  GENRES.Dubstep.reverb = 0.14;
+  GENRES.Dubstep.reverb = 0.12;
   GENRES.Dubstep.thin = 0.45;
-  GENRES.DnB.reverb = 0.12;
+  GENRES.DnB.reverb = 0.11;
   GENRES.DnB.thin = 0.4;
+  GENRES.Pop.reverb = 0.07;
   GENRES.Pop.thin = 0.5;
   GENRES["Hip-hop"].thin = 0.5;
   GENRES.RnB.thin = 0.5;
   GENRES["Lo-fi"].thin = 0.55;
   GENRES.Reggae.thin = 0.5;
+  GENRES.Rock.reverb = 0.22;
+  GENRES.Rock.voice = 0.55;
   GENRES.Rock.thin = 0.45;
   GENRES.Jazz.thin = 0.5;
   var PROGRESSIONS = {
@@ -815,6 +821,16 @@
       const g = i / n;
       data[i] *= g;
       data[data.length - 1 - i] *= g;
+    }
+  }
+  function compress(data, sr, thresh = 0.3, ratio = 3, atkMs = 4, relMs = 90) {
+    const a = Math.exp(-1 / (atkMs / 1e3 * sr));
+    const r = Math.exp(-1 / (relMs / 1e3 * sr));
+    let env = 0;
+    for (let i = 0; i < data.length; i++) {
+      const x = data[i] < 0 ? -data[i] : data[i];
+      env = x > env ? a * env + (1 - a) * x : r * env + (1 - r) * x;
+      if (env > thresh) data[i] *= (thresh + (env - thresh) / ratio) / env;
     }
   }
   function scaleFreq(semis, degree) {
@@ -917,9 +933,19 @@
       }
       let end = r.end;
       let j = i + 1;
-      while (j < raws.length && raws[j].role === "voice" && raws[j].start - end < sr * 0.35 && raws[j].end - r.start < sr * 8) {
-        end = raws[j].end;
-        j++;
+      while (j < raws.length && raws[j].end - r.start < sr * 8) {
+        const gap = raws[j].start - end;
+        if (raws[j].role === "voice" && gap < sr * 0.35) {
+          end = raws[j].end;
+          j++;
+          continue;
+        }
+        if (raws[j].role !== "voice" && gap < sr * 0.2 && raws[j].end - raws[j].start < sr * 0.22 && j + 1 < raws.length && raws[j + 1].role === "voice" && raws[j + 1].start - raws[j].end < sr * 0.2 && raws[j + 1].end - r.start < sr * 8) {
+          end = raws[j + 1].end;
+          j += 2;
+          continue;
+        }
+        break;
       }
       merged.push({ start: r.start, end, role: "voice", pitchHz: r.pitchHz });
       i = j;
@@ -943,6 +969,7 @@
         const keep = Math.min(slice.length, last + 1 + Math.floor(sr * 0.015));
         if (keep < slice.length) slice = slice.slice(0, keep);
       }
+      if (m.role === "voice") compress(slice, sr);
       normalize(slice, 0.95);
       applyFades(slice, sr);
       let e = 0;
@@ -1023,14 +1050,20 @@
     const vSorted = voices.slice().sort((a, b) => a.pos - b.pos);
     const vSpeech = voices.filter((v) => v.pitchHz && v.pitchHz >= 75 && v.pitchHz <= 260);
     const vHookSrc = vSpeech.length ? vSpeech : voices;
-    const vHook = vHookSrc.slice().sort((a, b) => b.data.length - a.data.length).slice(0, Math.min(4, vHookSrc.length));
+    const rep = findRepeatedPhrase(vHookSrc, sr);
+    const byLen = vHookSrc.slice().sort((a, b) => b.data.length - a.data.length);
+    const vHook = (rep.hook ? [rep.hook, ...byLen.filter((s) => s !== rep.hook)] : byLen).slice(0, Math.min(4, vHookSrc.length));
     const vocCache = /* @__PURE__ */ new Map();
-    const vocodeSeg = (src, root) => {
-      const key = `${src.pos}_${src.data.length}_${root}`;
+    const vocodeSeg = (src, root, capSec, nNotes) => {
+      const bucket = Math.ceil(capSec * 2) / 2;
+      const key = `${src.pos}_${src.data.length}_${root}_${nNotes}_${bucket}`;
       const hit = vocCache.get(key);
       if (hit) return hit;
-      const chordHz = [scaleFreq(semis, root), scaleFreq(semis, root + 2), scaleFreq(semis, root + 4)];
-      const data = vocode(src.data, sr, chordHz);
+      const degs = [0, 2, 4, 6, 8].slice(0, Math.max(3, Math.min(5, nNotes)));
+      const chordHz = degs.map((d) => scaleFreq(semis, root + d));
+      const capS = Math.min(src.data.length, Math.floor((capSec + 0.15) * sr));
+      const srcData = src.data.length > capS ? src.data.subarray(0, capS) : src.data;
+      const data = vocode(srcData, sr, chordHz);
       const seg = { data, role: "voice", pitchHz: chordHz[0], energy: src.energy, pos: src.pos, bright: src.bright };
       vocCache.set(key, seg);
       return seg;
@@ -1193,8 +1226,9 @@
         }
         if (S.voice && vSorted.length) {
           const vocal = cfg.voice >= 0.7;
-          const vMax = vocal ? 7 : 1.6;
-          const vGap = vocal ? 2.2 : cfg.voice >= 0.35 ? 3 : 5;
+          const vMax = vocal ? 5 : 2.5;
+          const hookMax = 6;
+          const vGap = vocal ? 2 : cfg.voice >= 0.35 ? 2.5 : 4;
           voiceDebt += barDur / vGap;
           const nInBar = Math.floor(voiceDebt);
           voiceDebt -= nInBar;
@@ -1202,12 +1236,15 @@
           for (let vi = 0; vi < nInBar; vi++) {
             const vwhen = barStart + vi * slot;
             if (vwhen < lastLeadEnd - 0.05) continue;
-            const rawVseg = isChorus && vHook.length ? vHook[vhIdx % vHook.length] : vSorted[(vhIdx + si) % vSorted.length];
+            const isHook = isChorus && vHook.length > 0;
+            const rawVseg = isHook ? vHook[vhIdx % vHook.length] : vSorted[(vhIdx + si) % vSorted.length];
             vhIdx++;
+            const segLenSec = rawVseg.data.length / sr;
+            const vdur = isHook ? Math.min(hookMax, segLenSec) : Math.min(vMax, slot * 0.92, segLenSec);
             const doVoc = cfg.vocoder ? cfg.vocoder >= 1 ? true : rnd() < cfg.vocoder : false;
-            const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot) : rawVseg;
+            const vocNotes = cfg.vocoder && cfg.vocoder >= 1 ? S.intensity >= 0.9 ? 5 : S.intensity >= 0.6 ? 4 : 3 : 3;
+            const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot, vdur, vocNotes) : rawVseg;
             const vGainMul = doVoc ? (_c = cfg.vocoderGain) != null ? _c : 1 : 1;
-            const vdur = Math.min(vMax, slot * 0.92);
             push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol * vGainMul, vdur);
             lastLeadEnd = vwhen + vdur;
           }
@@ -1273,14 +1310,23 @@
     const w0 = 2 * Math.PI * fc / sr, cs = Math.cos(w0), sn = Math.sin(w0), al = sn / (2 * Q);
     biquadInplace(x, al, 0, -al, 1 + al, -2 * cs, 1 - al);
   }
-  function vocode(voice, sr, chordHz, bands = 14) {
-    const n = voice.length;
-    if (n < 64) return Float32Array.from(voice);
-    const out = new Float32Array(n);
+  function vocode(voice, sr, chordHz, bands = 12) {
+    const n0 = voice.length;
+    if (n0 < 64) return Float32Array.from(voice);
+    const D = sr >= 44e3 ? 3 : sr >= 3e4 ? 2 : 1;
+    const dsr = sr / D;
+    const n = Math.floor(n0 / D);
+    const v = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      let s = 0;
+      const o = i * D;
+      for (let k = 0; k < D; k++) s += voice[o + k];
+      v[i] = s / D;
+    }
     const carrier = new Float32Array(n);
     for (const f of chordHz) {
       if (!(f > 20)) continue;
-      const inc = f / sr;
+      const inc = f / dsr;
       let ph = 0;
       for (let i = 0; i < n; i++) {
         carrier[i] += 2 * ph - 1;
@@ -1288,19 +1334,20 @@
         if (ph >= 1) ph -= 1;
       }
     }
-    const fLo = 150, fHi = Math.min(7e3, sr * 0.45);
-    const relA = Math.exp(-1 / (0.015 * sr));
+    const fLo = 150, fHi = Math.min(7e3, dsr * 0.45);
+    const relA = Math.exp(-1 / (0.01 * dsr));
+    const out = new Float32Array(n);
     const vb = new Float32Array(n);
     const cb = new Float32Array(n);
     for (let b = 0; b < bands; b++) {
-      const f0 = fLo * Math.pow(fHi / fLo, b / (bands - 1));
-      const f1 = fLo * Math.pow(fHi / fLo, (b + 1) / (bands - 1));
-      const fc = Math.sqrt(f0 * f1);
+      const f0 = fLo * Math.pow(fHi / fLo, b / bands);
+      const f1 = fLo * Math.pow(fHi / fLo, (b + 1) / bands);
+      const fc = Math.min(Math.sqrt(f0 * f1), dsr * 0.45);
       const Q = Math.max(1.5, fc / Math.max(1, f1 - f0));
-      vb.set(voice);
-      bpfInplace(vb, sr, fc, Q);
+      vb.set(v);
+      bpfInplace(vb, dsr, fc, Q);
       cb.set(carrier);
-      bpfInplace(cb, sr, fc, Q);
+      bpfInplace(cb, dsr, fc, Q);
       let env = 0;
       for (let i = 0; i < n; i++) {
         const a = vb[i] < 0 ? -vb[i] : vb[i];
@@ -1317,7 +1364,81 @@
       const g = 0.9 / pk;
       for (let i = 0; i < n; i++) out[i] *= g;
     }
-    return out;
+    if (D === 1) return out;
+    const res = new Float32Array(n0);
+    for (let i = 0; i < n0; i++) {
+      const p = i / D;
+      const j = Math.floor(p);
+      const fr = p - j;
+      res[i] = j + 1 < n ? out[j] * (1 - fr) + out[j + 1] * fr : out[n - 1];
+    }
+    return res;
+  }
+  function voiceFingerprint(d, sr) {
+    const T = 16, B = 8;
+    const fp = new Float32Array(T * B);
+    const frameLen = Math.floor(d.length / T);
+    if (frameLen < 32) return fp;
+    const edges = [];
+    for (let b = 0; b <= B; b++) edges.push(150 * Math.pow(4e3 / 150, b / B));
+    let N = 1;
+    while (N * 2 <= Math.min(1024, frameLen)) N *= 2;
+    const fft = new import_fft2.default(N);
+    const inp = new Float64Array(N);
+    const out = fft.createComplexArray();
+    for (let t = 0; t < T; t++) {
+      const off = t * frameLen;
+      for (let i = 0; i < N; i++) {
+        const w = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+        inp[i] = (off + i < d.length ? d[off + i] : 0) * w;
+      }
+      fft.realTransform(out, inp);
+      for (let b = 0; b < B; b++) {
+        const k0 = Math.max(1, Math.floor(edges[b] * N / sr));
+        const k1 = Math.min(N / 2, Math.floor(edges[b + 1] * N / sr));
+        let e = 0;
+        for (let k = k0; k <= k1; k++) {
+          const re = out[2 * k], im = out[2 * k + 1];
+          e += Math.sqrt(re * re + im * im);
+        }
+        fp[t * B + b] = Math.log(1 + e);
+      }
+    }
+    let mean = 0;
+    for (let i = 0; i < fp.length; i++) mean += fp[i];
+    mean /= fp.length;
+    let nrm = 0;
+    for (let i = 0; i < fp.length; i++) {
+      fp[i] -= mean;
+      nrm += fp[i] * fp[i];
+    }
+    nrm = Math.sqrt(nrm) || 1;
+    for (let i = 0; i < fp.length; i++) fp[i] /= nrm;
+    return fp;
+  }
+  function findRepeatedPhrase(voices, sr, thr = 0.85) {
+    if (voices.length < 2) return { hook: null, count: voices.length };
+    const fps = voices.map((v) => voiceFingerprint(v.data, sr));
+    let bestCount = 0;
+    let bestMember = null;
+    for (let i = 0; i < voices.length; i++) {
+      let count = 1;
+      let rep = voices[i];
+      for (let j = 0; j < voices.length; j++) {
+        if (i === j) continue;
+        let sim = 0;
+        for (let k = 0; k < fps[i].length; k++) sim += fps[i][k] * fps[j][k];
+        if (sim >= thr) {
+          count++;
+          if (voices[j].data.length > rep.data.length) rep = voices[j];
+        }
+      }
+      if (count > bestCount) {
+        bestCount = count;
+        bestMember = rep;
+      }
+    }
+    return bestCount >= 2 ? { hook: bestMember, count: bestCount } : { hook: null, count: 1 };
   }
   var MASTER = {
     "Hip-hop": { hpf: 72, bassHz: 200, bassDb: 1.5, presHz: 2500, presDb: 3, airHz: 8500, airDb: 1.5 },
