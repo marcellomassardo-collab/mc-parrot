@@ -1196,6 +1196,72 @@
         return { steps: 16, kickSteps: cfg.kick, snareSteps: cfg.snare };
     }
   }
+  var SLOT_OF = {
+    kick: "FOUNDATION",
+    snare: "FOUNDATION",
+    bass: "FOUNDATION",
+    hat: "RHYTHM",
+    sparkle: "RHYTHM",
+    pad: "PAD",
+    melody: "LEAD",
+    voice: "LEAD",
+    backing: "FILL",
+    fill: "FILL"
+  };
+  var SLOT_PRIORITY = { FOUNDATION: 5, LEAD: 4, RHYTHM: 3, PAD: 2, FILL: 1 };
+  var SLOTS = ["FOUNDATION", "RHYTHM", "PAD", "LEAD", "FILL"];
+  function thinArrangement(events, durationSec, capAt) {
+    if (!events.length) return events;
+    const voiceWins = events.filter((e) => e.layer === "voice").map((e) => [e.when, e.when + e.dur]).sort((a, b) => a[0] - b[0]);
+    const overlapsVoice = (e) => {
+      const a = e.when, b = e.when + e.dur;
+      for (const [vs, ve] of voiceWins) {
+        if (ve <= a) continue;
+        if (vs >= b) break;
+        const ov = Math.min(b, ve) - Math.max(a, vs);
+        if (ov > e.dur * 0.35) return true;
+      }
+      return false;
+    };
+    let kept = events.filter((e) => !(e.layer === "melody" && overlapsVoice(e)));
+    const CELL = 0.01;
+    const nCells = Math.max(1, Math.ceil((durationSec + 2) / CELL));
+    const counts = SLOTS.map(() => new Uint16Array(nCells));
+    const slotIdx = (l) => {
+      var _a;
+      return SLOTS.indexOf((_a = SLOT_OF[l != null ? l : "fill"]) != null ? _a : "FILL");
+    };
+    const order = kept.map((e, i) => ({ e, i })).sort((x, y) => {
+      var _a, _b, _c, _d, _e, _f;
+      const px = (_c = SLOT_PRIORITY[(_b = SLOT_OF[(_a = x.e.layer) != null ? _a : "fill"]) != null ? _b : "FILL"]) != null ? _c : 1;
+      const py = (_f = SLOT_PRIORITY[(_e = SLOT_OF[(_d = y.e.layer) != null ? _d : "fill"]) != null ? _e : "FILL"]) != null ? _f : 1;
+      return py - px || y.e.dur - x.e.dur || x.i - y.i;
+    });
+    const accepted = new Array(kept.length).fill(false);
+    for (const { e, i } of order) {
+      const si = slotIdx(e.layer);
+      const c0 = Math.max(0, Math.floor(e.when / CELL));
+      const c1 = Math.min(nCells - 1, Math.ceil((e.when + e.dur) / CELL));
+      if (e.layer === "voice") {
+        for (let c = c0; c <= c1; c++) counts[si][c]++;
+        accepted[i] = true;
+        continue;
+      }
+      let over = 0;
+      let total = 0;
+      for (let c = c0; c <= c1; c++) {
+        total++;
+        if (counts[si][c] > 0) continue;
+        let active = 0;
+        for (let k = 0; k < SLOTS.length; k++) if (counts[k][c] > 0) active++;
+        if (active >= capAt(c * CELL)) over++;
+      }
+      if (total > 0 && over / total > 0.3) continue;
+      for (let c = c0; c <= c1; c++) counts[si][c]++;
+      accepted[i] = true;
+    }
+    return kept.filter((_, i) => accepted[i]);
+  }
   function buildEvents(segs, opts, seconds, sr = 48e3) {
     var _a, _b, _c;
     const summary = { kick: 0, snare: 0, hat: 0, tonal: 0, voice: 0, other: 0 };
@@ -1379,6 +1445,7 @@
     let vhIdx = 0;
     let voiceDebt = 0;
     const prevPadHz = [0, 0, 0];
+    const sectionCaps = [];
     let lastLeadEnd = -1;
     for (let si = 0; si < structure.length; si++) {
       const S = structure[si];
@@ -1387,6 +1454,11 @@
       const lift = S.lift ? octave : 0;
       const isChorus = S.lift;
       if (isChorus) vhIdx = 0;
+      sectionCaps.push({
+        from: bar * barDur,
+        to: (bar + nBars) * barDur,
+        cap: S.intensity <= 0.45 ? 2 : isChorus ? 4 : 3
+      });
       for (let b = 0; b < nBars; b++, bar++) {
         const barStart = bar * barDur;
         const isSectionEnd = b === nBars - 1;
@@ -1507,7 +1579,7 @@
           const vocal = cfg.voice >= 0.7;
           const vMax = vocal ? 6 : 5;
           const hookMax = 7;
-          const vGap = vocal ? 1.5 : cfg.voice >= 0.35 ? 1.9 : 2.6;
+          const vGap = 1.1 + 3 * (1 - Math.max(0, Math.min(1, cfg.voice)));
           voiceDebt += barDur / vGap;
           const nInBar = Math.floor(voiceDebt);
           voiceDebt -= nInBar;
@@ -1554,7 +1626,13 @@
         }
       }
     }
-    return { events, durationSec: bar * barDur, summary };
+    const durationSec = bar * barDur;
+    const capAt = (t) => {
+      for (const s of sectionCaps) if (t >= s.from && t < s.to) return s.cap;
+      return 3;
+    };
+    const thinned = thinArrangement(events, durationSec, capAt);
+    return { events: thinned, durationSec, summary };
   }
   function biquadInplace(x, b0, b1, b2, a0, a1, a2) {
     const B0 = b0 / a0, B1 = b1 / a0, B2 = b2 / a0, A1 = a1 / a0, A2 = a2 / a0;
