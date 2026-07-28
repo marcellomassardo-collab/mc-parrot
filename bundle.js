@@ -677,23 +677,23 @@
   };
   var ROOT_HZ = 130.81;
   var GENRES = {
-    House: { bpm: 124, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1, hatRate: 1.6, motif: [0, 0, 3, 5], melSteps: [0, 4, 8, 12], noteDur: 0.45, voice: 0.3, seventh: false, arp: false, padGain: 0.22 },
+    House: { bpm: 125, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1, hatRate: 1.6, motif: [0, 0, 3, 5], melSteps: [0, 4, 8, 12], noteDur: 0.45, voice: 0.3, seventh: false, arp: false, padGain: 0.22 },
     Tekno: { bpm: 180, structure: "dance", kick: [0, 4, 8, 12], snare: [], hatStep: 2, kickRate: 0.7, snareRate: 1, hatRate: 2, motif: [0, 0, 0, 3], melSteps: [0, 8], noteDur: 0.3, voice: 0.1, seventh: false, arp: false, padGain: 0.15, chords: [0, 0, 6, 6], halfTime: true },
     // halfTime:true = NON dimezzare → spinge a 180 pieno (kick four-on-floor veloce)
     EDM: { bpm: 128, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.1, hatRate: 1.7, motif: [0, 4, 7, 4], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.22, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
     Trance: { bpm: 138, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1, hatRate: 1.8, motif: [0, 4, 7, 11], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.2, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
     Dubstep: { bpm: 140, structure: "dance", kick: [0, 8], snare: [8], hatStep: 4, kickRate: 0.7, snareRate: 0.9, hatRate: 2, motif: [0, 1, 0, 6], melSteps: [0, 6, 8, 11], noteDur: 0.5, voice: 0.3, seventh: false, arp: false, padGain: 0.18, chords: [0, 0, 5, 5], bassSteps: [0, 1, 2, 4, 8, 9, 10, 12], halfTime: true },
     DnB: { bpm: 174, structure: "dance", kick: [0, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1.15, hatRate: 1.8, motif: [0, 7, 5, 3], melSteps: [0, 4, 8, 12], noteDur: 0.3, voice: 0.2, seventh: false, arp: false, padGain: 0.2 },
-    "Hip-hop": { bpm: 74, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 0.95, hatRate: 1.4, motif: [0, 3, 2, 0], melSteps: [0, 10], noteDur: 0.5, voice: 0.8, seventh: true, arp: false, padGain: 0.18 },
-    RnB: { bpm: 82, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 0.9, hatRate: 1.2, motif: [0, 2, 6, 4], melSteps: [0, 6, 12], noteDur: 0.6, voice: 0.85, seventh: true, arp: false, padGain: 0.22 },
-    "Lo-fi": { bpm: 80, structure: "chill", kick: [0, 10], snare: [4, 12], hatStep: 4, kickRate: 0.9, snareRate: 0.85, hatRate: 1.3, motif: [0, 6, 4, 2], melSteps: [0, 4, 10], noteDur: 0.6, voice: 0.4, seventh: true, arp: false, padGain: 0.22 },
-    Pop: { bpm: 116, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.9, snareRate: 1, hatRate: 1.4, motif: [0, 2, 4, 5], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.75, seventh: false, arp: false, padGain: 0.22 },
+    "Hip-hop": { bpm: 90, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 0.95, hatRate: 1.4, motif: [0, 3, 2, 0], melSteps: [0, 10], noteDur: 0.5, voice: 0.8, seventh: true, arp: false, padGain: 0.18 },
+    RnB: { bpm: 85, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 0.9, hatRate: 1.2, motif: [0, 2, 6, 4], melSteps: [0, 6, 12], noteDur: 0.6, voice: 0.85, seventh: true, arp: false, padGain: 0.22 },
+    "Lo-fi": { bpm: 82, structure: "chill", kick: [0, 10], snare: [4, 12], hatStep: 4, kickRate: 0.9, snareRate: 0.85, hatRate: 1.3, motif: [0, 6, 4, 2], melSteps: [0, 4, 10], noteDur: 0.6, voice: 0.4, seventh: true, arp: false, padGain: 0.22 },
+    Pop: { bpm: 120, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.9, snareRate: 1, hatRate: 1.4, motif: [0, 2, 4, 5], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.75, seventh: false, arp: false, padGain: 0.22 },
     // --- generi aggiunti dai riferimenti (Marley/Doors/Queen/Miles/Norah) ---
-    Reggae: { bpm: 80, structure: "pop", kick: [8], snare: [8], hatStep: 2, kickRate: 0.85, snareRate: 0.95, hatRate: 1.3, motif: [0, 2, 4, 2], melSteps: [8], noteDur: 0.25, voice: 0.55, seventh: false, arp: false, padGain: 0.05, skankSteps: [2, 6, 10, 14] },
+    Reggae: { bpm: 78, structure: "pop", kick: [8], snare: [8], hatStep: 2, kickRate: 0.85, snareRate: 0.95, hatRate: 1.3, motif: [0, 2, 4, 2], melSteps: [8], noteDur: 0.25, voice: 0.55, seventh: false, arp: false, padGain: 0.05, skankSteps: [2, 6, 10, 14] },
     // one-drop + skank in levare
     Rock: { bpm: 120, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.05, hatRate: 1.5, motif: [0, 4, 5, 4], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.45, seventh: false, arp: false, padGain: 0.14, power: true },
     // backbeat + power chord
-    Jazz: { bpm: 110, structure: "chill", kick: [0], snare: [4, 12], hatStep: 2, kickRate: 0.7, snareRate: 0.8, hatRate: 1.2, motif: [0, 2, 4, 6], melSteps: [0, 4, 8, 12], noteDur: 0.35, voice: 0.3, seventh: true, arp: false, padGain: 0.2, swing: 0.33 }
+    Jazz: { bpm: 120, structure: "chill", kick: [0], snare: [4, 12], hatStep: 2, kickRate: 0.7, snareRate: 0.8, hatRate: 1.2, motif: [0, 2, 4, 6], melSteps: [0, 4, 8, 12], noteDur: 0.35, voice: 0.3, seventh: true, arp: false, padGain: 0.2, swing: 0.33 }
     // swing + settime
   };
   for (const g of ["House", "Tekno", "EDM", "Trance", "Dubstep", "DnB"]) {
@@ -719,7 +719,7 @@
   GENRES.DnB.reverb = 0.11;
   GENRES.DnB.thin = 0.4;
   GENRES.Pop.reverb = 0.07;
-  GENRES.Pop.thin = 0.5;
+  GENRES.Pop.roll = 0.35;
   GENRES["Hip-hop"].thin = 0.5;
   GENRES.RnB.thin = 0.5;
   GENRES["Lo-fi"].thin = 0.55;
@@ -823,6 +823,95 @@
       data[data.length - 1 - i] *= g;
     }
   }
+  function deHiss(data, sr, amount, fMinHz = 2500) {
+    if (amount <= 0) return;
+    const N = 512;
+    const hop = N / 2;
+    if (data.length < N * 3) return;
+    const frames = Math.floor((data.length - N) / hop) + 1;
+    const fft = new import_fft2.default(N);
+    const half = N / 2;
+    const win = new Float32Array(N);
+    for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+    const inBuf = new Float64Array(N);
+    const spec = fft.createComplexArray();
+    const time = fft.createComplexArray();
+    const kMin = Math.max(1, Math.floor(fMinHz * N / sr));
+    const energies = new Float32Array(frames);
+    for (let f = 0; f < frames; f++) {
+      const off = f * hop;
+      let e = 0;
+      for (let i = 0; i < N; i += 2) e += data[off + i] * data[off + i];
+      energies[f] = e;
+    }
+    const order = Array.from({ length: frames }, (_, i) => i).sort((a, b) => energies[a] - energies[b]);
+    const nQuiet = Math.max(2, Math.floor(frames * 0.2));
+    const noiseMag = new Float64Array(half + 1);
+    for (let q = 0; q < nQuiet; q++) {
+      const off = order[q] * hop;
+      for (let i = 0; i < N; i++) inBuf[i] = data[off + i] * win[i];
+      fft.realTransform(spec, inBuf);
+      for (let b = 0; b <= half; b++) {
+        const re = spec[2 * b], im = spec[2 * b + 1];
+        noiseMag[b] += Math.sqrt(re * re + im * im);
+      }
+    }
+    for (let b = 0; b <= half; b++) noiseMag[b] /= nQuiet;
+    const floorGain = 1 - 0.65 * amount;
+    const beta = 1.2 * amount;
+    const out = new Float32Array(data.length);
+    const norm = new Float32Array(data.length);
+    const gPrev = new Float32Array(half + 1).fill(1);
+    const attackN = Math.floor(sr * 0.012);
+    for (let f = 0; f < frames; f++) {
+      const off = f * hop;
+      for (let i = 0; i < N; i++) inBuf[i] = data[off + i] * win[i];
+      fft.realTransform(spec, inBuf);
+      fft.completeSpectrum(spec);
+      const prot = off < attackN ? 0.35 : 1;
+      for (let b = 0; b <= half; b++) {
+        let g = 1;
+        if (b >= kMin) {
+          const re = spec[2 * b], im = spec[2 * b + 1];
+          const mag = Math.sqrt(re * re + im * im) + 1e-12;
+          g = 1 - beta * prot * noiseMag[b] / mag;
+          const fl = 1 - (1 - floorGain) * prot;
+          if (g < fl) g = fl;
+          if (g > 1) g = 1;
+          g = 0.6 * gPrev[b] + 0.4 * g;
+        }
+        gPrev[b] = g;
+        const bb2 = N - b;
+        spec[2 * b] *= g;
+        spec[2 * b + 1] *= g;
+        if (bb2 < N && bb2 !== b) {
+          spec[2 * bb2] *= g;
+          spec[2 * bb2 + 1] *= g;
+        }
+      }
+      fft.inverseTransform(time, spec);
+      for (let i = 0; i < N; i++) {
+        const oi = off + i;
+        if (oi >= data.length) break;
+        out[oi] += time[2 * i] * win[i];
+        norm[oi] += win[i] * win[i];
+      }
+    }
+    for (let i = 0; i < data.length; i++) if (norm[i] > 1e-6) data[i] = out[i] / norm[i];
+  }
+  var DENOISE_BY_ROLE = {
+    kick: 0.5,
+    // il "pfff" davanti alla cassa è il più fastidioso, ma transiente protetto
+    snare: 0.3,
+    // lo snare È rumore a banda larga: mano leggera
+    hat: 0.15,
+    // l'hi-hat è quasi tutto alte frequenze: quasi nulla
+    tonal: 0,
+    // strumenti/droni-synth: NON toccare (possono essere "rumore usato come synth")
+    voice: 0.45,
+    // voce più pulita e presente
+    other: 0.35
+  };
   function compress(data, sr, thresh = 0.3, ratio = 3, atkMs = 4, relMs = 90) {
     const a = Math.exp(-1 / (atkMs / 1e3 * sr));
     const r = Math.exp(-1 / (relMs / 1e3 * sr));
@@ -893,6 +982,7 @@
     return tot > 0 ? hi / tot : 0;
   }
   function extractAndClassify(data, sr, outStats) {
+    var _a;
     let starts = detectOnsetSamples(data, sr);
     if (starts.length < 4) {
       starts = [];
@@ -940,7 +1030,7 @@
           j++;
           continue;
         }
-        if (raws[j].role !== "voice" && gap < sr * 0.2 && raws[j].end - raws[j].start < sr * 0.22 && j + 1 < raws.length && raws[j + 1].role === "voice" && raws[j + 1].start - raws[j].end < sr * 0.2 && raws[j + 1].end - r.start < sr * 8) {
+        if (raws[j].role !== "voice" && gap < sr * 0.28 && raws[j].end - raws[j].start < sr * 0.3 && j + 1 < raws.length && raws[j + 1].role === "voice" && raws[j + 1].start - raws[j].end < sr * 0.28 && raws[j + 1].end - r.start < sr * 8) {
           end = raws[j + 1].end;
           j += 2;
           continue;
@@ -969,6 +1059,8 @@
         const keep = Math.min(slice.length, last + 1 + Math.floor(sr * 0.015));
         if (keep < slice.length) slice = slice.slice(0, keep);
       }
+      const dn = (_a = DENOISE_BY_ROLE[m.role]) != null ? _a : 0.3;
+      if (dn > 0) deHiss(slice, sr, dn);
       if (m.role === "voice") compress(slice, sr);
       normalize(slice, 0.95);
       applyFades(slice, sr);
@@ -1034,7 +1126,7 @@
     const meter2 = (_b = opts.meter) != null ? _b : "4/4";
     const { steps, kickSteps, snareSteps } = meterInfo(meter2, cfg);
     const bpm2 = Math.max(50, Math.min(200, opts.bpm || cfg.bpm));
-    const sixteenth = 60 / bpm2 / 4 * (cfg.halfTime ? 1 : 2);
+    const sixteenth = 60 / bpm2 / 4;
     const barDur = steps * sixteenth;
     const density = bpm2 >= 140 ? 0.4 : bpm2 >= 122 ? 0.6 : 1;
     const melEvery = density >= 1 ? 1 : density >= 0.6 ? 2 : 3;
@@ -1087,16 +1179,21 @@
       }
     }
     const verseContour = [0, 1, 0, 2];
-    const pickTonalFor = (targetHz, k) => {
+    const pickTonalFor = (targetHz, k, holdSec = 0) => {
       if (!tonalPool.length) return null;
       let best = null;
       let bestRate = 1;
       let bestCost = 1e9;
-      const tries = Math.min(6, tonalPool.length);
+      const tries = Math.min(8, tonalPool.length);
       for (let j = 0; j < tries; j++) {
         const seg = tonalPool[(gOff + k + j) % tonalPool.length];
         const rate = seg.pitchHz && seg.pitchHz > 20 ? targetHz / seg.pitchHz : 1;
-        const cost = Math.abs(Math.log2(rate)) + (seg.pitchHz ? 0 : 0.6);
+        let cost = Math.abs(Math.log2(rate)) + (seg.pitchHz ? 0 : 0.6);
+        if (holdSec > 0) {
+          const grainSec = seg.data.length / sr / Math.max(0.25, rate);
+          const reps = holdSec / Math.max(0.02, grainSec);
+          if (reps > 1) cost += Math.min(1.2, (reps - 1) * 0.22);
+        }
         if (cost < bestCost) {
           bestCost = cost;
           best = seg;
@@ -1117,11 +1214,28 @@
       sumBars--;
     }
     const events = [];
-    const push = (seg, when, rate, gain, dur, sustain = false) => {
+    const push = (seg, when, rate, gain, dur, sustain = false, pan) => {
+      var _a2;
       if (!seg) return;
-      events.push({ seg, when, rate: Math.max(0.25, Math.min(4, rate)), gain, dur, sustain });
+      const p = pan !== void 0 ? pan : (_a2 = PAN_BY_ROLE[seg.role]) != null ? _a2 : 0;
+      events.push({ seg, when, rate: Math.max(0.25, Math.min(4, rate)), gain, dur, sustain, pan: p * stereoAmt });
     };
     const pick = (arr, i) => arr.length ? arr[(i + gOff) % arr.length] : void 0;
+    const charPool = segs.filter((s) => s.data.length / sr >= 0.3 && (s.role === "other" || s.role === "voice" || s.role === "tonal")).sort((a, b) => b.energy * b.data.length - a.energy * a.data.length).slice(0, 6);
+    const charFx = /* @__PURE__ */ new Map();
+    const withDelay = (src, delaySec) => {
+      const key = `d_${src.pos}_${delaySec.toFixed(3)}`;
+      const hit = charFx.get(key);
+      if (hit) return hit;
+      const seg = { ...src, data: delayEffect(src.data, sr, delaySec) };
+      charFx.set(key, seg);
+      return seg;
+    };
+    const stereoAmt = ((genre2) => {
+      var _a2;
+      const w = genre2 && ((_a2 = STEREO[genre2]) == null ? void 0 : _a2.width) || STEREO_DEFAULT.width;
+      return Math.max(0.5, Math.min(1.4, w));
+    })(genreName);
     const hatOffset = Math.floor(cfg.hatStep / 2);
     let bar = 0;
     let vhIdx = 0;
@@ -1139,23 +1253,36 @@
         const isSectionEnd = b === nBars - 1;
         const chordRoot = prog[b % prog.length];
         const tones = chordDegrees(chordRoot);
+        const rollBar = !!cfg.roll && rnd() < 0.18 + 0.35 * cfg.roll * S.intensity;
+        const fourOnFloor = [0, 4, 8, 12];
+        const isClub = ["House", "Tekno", "EDM", "Trance"].includes(genreName);
+        const introLike = S.intensity <= 0.45;
+        const barKick = introLike ? [0, 8] : isChorus && isClub ? fourOnFloor : kickSteps;
+        const barHatOffbeat = introLike ? [4, 12] : null;
         for (let s = 0; s < steps; s++) {
           const when = barStart + s * sixteenth;
-          if (S.kick && kickSteps.includes(s)) push(pick(kickPool, bar), when, cfg.kickRate, 0.95 * vol, 0.3);
+          if (S.kick && barKick.includes(s)) push(pick(kickPool, bar), when, cfg.kickRate, 0.95 * vol, 0.3);
           if (S.snare && snareSteps.includes(s)) push(pick(snarePool, bar + s), when, cfg.snareRate, 0.55 * vol, 0.25);
-          if (S.hat && cfg.hatStep > 0 && s % cfg.hatStep === hatOffset) {
+          if (barHatOffbeat) {
+            if (barHatOffbeat.includes(s) && hatPool.length) {
+              push(pick(hatPool, bar + s), when, cfg.hatRate * 1.1, 0.5 * vol, 0.12, false, s % 8 === 4 ? 0.3 : -0.28);
+            }
+          } else if (S.hat && cfg.hatStep > 0 && s % cfg.hatStep === hatOffset) {
             const swing = (rnd() < 0.12 ? sixteenth * 0.12 : 0) + (swingAmt > 0 && s % 4 === 2 ? swingAmt * sixteenth : 0);
-            push(pick(hatPool, bar * 2 + s), when + swing, cfg.hatRate * 1.1, 0.42 * vol, 0.1);
+            const hp = s / cfg.hatStep % 2 === 0 ? 0.32 : -0.28;
+            push(pick(hatPool, bar * 2 + s), when + swing, cfg.hatRate * 1.1, 0.42 * vol, 0.1, false, hp);
           }
           if (S.hat && brightPool.length) {
             const roll = cfg.roll || 0;
             if (roll > 0) {
-              if (s % 4 < 3 && rnd() < 0.35 + 0.55 * roll * S.intensity) {
+              if (rollBar && s >= steps - 4 && rnd() < 0.55 + 0.4 * roll * S.intensity) {
                 const rate = 1.2 + 0.4 * (s % 4);
-                push(brightPool[(bar * 3 + s) % brightPool.length], when, rate, 0.2 * vol, sixteenth * 0.95);
+                const sp = s % 2 === 0 ? 0.85 : -0.8;
+                push(brightPool[(bar * 3 + s) % brightPool.length], when, rate, 0.2 * vol, sixteenth * 0.95, false, sp);
               }
             } else if (s % 8 === 4 && !(cfg.thin && rnd() < cfg.thin)) {
-              push(brightPool[(bar + Math.floor(s / 8)) % brightPool.length], when, 1.5, 0.3 * vol, 0.2);
+              const sp = bar % 2 === 0 ? 0.7 : -0.65;
+              push(brightPool[(bar + Math.floor(s / 8)) % brightPool.length], when, 1.5, 0.3 * vol, 0.2, false, sp);
             }
           }
         }
@@ -1170,8 +1297,9 @@
           const pulse = Math.max(2, Math.floor(steps / 8));
           for (let ps = 0; ps < steps; ps += pulse) {
             for (let c = 0; c < triad.length; c++) {
-              const t = pickTonalFor(scaleFreq(semis, triad[c]), bar * 5 + ps + c);
-              if (t) push(t.seg, barStart + (ps + c * 0.2) * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), pulse * sixteenth * 1.4, true);
+              const t = pickTonalFor(scaleFreq(semis, triad[c]), bar * 5 + ps + c, pulse * sixteenth * 1.4);
+              const padPan = c === 0 ? 0 : c === 1 ? -0.4 : 0.4;
+              if (t) push(t.seg, barStart + (ps + c * 0.2) * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), pulse * sixteenth * 1.4, true, padPan);
             }
           }
         }
@@ -1181,14 +1309,14 @@
               const st = cfg.bassSteps[bi];
               if (st >= steps) continue;
               const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar * 8 + bi);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, (st % 4 === 0 ? 0.5 : 0.38) * vol, sixteenth * 1.6);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, (st % 4 === 0 ? 0.5 : 0.38) * vol, sixteenth * 1.6, false, 0);
             }
           } else {
-            const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar);
-            if (t) push(t.seg, barStart, t.rate, 0.45 * vol, Math.min(barDur * 0.5, 0.6), true);
+            const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar, Math.min(barDur * 0.5, 0.6));
+            if (t) push(t.seg, barStart, t.rate, 0.45 * vol, Math.min(barDur * 0.5, 0.6), true, 0);
             if (steps >= 16) {
-              const t2 = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar + 7);
-              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * vol, Math.min(barDur * 0.5, 0.5), true);
+              const t2 = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar + 7, Math.min(barDur * 0.5, 0.5));
+              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * vol, Math.min(barDur * 0.5, 0.5), true, 0);
             }
           }
         }
@@ -1200,8 +1328,8 @@
               if (m % melEvery !== 0) continue;
               const ci = hookContour[m % hookLen];
               const degree = tones[ci % tones.length] + lift + octave;
-              const t = pickTonalFor(scaleFreq(semis, degree), bar * 31 + m);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.42 * vol, cfg.noteDur * 1.8, true);
+              const t = pickTonalFor(scaleFreq(semis, degree), bar * 31 + m, cfg.noteDur * 1.8);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.42 * vol, cfg.noteDur * 1.8, true, m % 2 === 0 ? -0.22 : 0.18);
             }
           } else {
             const nNotes = Math.max(1, Math.ceil(cfg.melSteps.length / 2 * density));
@@ -1210,8 +1338,8 @@
               if (st >= steps) continue;
               const ci = verseContour[(b + m) % verseContour.length];
               const degree = tones[ci % tones.length] + octave;
-              const t = pickTonalFor(scaleFreq(semis, degree), bar * 17 + m);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.34 * vol, cfg.noteDur * 2, true);
+              const t = pickTonalFor(scaleFreq(semis, degree), bar * 17 + m, cfg.noteDur * 2);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.34 * vol, cfg.noteDur * 2, true, m % 2 === 0 ? -0.18 : 0.2);
             }
           }
         }
@@ -1220,7 +1348,7 @@
             if (st >= steps) continue;
             for (const deg of [tones[1] + octave, tones[2] + octave]) {
               const t = pickTonalFor(scaleFreq(semis, deg), bar * 13 + st + deg);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.32 * vol, sixteenth * 1.2);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.32 * vol, sixteenth * 1.2, false, deg % 2 === 0 ? -0.45 : 0.4);
             }
           }
         }
@@ -1228,7 +1356,7 @@
           const vocal = cfg.voice >= 0.7;
           const vMax = vocal ? 5 : 2.5;
           const hookMax = 6;
-          const vGap = vocal ? 2 : cfg.voice >= 0.35 ? 2.5 : 4;
+          const vGap = vocal ? 1.7 : cfg.voice >= 0.35 ? 2.2 : 3.2;
           voiceDebt += barDur / vGap;
           const nInBar = Math.floor(voiceDebt);
           voiceDebt -= nInBar;
@@ -1250,33 +1378,30 @@
           }
           if (vocal && isChorus && vSorted.length) {
             const chop = vSorted[(bar * 3 + 1) % vSorted.length];
-            push(chop, barStart + Math.floor(steps / 2) * sixteenth, 1, 0.26 * vol, 0.22);
+            push(chop, barStart + Math.floor(steps / 2) * sixteenth, 1, 0.26 * vol, 0.22, false, -0.8);
             const harm = vSorted[(bar * 5 + 2) % vSorted.length];
-            push(harm, barStart + Math.floor(steps * 0.75) * sixteenth, 1.5, 0.18 * vol, 0.3);
+            push(harm, barStart + Math.floor(steps * 0.75) * sixteenth, 1.5, 0.18 * vol, 0.3, false, 0.8);
           }
+        }
+        if (charPool.length && bar % 4 === 3 && S.intensity >= 0.5) {
+          const ci = Math.floor(bar / 4);
+          const src = charPool[ci % charPool.length];
+          const variantCount = cfg.vocoder ? 3 : 2;
+          const variant = ci % variantCount;
+          let cseg = src;
+          let cpan = ci % 2 === 0 ? -0.3 : 0.3;
+          if (variant === 1) {
+            cseg = withDelay(src, sixteenth * 2);
+          } else if (variant === 2) {
+            cseg = vocodeSeg(src, chordRoot, src.data.length / sr, 3);
+            cpan = 0;
+          }
+          const cdur = Math.min(cseg.data.length / sr, barDur * 1.6);
+          push(cseg, barStart + Math.floor(steps * 0.5) * sixteenth, 1, 0.7 * vol, cdur, false, cpan);
         }
       }
     }
     return { events, durationSec: bar * barDur, summary };
-  }
-  function limiter(x, sr, ceiling = 0.891, laMs = 5, relMs = 120) {
-    const n = x.length;
-    if (!n) return;
-    const LA = Math.max(1, Math.round(laMs * sr / 1e3));
-    const rel = Math.exp(-1 / (relMs / 1e3 * sr));
-    const g = new Float32Array(n);
-    for (let i = 0; i < n; i++) {
-      const a = Math.abs(x[i]);
-      g[i] = a > ceiling ? ceiling / a : 1;
-    }
-    const inc = 1 / LA;
-    for (let i = n - 2; i >= 0; i--) if (g[i] > g[i + 1] + inc) g[i] = g[i + 1] + inc;
-    let cur = g[0];
-    for (let i = 0; i < n; i++) {
-      const t = g[i];
-      cur = t < cur ? t : rel * cur + (1 - rel) * t;
-      x[i] *= cur;
-    }
   }
   function biquadInplace(x, b0, b1, b2, a0, a1, a2) {
     const B0 = b0 / a0, B1 = b1 / a0, B2 = b2 / a0, A1 = a1 / a0, A2 = a2 / a0;
@@ -1374,6 +1499,31 @@
     }
     return res;
   }
+  function delayEffect(data, sr, delaySec, feedback = 0.42, mix = 0.5, taps = 4) {
+    const d = Math.max(1, Math.floor(delaySec * sr));
+    const out = new Float32Array(data.length + d * taps);
+    for (let i = 0; i < data.length; i++) out[i] = data[i];
+    let g = feedback;
+    for (let t = 1; t <= taps; t++) {
+      const off = d * t;
+      for (let i = 0; i < data.length; i++) {
+        const oi = off + i;
+        if (oi >= out.length) break;
+        out[oi] += data[i] * g * mix;
+      }
+      g *= feedback;
+    }
+    let pk = 0;
+    for (let i = 0; i < out.length; i++) {
+      const a = out[i] < 0 ? -out[i] : out[i];
+      if (a > pk) pk = a;
+    }
+    if (pk > 0.95) {
+      const k = 0.95 / pk;
+      for (let i = 0; i < out.length; i++) out[i] *= k;
+    }
+    return out;
+  }
   function voiceFingerprint(d, sr) {
     const T = 16, B = 8;
     const fp = new Float32Array(T * B);
@@ -1464,6 +1614,43 @@
     // naturale, caldo, gentile
   };
   var MASTER_DEFAULT = { hpf: 92, bassHz: 220, bassDb: -3, presHz: 3e3, presDb: 3, airHz: 9e3, airDb: 4 };
+  var STEREO = {
+    "Hip-hop": { monoBelowHz: 120, width: 0.95, lufs: -9, tpDb: -1.5 },
+    // 808 rigorosamente mono, immagine stretta
+    RnB: { monoBelowHz: 110, width: 1.05, lufs: -10, tpDb: -1 },
+    "Lo-fi": { monoBelowHz: 100, width: 1, lufs: -14, tpDb: -1 },
+    // volutamente non "loud"
+    Pop: { monoBelowHz: 110, width: 1.15, lufs: -9, tpDb: -1.5 },
+    House: { monoBelowHz: 110, width: 1.2, lufs: -9.5, tpDb: -1 },
+    // largo sopra il basso, stretto sotto
+    Tekno: { monoBelowHz: 110, width: 1.1, lufs: -9.5, tpDb: -1 },
+    // centro molto compatto
+    EDM: { monoBelowHz: 110, width: 1.4, lufs: -8, tpDb: -1.5 },
+    Trance: { monoBelowHz: 110, width: 1.45, lufs: -8.5, tpDb: -1.5 },
+    // il più ampio dei generi da club
+    Dubstep: { monoBelowHz: 120, width: 1.3, lufs: -8, tpDb: -1.5 },
+    // sub mono + lati estremi = massimo contrasto
+    DnB: { monoBelowHz: 120, width: 1.2, lufs: -10, tpDb: -1 },
+    Reggae: { monoBelowHz: 100, width: 0.95, lufs: -11, tpDb: -1 },
+    // centrato, caldo
+    Rock: { monoBelowHz: 105, width: 1.25, lufs: -10, tpDb: -1 },
+    // chitarre larghe su spina dorsale mono
+    Jazz: { monoBelowHz: 90, width: 1.05, lufs: -15, tpDb: -1 }
+    // dinamica naturale, poco compresso
+  };
+  var STEREO_DEFAULT = { monoBelowHz: 110, width: 1.1, lufs: -10, tpDb: -1 };
+  var PAN_BY_ROLE = {
+    kick: 0,
+    bass: 0,
+    voice: 0,
+    snare: 0,
+    hat: 0.35,
+    pad: -0.25,
+    melody: -0.2,
+    sparkle: 0.5,
+    skank: -0.45,
+    other: 0.15
+  };
   function masterEq(pcm, sr, genre2) {
     const p = genre2 && MASTER[genre2] || MASTER_DEFAULT;
     hpfInplace(pcm, sr, p.hpf);
@@ -1471,12 +1658,12 @@
     peakInplace(pcm, sr, p.presHz, p.presDb, 1);
     shelfInplace(pcm, sr, p.airHz, p.airDb, true);
   }
-  function masterReverb(pcm, sr, wet) {
+  function masterReverb(pcm, sr, wet, spread = 0) {
     const n = pcm.length;
     if (!n || wet <= 0) return;
     const scale2 = sr / 44100;
-    const combTuning = [1557, 1617, 1491, 1422, 1277, 1356];
-    const apTuning = [225, 556, 441, 341];
+    const combTuning = [1557, 1617, 1491, 1422, 1277, 1356].map((v) => v + spread);
+    const apTuning = [225, 556, 441, 341].map((v) => v + spread);
     const feedback = 0.84;
     const damp = 0.2;
     const send = new Float32Array(n);
@@ -1518,48 +1705,143 @@
     }
     for (let i = 0; i < n; i++) pcm[i] += wetBuf[i] * wet;
   }
-  function masterPCM(pcm, sr, genre2) {
-    var _a;
-    const n = pcm.length;
+  function monoBelow(L, R, sr, fc = 120) {
+    const n = Math.min(L.length, R.length);
     if (!n) return;
+    const side = new Float32Array(n);
+    for (let i = 0; i < n; i++) side[i] = (L[i] - R[i]) * 0.5;
+    hpfInplace(side, sr, fc);
+    hpfInplace(side, sr, fc);
+    for (let i = 0; i < n; i++) {
+      const mid = (L[i] + R[i]) * 0.5;
+      L[i] = mid + side[i];
+      R[i] = mid - side[i];
+    }
+  }
+  function stereoWidth(L, R, width) {
+    if (width === 1) return;
+    const n = Math.min(L.length, R.length);
+    for (let i = 0; i < n; i++) {
+      const mid = (L[i] + R[i]) * 0.5;
+      const side = (L[i] - R[i]) * 0.5 * width;
+      L[i] = mid + side;
+      R[i] = mid - side;
+    }
+  }
+  function measureLufs(L, R, sr) {
+    const n = Math.min(L.length, R.length);
+    if (!n) return -70;
+    const k = (x) => {
+      const y = Float32Array.from(x);
+      shelfInplace(y, sr, 1500, 4, true, 0.707);
+      hpfInplace(y, sr, 38, 0.5);
+      return y;
+    };
+    const kl = k(L);
+    const kr = k(R);
+    const win = Math.max(1, Math.floor(sr * 0.4));
+    const step = Math.max(1, Math.floor(win / 4));
+    const blocks = [];
+    for (let s = 0; s + win <= n; s += step) {
+      let e = 0;
+      for (let i = s; i < s + win; i++) e += kl[i] * kl[i] + kr[i] * kr[i];
+      const ms = e / win;
+      blocks.push(ms > 0 ? -0.691 + 10 * Math.log10(ms) : -70);
+    }
+    if (!blocks.length) return -70;
+    const abs = blocks.filter((b) => b > -70);
+    if (!abs.length) return -70;
+    const meanAbs = abs.reduce((a, b) => a + Math.pow(10, b / 10), 0) / abs.length;
+    const relGate = 10 * Math.log10(meanAbs) - 10;
+    const kept = abs.filter((b) => b > relGate);
+    const use = kept.length ? kept : abs;
+    const mean = use.reduce((a, b) => a + Math.pow(10, b / 10), 0) / use.length;
+    return 10 * Math.log10(mean);
+  }
+  function limiterStereo(L, R, sr, ceiling = 0.891, laMs = 5, relMs = 120) {
+    const n = Math.min(L.length, R.length);
+    if (!n) return;
+    const LA = Math.max(1, Math.round(laMs * sr / 1e3));
+    const rel = Math.exp(-1 / (relMs / 1e3 * sr));
+    const g = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const a = Math.max(Math.abs(L[i]), Math.abs(R[i]));
+      g[i] = a > ceiling ? ceiling / a : 1;
+    }
+    const inc = 1 / LA;
+    for (let i = n - 2; i >= 0; i--) if (g[i] > g[i + 1] + inc) g[i] = g[i + 1] + inc;
+    let cur = g[0];
+    for (let i = 0; i < n; i++) {
+      const t = g[i];
+      cur = t < cur ? t : rel * cur + (1 - rel) * t;
+      L[i] *= cur;
+      R[i] *= cur;
+    }
+  }
+  function masterStereo(L, R, sr, genre2) {
+    var _a;
+    const n = Math.min(L.length, R.length);
+    if (!n) return;
+    const st = genre2 && STEREO[genre2] || STEREO_DEFAULT;
     let peak = 0;
     for (let i = 0; i < n; i++) {
-      const a = Math.abs(pcm[i]);
+      const a = Math.max(Math.abs(L[i]), Math.abs(R[i]));
       if (a > peak) peak = a;
     }
     if (peak > 1e-6) {
       const g = 0.9 / peak;
-      for (let i = 0; i < n; i++) pcm[i] *= g;
+      for (let i = 0; i < n; i++) {
+        L[i] *= g;
+        R[i] *= g;
+      }
     }
-    masterEq(pcm, sr, genre2);
+    masterEq(L, sr, genre2);
+    masterEq(R, sr, genre2);
     const rvb = genre2 && ((_a = GENRES[genre2]) == null ? void 0 : _a.reverb) || 0;
-    if (rvb > 0) masterReverb(pcm, sr, rvb);
+    if (rvb > 0) {
+      masterReverb(L, sr, rvb, 0);
+      masterReverb(R, sr, rvb, 23);
+    }
     const msC = Math.exp(-1 / (0.01 * sr));
     const aC = Math.exp(-1 / (0.03 * sr));
     const rC = Math.exp(-1 / (0.25 * sr));
     let ms = 0;
     let env = 0;
     for (let i = 0; i < n; i++) {
-      const x = pcm[i];
+      const x = (L[i] + R[i]) * 0.5;
       ms = msC * ms + (1 - msC) * x * x;
       const det = Math.sqrt(ms);
       env = det > env ? aC * env + (1 - aC) * det : rC * env + (1 - rC) * det;
-      if (env > 0.25) pcm[i] *= Math.pow(env / 0.25, 1 / 3 - 1);
+      if (env > 0.25) {
+        const gg = Math.pow(env / 0.25, 1 / 3 - 1);
+        L[i] *= gg;
+        R[i] *= gg;
+      }
     }
-    let pk2 = 0;
-    for (let i = 0; i < n; i++) {
-      const a = Math.abs(pcm[i]);
-      if (a > pk2) pk2 = a;
+    monoBelow(L, R, sr, st.monoBelowHz);
+    stereoWidth(L, R, st.width);
+    const ceiling = Math.pow(10, st.tpDb / 20);
+    for (let pass = 0; pass < 2; pass++) {
+      const lufs = measureLufs(L, R, sr);
+      if (lufs <= -70) break;
+      let gain = Math.pow(10, (st.lufs - lufs) / 20);
+      gain = Math.max(0.25, Math.min(gain, pass === 0 ? 12 : 3));
+      if (Math.abs(20 * Math.log10(gain)) < 0.3) break;
+      for (let i = 0; i < n; i++) {
+        L[i] *= gain;
+        R[i] *= gain;
+      }
+      limiterStereo(L, R, sr, ceiling, 5, 120);
     }
-    if (pk2 > 1e-6) {
-      const g = 0.95 / pk2;
-      for (let i = 0; i < n; i++) pcm[i] *= g;
-    }
-    limiter(pcm, sr, 0.891, 5, 120);
+    limiterStereo(L, R, sr, ceiling, 5, 120);
   }
-  function mixInto(out, data, startSample, rate, gain, maxOut, sr, loop = false) {
+  function mixInto(out, data, startSample, rate, gain, maxOut, sr, loop = false, outR, pan = 0) {
     const outLen = out.length;
     const srcLen = data.length;
+    const p = Math.max(-1, Math.min(1, pan));
+    const ang = (p + 1) * Math.PI / 4;
+    const gL = outR ? Math.cos(ang) * Math.SQRT2 : 1;
+    const gR = outR ? Math.sin(ang) * Math.SQRT2 : 1;
     const onePass = Math.max(0, Math.floor((srcLen - 1) / rate));
     if (onePass <= 0) return;
     const longGrain = onePass > sr * 0.2;
@@ -1578,11 +1860,14 @@
           if (j < fadeN) env = j / fadeN;
           else if (j > usable - fadeN) env = (usable - j) / fadeN;
         }
-        out[oi] += (data[si] * (1 - frac) + data[si + 1] * frac) * gain * env;
+        const v = (data[si] * (1 - frac) + data[si + 1] * frac) * gain * env;
+        out[oi] += v * gL;
+        if (outR) outR[oi] += v * gR;
       }
       return;
     }
-    const xf = Math.max(1, Math.min(Math.floor(onePass / 3), Math.floor(sr * 0.03)));
+    const shortGrain = onePass < sr * 0.25;
+    const xf = shortGrain ? Math.max(1, Math.floor(onePass / 2)) : Math.max(1, Math.min(Math.floor(onePass / 3), Math.floor(sr * 0.03)));
     const period = Math.max(1, onePass - xf);
     const total = Math.min(maxOut, outLen - startSample);
     const gFade = Math.min(edge, Math.floor(total / 2));
@@ -1615,7 +1900,9 @@
           sum += (data[si] * (1 - frac) + data[si + 1] * frac) * w;
         }
       }
-      out[oi] += sum * gain * gEnv;
+      const v = sum * gain * gEnv;
+      out[oi] += v * gL;
+      if (outR) outR[oi] += v * gR;
     }
   }
 
@@ -1623,27 +1910,28 @@
   var GENRES2 = ["Pop", "Hip-hop", "RnB", "Lo-fi", "House", "Tekno", "EDM", "Trance", "Dubstep", "DnB", "Reggae", "Rock", "Jazz"];
   var SCALES2 = ["Major", "Minor", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Locrian", "Harmonic Minor", "Pentatonic", "Chromatic"];
   var DEF = {
-    House: { bpm: 124, scale: "Minor" },
+    House: { bpm: 125, scale: "Minor" },
     Tekno: { bpm: 180, scale: "Dorian" },
     EDM: { bpm: 128, scale: "Minor" },
     Trance: { bpm: 138, scale: "Minor" },
     Dubstep: { bpm: 140, scale: "Harmonic Minor" },
     DnB: { bpm: 174, scale: "Minor" },
-    "Hip-hop": { bpm: 74, scale: "Minor" },
-    RnB: { bpm: 82, scale: "Minor" },
-    "Lo-fi": { bpm: 80, scale: "Dorian" },
-    Pop: { bpm: 116, scale: "Major" },
-    Reggae: { bpm: 80, scale: "Major" },
+    "Hip-hop": { bpm: 90, scale: "Minor" },
+    RnB: { bpm: 85, scale: "Minor" },
+    "Lo-fi": { bpm: 82, scale: "Dorian" },
+    Pop: { bpm: 120, scale: "Major" },
+    Reggae: { bpm: 78, scale: "Major" },
     Rock: { bpm: 120, scale: "Minor" },
-    Jazz: { bpm: 110, scale: "Dorian" }
+    Jazz: { bpm: 120, scale: "Dorian" }
   };
   var genre = "Pop";
   var scale = "Major";
-  var bpm = 116;
+  var bpm = 120;
   var meter = "4/4";
   var recPCM = null;
   var recSR = 48e3;
   var outPCM = null;
+  var outPCMR = null;
   var outSR = 48e3;
   var ctx = null;
   var recStream = null;
@@ -1706,18 +1994,28 @@
         setStatus("This browser does not support microphone access. Try Chrome or Safari (latest).");
         return;
       }
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 2 } });
       recStream = stream;
       ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
       if (ctx.state === "suspended") await ctx.resume();
       recSR = ctx.sampleRate;
       recBuffers = [];
       recSource = ctx.createMediaStreamSource(stream);
-      recNode = ctx.createScriptProcessor(4096, 1, 1);
+      const inCh = Math.min(2, recSource.channelCount || 1);
+      recNode = ctx.createScriptProcessor(4096, inCh, inCh);
       const mute = ctx.createGain();
       mute.gain.value = 0;
       recNode.onaudioprocess = (e) => {
-        recBuffers.push(Float32Array.from(e.inputBuffer.getChannelData(0)));
+        const ib = e.inputBuffer;
+        const c0 = ib.getChannelData(0);
+        if (ib.numberOfChannels > 1) {
+          const c1 = ib.getChannelData(1);
+          const m = new Float32Array(c0.length);
+          for (let i = 0; i < c0.length; i++) m[i] = (c0[i] + c1[i]) * 0.5;
+          recBuffers.push(m);
+        } else {
+          recBuffers.push(Float32Array.from(c0));
+        }
       };
       recSource.connect(recNode);
       recNode.connect(mute);
@@ -1778,7 +2076,7 @@
     gb.textContent = "\u2026 Generating";
     setStatus("Generating music\u2026");
     setTimeout(() => {
-      var _a;
+      var _a, _b;
       try {
         const mono = Float32Array.from(recPCM);
         highpass(mono, recSR);
@@ -1792,17 +2090,20 @@
         }
         const opts = { bpm, scale, genre, meter };
         const { events, durationSec } = buildEvents(segs, opts, 60, recSR);
-        const out = new Float32Array(Math.ceil((durationSec + 2) * recSR));
-        for (const ev of events) mixInto(out, ev.seg.data, Math.floor(ev.when * recSR), ev.rate, ev.gain, Math.floor(ev.dur * recSR), recSR, ev.sustain);
-        masterPCM(out, recSR, genre);
-        outPCM = out;
+        const n = Math.ceil((durationSec + 2) * recSR);
+        const outL = new Float32Array(n);
+        const outR = new Float32Array(n);
+        for (const ev of events) mixInto(outL, ev.seg.data, Math.floor(ev.when * recSR), ev.rate, ev.gain, Math.floor(ev.dur * recSR), recSR, ev.sustain, outR, (_a = ev.pan) != null ? _a : 0);
+        masterStereo(outL, outR, recSR, genre);
+        outPCM = outL;
+        outPCMR = outR;
         outSR = recSR;
         $("expBtn").disabled = false;
         play();
         const warn = stats.noisy ? " \u26A0\uFE0F Lots of background noise \u2014 for best quality, record in a quieter spot." : "";
         setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Press Stop/Play, or Export.${warn}`);
       } catch (e) {
-        setStatus("Error: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
+        setStatus("Error: " + ((_b = e == null ? void 0 : e.message) != null ? _b : e));
         setGenBtn("generate");
       }
     }, 30);
@@ -1832,8 +2133,9 @@
     } catch {
     }
     const token = ++playToken;
-    const buf = ctx.createBuffer(1, outPCM.length, outSR);
+    const buf = ctx.createBuffer(outPCMR ? 2 : 1, outPCM.length, outSR);
     buf.getChannelData(0).set(outPCM);
+    if (outPCMR) buf.getChannelData(1).set(outPCMR);
     playSrc = ctx.createBufferSource();
     playSrc.buffer = buf;
     playSrc.connect(ctx.destination);
@@ -1858,8 +2160,11 @@
       $("expBtn").disabled = true;
     }
   }
-  function pcmToWav(pcm, sr) {
-    const n = pcm.length, dataSize = n * 2, buf = new ArrayBuffer(44 + dataSize), v = new DataView(buf);
+  function pcmToWav(pcm, sr, R) {
+    const ch = R ? 2 : 1;
+    const frames = R ? Math.min(pcm.length, R.length) : pcm.length;
+    const n = frames * ch, dataSize = n * 2, blockAlign = 2 * ch;
+    const buf = new ArrayBuffer(44 + dataSize), v = new DataView(buf);
     const w = (o2, s) => {
       for (let i = 0; i < s.length; i++) v.setUint8(o2 + i, s.charCodeAt(i));
     };
@@ -1869,24 +2174,28 @@
     w(12, "fmt ");
     v.setUint32(16, 16, true);
     v.setUint16(20, 1, true);
-    v.setUint16(22, 1, true);
+    v.setUint16(22, ch, true);
     v.setUint32(24, sr, true);
-    v.setUint32(28, sr * 2, true);
-    v.setUint16(32, 2, true);
+    v.setUint32(28, sr * blockAlign, true);
+    v.setUint16(32, blockAlign, true);
     v.setUint16(34, 16, true);
     w(36, "data");
     v.setUint32(40, dataSize, true);
     let o = 44;
-    for (let i = 0; i < n; i++) {
-      let s = Math.max(-1, Math.min(1, pcm[i]));
+    const put = (x) => {
+      const s = Math.max(-1, Math.min(1, x));
       v.setInt16(o, s < 0 ? s * 32768 : s * 32767, true);
       o += 2;
+    };
+    for (let i = 0; i < frames; i++) {
+      put(pcm[i]);
+      if (R) put(R[i]);
     }
     return new Uint8Array(buf);
   }
   $("expBtn").onclick = () => {
     if (!outPCM) return;
-    const blob = new Blob([pcmToWav(outPCM, outSR).buffer], { type: "audio/wav" });
+    const blob = new Blob([pcmToWav(outPCM, outSR, outPCMR != null ? outPCMR : void 0).buffer], { type: "audio/wav" });
     const url = URL.createObjectURL(blob);
     const cl = (s) => s.replace(/[^A-Za-z0-9]/g, "");
     const d = /* @__PURE__ */ new Date();
