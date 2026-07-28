@@ -1156,6 +1156,34 @@
     }
     return segs.slice(0, 48);
   }
+  var LAYER_EQ = {
+    kick: { hpf: 30, lpf: 6e3, dipHz: 400, dipDb: -3, dipQ: 1.4 },
+    // unico padrone sotto i 100 Hz
+    bass: { hpf: 35, lpf: 300, dipHz: 70, dipDb: -2.5, dipQ: 1.2 },
+    // lascia il sub alla cassa
+    snare: { hpf: 130, lpf: 12e3, dipHz: 500, dipDb: -4, dipQ: 3 },
+    hat: { hpf: 500, lpf: 16e3, dipHz: 3e3, dipDb: -3, dipQ: 1.2 },
+    // fuori dalla zona voce
+    sparkle: { hpf: 700, lpf: 16e3, dipHz: 3e3, dipDb: -3, dipQ: 1.2 },
+    pad: { hpf: 250, lpf: 6e3, dipHz: 1800, dipDb: -3.5, dipQ: 1 },
+    // "tasca" per la voce
+    melody: { hpf: 220, lpf: 12e3, peakHz: 1500, peakDb: 2.5 },
+    voice: { hpf: 110, lpf: 12e3, dipHz: 700, dipDb: -2.5, dipQ: 1, peakHz: 3e3, peakDb: 3 },
+    backing: { hpf: 200, lpf: 1e4, dipHz: 3e3, dipDb: -3.5, dipQ: 1 },
+    // cede il passo al lead
+    fill: { hpf: 200, lpf: 1e4, dipHz: 3e3, dipDb: -2, dipQ: 1 }
+  };
+  function eqForLayer(data, sr, layer) {
+    var _a;
+    const p = LAYER_EQ[layer];
+    if (!p) return data;
+    const out = Float32Array.from(data);
+    hpfInplace(out, sr, p.hpf);
+    lpfInplace(out, sr, p.lpf);
+    if (p.dipHz && p.dipDb) peakInplace(out, sr, p.dipHz, p.dipDb, (_a = p.dipQ) != null ? _a : 1);
+    if (p.peakHz && p.peakDb) peakInplace(out, sr, p.peakHz, p.peakDb, 1.2);
+    return out;
+  }
   function meterInfo(meter2, cfg) {
     switch (meter2) {
       case "3/4":
@@ -1313,11 +1341,22 @@
       sumBars--;
     }
     const events = [];
-    const push = (seg, when, rate, gain, dur, sustain = false, pan) => {
+    const eqCache = /* @__PURE__ */ new Map();
+    const forLayer = (seg, layer) => {
+      const key = `${seg.pos}_${seg.data.length}_${layer}`;
+      const hit = eqCache.get(key);
+      if (hit) return hit;
+      const out = { ...seg, data: eqForLayer(seg.data, sr, layer) };
+      eqCache.set(key, out);
+      return out;
+    };
+    const push = (seg, when, rate, gain, dur, sustain = false, pan, layer) => {
       var _a2;
       if (!seg) return;
       const p = pan !== void 0 ? pan : (_a2 = PAN_BY_ROLE[seg.role]) != null ? _a2 : 0;
-      events.push({ seg, when, rate: Math.max(0.25, Math.min(4, rate)), gain, dur, sustain, pan: p * stereoAmt });
+      const L = layer != null ? layer : seg.role === "voice" ? "voice" : seg.role === "tonal" ? "melody" : seg.role;
+      const s = LAYER_EQ[L] ? forLayer(seg, L) : seg;
+      events.push({ seg: s, when, rate: Math.max(0.25, Math.min(4, rate)), gain, dur, sustain, pan: p * stereoAmt, layer: L });
     };
     const pick = (arr, i) => arr.length ? arr[(i + gOff) % arr.length] : void 0;
     const charPool = segs.filter((s) => s.data.length / sr >= 0.3 && (s.role === "other" || s.role === "voice" || s.role === "tonal")).sort((a, b) => b.energy * b.data.length - a.energy * a.data.length).slice(0, 6);
@@ -1361,16 +1400,16 @@
         const barHatOffbeat = introLike ? [4, 12] : null;
         for (let s = 0; s < steps; s++) {
           const when = barStart + s * sixteenth;
-          if (S.kick && barKick.includes(s)) push(pick(kickPool, bar), when, cfg.kickRate, 0.95 * vol, 0.3);
-          if (S.snare && snareSteps.includes(s)) push(pick(snarePool, bar + s), when, cfg.snareRate, 0.55 * vol, 0.25);
+          if (S.kick && barKick.includes(s)) push(pick(kickPool, bar), when, cfg.kickRate, 0.95 * vol, 0.3, false, void 0, "kick");
+          if (S.snare && snareSteps.includes(s)) push(pick(snarePool, bar + s), when, cfg.snareRate, 0.55 * vol, 0.25, false, void 0, "snare");
           if (barHatOffbeat) {
             if (barHatOffbeat.includes(s) && hatPool.length) {
-              push(pick(hatPool, bar + s), when, cfg.hatRate * 1.1, 0.5 * vol, 0.12, false, s % 8 === 4 ? 0.3 : -0.28);
+              push(pick(hatPool, bar + s), when, cfg.hatRate * 1.1, 0.5 * vol, 0.12, false, s % 8 === 4 ? 0.3 : -0.28, "hat");
             }
           } else if (S.hat && cfg.hatStep > 0 && s % cfg.hatStep === hatOffset) {
             const swing = (rnd() < 0.12 ? sixteenth * 0.12 : 0) + (swingAmt > 0 && s % 4 === 2 ? swingAmt * sixteenth : 0);
             const hp = s / cfg.hatStep % 2 === 0 ? 0.32 : -0.28;
-            push(pick(hatPool, bar * 2 + s), when + swing, cfg.hatRate * 1.1, 0.42 * vol, 0.1, false, hp);
+            push(pick(hatPool, bar * 2 + s), when + swing, cfg.hatRate * 1.1, 0.42 * vol, 0.1, false, hp, "hat");
           }
           if (S.hat && brightPool.length) {
             const roll = cfg.roll || 0;
@@ -1378,17 +1417,17 @@
               if (rollBar && s >= steps - 4 && rnd() < 0.55 + 0.4 * roll * S.intensity) {
                 const rate = 1.2 + 0.4 * (s % 4);
                 const sp = s % 2 === 0 ? 0.85 : -0.8;
-                push(brightPool[(bar * 3 + s) % brightPool.length], when, rate, 0.2 * vol, sixteenth * 0.95, false, sp);
+                push(brightPool[(bar * 3 + s) % brightPool.length], when, rate, 0.2 * vol, sixteenth * 0.95, false, sp, "sparkle");
               }
             } else if (s % 8 === 4 && !(cfg.thin && rnd() < cfg.thin)) {
               const sp = bar % 2 === 0 ? 0.7 : -0.65;
-              push(brightPool[(bar + Math.floor(s / 8)) % brightPool.length], when, 1.5, 0.3 * vol, 0.2, false, sp);
+              push(brightPool[(bar + Math.floor(s / 8)) % brightPool.length], when, 1.5, 0.3 * vol, 0.2, false, sp, "sparkle");
             }
           }
         }
         if (isSectionEnd && (S.snare || S.kick)) {
           for (let f = 0; f < 4; f++) {
-            push(pick(snarePool, f), barStart + (steps - 4 + f) * sixteenth, cfg.snareRate * (1 + f * 0.12), 0.4 * vol, 0.12);
+            push(pick(snarePool, f), barStart + (steps - 4 + f) * sixteenth, cfg.snareRate * (1 + f * 0.12), 0.4 * vol, 0.12, false, void 0, "fill");
           }
         }
         if (S.bass && tonalPool.length && cfg.padGain > 0) {
@@ -1411,7 +1450,7 @@
           for (let c = 0; c < triad.length; c++) {
             const t = pickTonalFor(padHz[c], bar * 5 + c, padDur);
             const padPan = c === 0 ? 0 : c === 1 ? -0.4 : 0.4;
-            if (t) push(t.seg, barStart + c * 0.25 * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), padDur, true, padPan);
+            if (t) push(t.seg, barStart + c * 0.25 * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), padDur, true, padPan, "pad");
             prevPadHz[c] = padHz[c];
           }
         }
@@ -1421,14 +1460,14 @@
               const st = cfg.bassSteps[bi];
               if (st >= steps) continue;
               const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar * 8 + bi);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, (st % 4 === 0 ? 0.5 : 0.38) * vol, sixteenth * 1.6, false, 0);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, (st % 4 === 0 ? 0.5 : 0.38) * vol, sixteenth * 1.6, false, 0, "bass");
             }
           } else {
             const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar, Math.min(barDur * 0.5, 0.6));
-            if (t) push(t.seg, barStart, t.rate, 0.45 * vol, Math.min(barDur * 0.5, 0.6), true, 0);
+            if (t) push(t.seg, barStart, t.rate, 0.45 * vol, Math.min(barDur * 0.5, 0.6), true, 0, "bass");
             if (steps >= 16) {
               const t2 = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar + 7, Math.min(barDur * 0.5, 0.5));
-              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * vol, Math.min(barDur * 0.5, 0.5), true, 0);
+              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * vol, Math.min(barDur * 0.5, 0.5), true, 0, "bass");
             }
           }
         }
@@ -1441,7 +1480,7 @@
               const ci = hookContour[m % hookLen];
               const degree = tones[ci % tones.length] + lift + octave;
               const t = pickTonalFor(scaleFreq(semis, degree), bar * 31 + m, cfg.noteDur * 1.8);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.42 * vol, cfg.noteDur * 1.8, true, m % 2 === 0 ? -0.22 : 0.18);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.42 * vol, cfg.noteDur * 1.8, true, m % 2 === 0 ? -0.22 : 0.18, "melody");
             }
           } else {
             const nNotes = Math.max(1, Math.ceil(cfg.melSteps.length / 2 * density));
@@ -1451,7 +1490,7 @@
               const ci = verseContour[(b + m) % verseContour.length];
               const degree = tones[ci % tones.length] + octave;
               const t = pickTonalFor(scaleFreq(semis, degree), bar * 17 + m, cfg.noteDur * 2);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.34 * vol, cfg.noteDur * 2, true, m % 2 === 0 ? -0.18 : 0.2);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.34 * vol, cfg.noteDur * 2, true, m % 2 === 0 ? -0.18 : 0.2, "melody");
             }
           }
         }
@@ -1460,7 +1499,7 @@
             if (st >= steps) continue;
             for (const deg of [tones[1] + octave, tones[2] + octave]) {
               const t = pickTonalFor(scaleFreq(semis, deg), bar * 13 + st + deg);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.32 * vol, sixteenth * 1.2, false, deg % 2 === 0 ? -0.45 : 0.4);
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.32 * vol, sixteenth * 1.2, false, deg % 2 === 0 ? -0.45 : 0.4, "fill");
             }
           }
         }
@@ -1487,14 +1526,14 @@
             const hardTune = doTune && !!cfg.autotuneHard && rnd() < cfg.autotuneHard;
             const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot, vdur, vocNotes) : doTune ? tuneSeg(rawVseg, chordRoot, hardTune) : rawVseg;
             const vGainMul = doVoc ? (_c = cfg.vocoderGain) != null ? _c : 1 : 1;
-            push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol * vGainMul, vdur);
+            push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol * vGainMul, vdur, false, void 0, "voice");
             lastLeadEnd = vwhen + vdur;
           }
           if (vocal && isChorus && vSorted.length) {
             const chop = vSorted[(bar * 3 + 1) % vSorted.length];
-            push(chop, barStart + Math.floor(steps / 2) * sixteenth, 0.5, 0.22 * vol, 0.3, false, -0.8);
+            push(chop, barStart + Math.floor(steps / 2) * sixteenth, 0.5, 0.22 * vol, 0.3, false, -0.8, "backing");
             const harm = vSorted[(bar * 5 + 2) % vSorted.length];
-            push(harm, barStart + Math.floor(steps * 0.75) * sixteenth, 1.5, 0.16 * vol, 0.3, false, 0.8);
+            push(harm, barStart + Math.floor(steps * 0.75) * sixteenth, 1.5, 0.16 * vol, 0.3, false, 0.8, "backing");
           }
         }
         if (charPool.length && bar % 4 === 3 && S.intensity >= 0.5) {
@@ -1511,7 +1550,7 @@
             cpan = 0;
           }
           const cdur = Math.min(cseg.data.length / sr, barDur * 1.6);
-          push(cseg, barStart + Math.floor(steps * 0.5) * sixteenth, 1, 0.7 * vol, cdur, false, cpan);
+          push(cseg, barStart + Math.floor(steps * 0.5) * sixteenth, 1, 0.7 * vol, cdur, false, cpan, "fill");
         }
       }
     }
@@ -1539,6 +1578,11 @@
     const A = Math.pow(10, dB / 40), w0 = 2 * Math.PI * fc / sr, cs = Math.cos(w0), sn = Math.sin(w0), al = sn / (2 * Q), s = 2 * Math.sqrt(A) * al;
     if (high) biquadInplace(x, A * (A + 1 + (A - 1) * cs + s), -2 * A * (A - 1 + (A + 1) * cs), A * (A + 1 + (A - 1) * cs - s), A + 1 - (A - 1) * cs + s, 2 * (A - 1 - (A + 1) * cs), A + 1 - (A - 1) * cs - s);
     else biquadInplace(x, A * (A + 1 - (A - 1) * cs + s), 2 * A * (A - 1 - (A + 1) * cs), A * (A + 1 - (A - 1) * cs - s), A + 1 + (A - 1) * cs + s, -2 * (A - 1 + (A + 1) * cs), A + 1 + (A - 1) * cs - s);
+  }
+  function lpfInplace(x, sr, fc, Q = 0.707) {
+    if (fc >= sr * 0.48) return;
+    const w0 = 2 * Math.PI * fc / sr, cs = Math.cos(w0), sn = Math.sin(w0), al = sn / (2 * Q);
+    biquadInplace(x, (1 - cs) / 2, 1 - cs, (1 - cs) / 2, 1 + al, -2 * cs, 1 - al);
   }
   function peakInplace(x, sr, fc, dB, Q = 1) {
     if (!dB) return;
