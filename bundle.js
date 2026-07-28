@@ -750,6 +750,9 @@
   GENRES.RnB.autotuneHard = 0.4;
   GENRES["Lo-fi"].autotuneHard = 0.3;
   GENRES.Reggae.autotuneHard = 0.25;
+  GENRES.Reggae.bassGain = 1.6;
+  GENRES.Rock.drive = 0.55;
+  GENRES.Rock.padGain = 0.26;
   GENRES.Trance.reverb = 0.24;
   GENRES.Trance.roll = 0.85;
   GENRES.EDM.reverb = 0.2;
@@ -1263,7 +1266,7 @@
     return kept.filter((_, i) => accepted[i]);
   }
   function buildEvents(segs, opts, seconds, sr = 48e3) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e;
     const summary = { kick: 0, snare: 0, hat: 0, tonal: 0, voice: 0, other: 0 };
     for (const s of segs) summary[s.role]++;
     const pool = (r) => segs.filter((s) => s.role === r);
@@ -1382,10 +1385,12 @@
         const seg = tonalPool[(gOff + k + j) % tonalPool.length];
         const rate = seg.pitchHz && seg.pitchHz > 20 ? targetHz / seg.pitchHz : 1;
         let cost = Math.abs(Math.log2(rate)) + (seg.pitchHz ? 0 : 0.6);
+        const octs = Math.abs(Math.log2(rate));
+        if (octs > 1) cost += (octs - 1) * 2.5;
         if (holdSec > 0) {
           const grainSec = seg.data.length / sr / Math.max(0.25, rate);
           const reps = holdSec / Math.max(0.02, grainSec);
-          if (reps > 1) cost += Math.min(1.2, (reps - 1) * 0.22);
+          if (reps > 1) cost += Math.min(3, (reps - 1) * 0.7);
         }
         if (cost < bestCost) {
           bestCost = cost;
@@ -1408,11 +1413,19 @@
     }
     const events = [];
     const eqCache = /* @__PURE__ */ new Map();
+    const drive = (_c = cfg.drive) != null ? _c : 0;
     const forLayer = (seg, layer) => {
       const key = `${seg.pos}_${seg.data.length}_${layer}`;
       const hit = eqCache.get(key);
       if (hit) return hit;
-      const out = { ...seg, data: eqForLayer(seg.data, sr, layer) };
+      let d = eqForLayer(seg.data, sr, layer);
+      if (drive > 0 && (layer === "pad" || layer === "melody")) {
+        d = Float32Array.from(d);
+        const k = 1 + drive * 6;
+        const norm = 1 / Math.tanh(k);
+        for (let i = 0; i < d.length; i++) d[i] = Math.tanh(d[i] * k) * norm * 0.85;
+      }
+      const out = { ...seg, data: d };
       eqCache.set(key, out);
       return out;
     };
@@ -1440,6 +1453,7 @@
       const w = genre2 && ((_a2 = STEREO[genre2]) == null ? void 0 : _a2.width) || STEREO_DEFAULT.width;
       return Math.max(0.5, Math.min(1.4, w));
     })(genreName);
+    const bassG = (_d = cfg.bassGain) != null ? _d : 1;
     const hatOffset = Math.floor(cfg.hatStep / 2);
     let bar = 0;
     let vhIdx = 0;
@@ -1532,14 +1546,14 @@
               const st = cfg.bassSteps[bi];
               if (st >= steps) continue;
               const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar * 8 + bi);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, (st % 4 === 0 ? 0.5 : 0.38) * vol, sixteenth * 1.6, false, 0, "bass");
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, (st % 4 === 0 ? 0.5 : 0.38) * bassG * vol, sixteenth * 1.6, false, 0, "bass");
             }
           } else {
             const t = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar, Math.min(barDur * 0.5, 0.6));
-            if (t) push(t.seg, barStart, t.rate, 0.45 * vol, Math.min(barDur * 0.5, 0.6), true, 0, "bass");
+            if (t) push(t.seg, barStart, t.rate, 0.45 * bassG * vol, Math.min(barDur * 0.5, 0.6), true, 0, "bass");
             if (steps >= 16) {
               const t2 = pickTonalFor(scaleFreq(semis, chordRoot) / 2, bar + 7, Math.min(barDur * 0.5, 0.5));
-              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * vol, Math.min(barDur * 0.5, 0.5), true, 0, "bass");
+              if (t2) push(t2.seg, barStart + 8 * sixteenth, t2.rate, 0.26 * bassG * vol, Math.min(barDur * 0.5, 0.5), true, 0, "bass");
             }
           }
         }
@@ -1571,7 +1585,7 @@
             if (st >= steps) continue;
             for (const deg of [tones[1] + octave, tones[2] + octave]) {
               const t = pickTonalFor(scaleFreq(semis, deg), bar * 13 + st + deg);
-              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.32 * vol, sixteenth * 1.2, false, deg % 2 === 0 ? -0.45 : 0.4, "fill");
+              if (t) push(t.seg, barStart + st * sixteenth, t.rate, 0.5 * vol, sixteenth * 1.2, false, deg % 2 === 0 ? -0.45 : 0.4, "hat");
             }
           }
         }
@@ -1597,7 +1611,7 @@
             const doTune = !doVoc && !!cfg.autotune && rnd() < cfg.autotune;
             const hardTune = doTune && !!cfg.autotuneHard && rnd() < cfg.autotuneHard;
             const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot, vdur, vocNotes) : doTune ? tuneSeg(rawVseg, chordRoot, hardTune) : rawVseg;
-            const vGainMul = doVoc ? (_c = cfg.vocoderGain) != null ? _c : 1 : 1;
+            const vGainMul = doVoc ? (_e = cfg.vocoderGain) != null ? _e : 1 : 1;
             push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol * vGainMul, vdur, false, void 0, "voice");
             lastLeadEnd = vwhen + vdur;
           }
@@ -2295,8 +2309,20 @@
     const shortGrain = onePass < sr * 0.25;
     const xf = shortGrain ? Math.max(1, Math.floor(onePass / 2)) : Math.max(1, Math.min(Math.floor(onePass / 3), Math.floor(sr * 0.03)));
     const period = Math.max(1, onePass - xf);
-    const total = Math.min(maxOut, outLen - startSample);
+    const MAX_REPS = 6;
+    const period0 = Math.max(1, onePass - xf);
+    const total = Math.min(maxOut, outLen - startSample, Math.ceil(period0 * MAX_REPS));
     const gFade = Math.min(edge, Math.floor(total / 2));
+    const reps = total / Math.max(1, period);
+    const jitterOn = reps > 2 && srcLen > onePass * rate * 1.15;
+    const maxJit = jitterOn ? Math.max(0, srcLen - Math.floor(onePass * rate) - 2) : 0;
+    const jitterFor = (rep) => {
+      if (!jitterOn || maxJit <= 0) return 0;
+      let h = rep * 2654435761 >>> 0;
+      h ^= h >>> 13;
+      h = Math.imul(h, 1274126177) >>> 0;
+      return h % maxJit | 0;
+    };
     for (let j = 0; j < total; j++) {
       const oi = startSample + j;
       if (oi >= outLen) break;
@@ -2307,9 +2333,10 @@
       }
       const rep = Math.floor(j / period);
       const local = j - rep * period;
+      const off = jitterFor(rep);
       let sum = 0;
       {
-        const srcPos = local * rate;
+        const srcPos = off + local * rate;
         const si = Math.floor(srcPos);
         if (si + 1 < srcLen) {
           const frac = srcPos - si;
@@ -2318,7 +2345,7 @@
         }
       }
       if (local < xf && rep > 0) {
-        const srcPos = (local + period) * rate;
+        const srcPos = jitterFor(rep - 1) + (local + period) * rate;
         const si = Math.floor(srcPos);
         if (si + 1 < srcLen) {
           const frac = srcPos - si;
