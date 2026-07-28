@@ -597,11 +597,14 @@
     const minLag = Math.max(2, Math.round(sr / 350));
     const maxLag = Math.min(W - 1, Math.round(sr / 80));
     if (W <= maxLag + 2) return { voicedFrac: 0, medianF0: 0, f0stdSemi: 0 };
-    const nF = Math.min(160, Math.floor((data.length - W) / hop) + 1);
-    if (nF < 1) return { voicedFrac: 0, medianF0: 0, f0stdSemi: 0 };
+    const avail = Math.floor((data.length - W) / hop) + 1;
+    if (avail < 1) return { voicedFrac: 0, medianF0: 0, f0stdSemi: 0 };
+    const nF = Math.min(40, avail);
+    const stride = Math.max(1, Math.floor(avail / nF));
+    const off = (f) => f * stride * hop;
     const rms = new Float32Array(nF);
     for (let f = 0; f < nF; f++) {
-      const o = f * hop;
+      const o = off(f);
       let s = 0;
       for (let i = 0; i < W; i++) {
         const v = data[o + i];
@@ -618,16 +621,14 @@
     for (let f = 0; f < nF; f++) {
       if (rms[f] < floor) continue;
       active++;
-      const o = f * hop;
+      const o = off(f);
       let mean = 0;
       for (let i = 0; i < W; i++) mean += data[o + i];
       mean /= W;
       for (let i = 0; i < W; i++) buf[i] = data[o + i] - mean;
       let bestLag = -1;
       let bestVal = 0;
-      let prev = 0;
-      let rising = false;
-      for (let tau = minLag; tau <= maxLag; tau++) {
+      const nsdfAt = (tau) => {
         let acf = 0;
         let m = 0;
         const lim = W - tau;
@@ -637,13 +638,26 @@
           acf += a * b;
           m += a * a + b * b;
         }
-        const nsdf = m > 1e-12 ? 2 * acf / m : 0;
-        if (nsdf > prev) rising = true;
-        if (rising && nsdf < prev && prev > bestVal) {
-          bestVal = prev;
-          bestLag = tau - 1;
+        return m > 1e-12 ? 2 * acf / m : 0;
+      };
+      let coarseLag = -1;
+      let coarseVal = -1;
+      for (let tau = minLag; tau <= maxLag; tau += 2) {
+        const v = nsdfAt(tau);
+        if (v > coarseVal) {
+          coarseVal = v;
+          coarseLag = tau;
         }
-        prev = nsdf;
+      }
+      if (coarseLag < 0) continue;
+      const lo = Math.max(minLag, coarseLag - 3);
+      const hi = Math.min(maxLag, coarseLag + 3);
+      for (let tau = lo; tau <= hi; tau++) {
+        const nsdf = nsdfAt(tau);
+        if (nsdf > bestVal) {
+          bestVal = nsdf;
+          bestLag = tau;
+        }
       }
       if (bestLag > 0 && bestVal >= 0.6) {
         voiced++;
@@ -1004,7 +1018,8 @@
       const next = i + 1 < starts.length ? starts[i + 1] : data.length;
       const rawLen = Math.min(Math.floor(sr * 3), next - start);
       if (rawLen < Math.floor(sr * 0.03)) continue;
-      const probe = data.slice(start, start + rawLen);
+      const probeLen = Math.min(rawLen, Math.floor(sr * 0.8));
+      const probe = data.subarray(start, start + probeLen);
       const { role, pitchHz, isNoise } = classifySegment(probe, sr);
       nClassified++;
       if (isNoise) {
@@ -1676,34 +1691,53 @@
       px = x;
       py = y;
     }
-    const wetBuf = new Float32Array(n);
-    for (const ct of combTuning) {
-      const L = Math.max(1, Math.round(ct * scale2));
-      const buf = new Float32Array(L);
-      let idx = 0, filt = 0;
-      for (let i = 0; i < n; i++) {
-        const y = buf[idx];
-        filt = y * (1 - damp) + filt * damp;
-        buf[idx] = send[i] + filt * feedback;
-        idx = idx + 1 >= L ? 0 : idx + 1;
-        wetBuf[i] += y;
-      }
+    const nComb = combTuning.length;
+    const nAp = apTuning.length;
+    const cLen = new Int32Array(nComb);
+    const cOff = new Int32Array(nComb);
+    const aLen = new Int32Array(nAp);
+    const aOff = new Int32Array(nAp);
+    let total = 0;
+    for (let c = 0; c < nComb; c++) {
+      cLen[c] = Math.max(1, Math.round(combTuning[c] * scale2));
+      cOff[c] = total;
+      total += cLen[c];
     }
-    const norm = 1 / combTuning.length;
-    for (let i = 0; i < n; i++) wetBuf[i] *= norm;
-    for (const at of apTuning) {
-      const L = Math.max(1, Math.round(at * scale2));
-      const buf = new Float32Array(L);
-      let idx = 0;
-      for (let i = 0; i < n; i++) {
-        const bufout = buf[idx];
-        const inp = wetBuf[i];
-        buf[idx] = inp + bufout * 0.5;
-        wetBuf[i] = bufout - inp;
-        idx = idx + 1 >= L ? 0 : idx + 1;
-      }
+    for (let a2 = 0; a2 < nAp; a2++) {
+      aLen[a2] = Math.max(1, Math.round(apTuning[a2] * scale2));
+      aOff[a2] = total;
+      total += aLen[a2];
     }
-    for (let i = 0; i < n; i++) pcm[i] += wetBuf[i] * wet;
+    const mem = new Float32Array(total);
+    const cIdx = new Int32Array(nComb);
+    const aIdx = new Int32Array(nAp);
+    const cFilt = new Float32Array(nComb);
+    const norm = 1 / nComb;
+    const oneMinusDamp = 1 - damp;
+    for (let i = 0; i < n; i++) {
+      const x = send[i];
+      let acc = 0;
+      for (let c = 0; c < nComb; c++) {
+        const p = cOff[c] + cIdx[c];
+        const y = mem[p];
+        const filt = y * oneMinusDamp + cFilt[c] * damp;
+        cFilt[c] = filt;
+        mem[p] = x + filt * feedback;
+        const ni = cIdx[c] + 1;
+        cIdx[c] = ni >= cLen[c] ? 0 : ni;
+        acc += y;
+      }
+      let v = acc * norm;
+      for (let a2 = 0; a2 < nAp; a2++) {
+        const p = aOff[a2] + aIdx[a2];
+        const bufout = mem[p];
+        mem[p] = v + bufout * 0.5;
+        v = bufout - v;
+        const ni = aIdx[a2] + 1;
+        aIdx[a2] = ni >= aLen[a2] ? 0 : ni;
+      }
+      pcm[i] += v * wet;
+    }
   }
   function monoBelow(L, R, sr, fc = 120) {
     const n = Math.min(L.length, R.length);
@@ -1728,11 +1762,35 @@
       R[i] = mid - side;
     }
   }
-  function measureLufs(L, R, sr) {
-    const n = Math.min(L.length, R.length);
-    if (!n) return -70;
+  var COMP_THR = 0.25;
+  var COMP_MAX = 8;
+  var COMP_N = 2048;
+  var COMP_LUT = (() => {
+    const t = new Float32Array(COMP_N + 1);
+    for (let i = 0; i <= COMP_N; i++) {
+      const env = COMP_THR + (COMP_MAX - COMP_THR) * i / COMP_N;
+      t[i] = Math.pow(env / COMP_THR, 1 / 3 - 1);
+    }
+    return t;
+  })();
+  function compGain(env) {
+    if (env <= COMP_THR) return 1;
+    if (env >= COMP_MAX) return Math.pow(env / COMP_THR, 1 / 3 - 1);
+    const p = (env - COMP_THR) / (COMP_MAX - COMP_THR) * COMP_N;
+    const i = p | 0;
+    const f = p - i;
+    return COMP_LUT[i] * (1 - f) + COMP_LUT[i + 1] * f;
+  }
+  function measureLufs(L, R, srIn) {
+    const n0 = Math.min(L.length, R.length);
+    if (!n0) return -70;
+    const D = srIn >= 44e3 ? 2 : 1;
+    const sr = srIn / D;
+    const n = Math.floor(n0 / D);
     const k = (x) => {
-      const y = Float32Array.from(x);
+      const y = new Float32Array(n);
+      if (D === 1) y.set(x.subarray(0, n));
+      else for (let i = 0; i < n; i++) y[i] = (x[2 * i] + x[2 * i + 1]) * 0.5;
       shelfInplace(y, sr, 1500, 4, true, 0.707);
       hpfInplace(y, sr, 38, 0.5);
       return y;
@@ -1812,8 +1870,8 @@
       ms = msC * ms + (1 - msC) * x * x;
       const det = Math.sqrt(ms);
       env = det > env ? aC * env + (1 - aC) * det : rC * env + (1 - rC) * det;
-      if (env > 0.25) {
-        const gg = Math.pow(env / 0.25, 1 / 3 - 1);
+      if (env > COMP_THR) {
+        const gg = compGain(env);
         L[i] *= gg;
         R[i] *= gg;
       }
@@ -1821,6 +1879,7 @@
     monoBelow(L, R, sr, st.monoBelowHz);
     stereoWidth(L, R, st.width);
     const ceiling = Math.pow(10, st.tpDb / 20);
+    let limited = false;
     for (let pass = 0; pass < 2; pass++) {
       const lufs = measureLufs(L, R, sr);
       if (lufs <= -70) break;
@@ -1832,8 +1891,9 @@
         R[i] *= gain;
       }
       limiterStereo(L, R, sr, ceiling, 5, 120);
+      limited = true;
     }
-    limiterStereo(L, R, sr, ceiling, 5, 120);
+    if (!limited) limiterStereo(L, R, sr, ceiling, 5, 120);
   }
   function mixInto(out, data, startSample, rate, gain, maxOut, sr, loop = false, outR, pan = 0) {
     const outLen = out.length;
@@ -1847,22 +1907,27 @@
     const longGrain = onePass > sr * 0.2;
     const edge = onePass > 8 ? Math.min(Math.floor(sr * (longGrain ? 0.02 : 5e-3)), Math.floor(onePass / 2)) : 0;
     if (!loop || maxOut <= onePass) {
-      const usable = Math.min(maxOut, onePass);
+      const usable = Math.min(maxOut, Math.min(onePass, outLen - startSample));
+      if (usable <= 0) return;
       const fadeN = usable > 8 ? Math.min(edge, Math.floor(usable / 2)) : 0;
+      let srcPos = 0;
+      let si = 0;
+      const invFade = fadeN > 0 ? 1 / fadeN : 0;
+      const gainL = gain * gL;
+      const gainR = gain * gR;
       for (let j = 0; j < usable; j++) {
-        const oi = startSample + j;
-        if (oi >= outLen) break;
-        const srcPos = j * rate;
-        const si = Math.floor(srcPos);
         const frac = srcPos - si;
         let env = 1;
         if (fadeN > 0) {
-          if (j < fadeN) env = j / fadeN;
-          else if (j > usable - fadeN) env = (usable - j) / fadeN;
+          if (j < fadeN) env = j * invFade;
+          else if (j > usable - fadeN) env = (usable - j) * invFade;
         }
-        const v = (data[si] * (1 - frac) + data[si + 1] * frac) * gain * env;
-        out[oi] += v * gL;
-        if (outR) outR[oi] += v * gR;
+        const s = (data[si] * (1 - frac) + data[si + 1] * frac) * env;
+        const oi = startSample + j;
+        out[oi] += s * gainL;
+        if (outR) outR[oi] += s * gainR;
+        srcPos += rate;
+        while (srcPos - si >= 1) si++;
       }
       return;
     }
