@@ -2307,48 +2307,68 @@
     if (recording) stopRec();
     else startRec();
   };
-  function generate() {
+  var breathe = () => new Promise((r) => setTimeout(r, 0));
+  async function generate() {
+    var _a, _b;
     if (!recPCM) return;
     const gb = $("genBtn");
     gb.disabled = true;
-    gb.textContent = "\u2026 Generating";
-    setStatus("Generating music\u2026");
-    setTimeout(() => {
-      var _a, _b;
-      try {
-        if (!segCache || segCache.pcm !== recPCM) {
-          const mono = Float32Array.from(recPCM);
-          highpass(mono, recSR);
-          normalize(mono, 0.98);
-          const stats2 = { onsets: 0, noise: 0, kept: 0, noiseFrac: 0, floorRatio: 0, noisy: false };
-          segCache = { pcm: recPCM, segs: extractAndClassify(mono, recSR, stats2), noisy: stats2.noisy };
-        }
-        const segs = segCache.segs;
-        const stats = { noisy: segCache.noisy };
-        if (!segs.length) {
-          setStatus("No usable sound found.");
-          setGenBtn("generate");
-          return;
-        }
-        const opts = { bpm, scale, genre, meter };
-        const { events, durationSec } = buildEvents(segs, opts, 60, recSR);
-        const n = Math.ceil((durationSec + 2) * recSR);
-        const outL = new Float32Array(n);
-        const outR = new Float32Array(n);
-        for (const ev of events) mixInto(outL, ev.seg.data, Math.floor(ev.when * recSR), ev.rate, ev.gain, Math.floor(ev.dur * recSR), recSR, ev.sustain, outR, (_a = ev.pan) != null ? _a : 0);
-        masterStereo(outL, outR, recSR, genre);
-        outPCM = outL;
-        outPCMR = outR;
-        outSR = recSR;
-        $("expBtn").disabled = false;
-        play();
-        const warn = stats.noisy ? " \u26A0\uFE0F Lots of background noise \u2014 for best quality, record in a quieter spot." : "";
-        setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Press Stop/Play, or Export.${warn}`);
-      } catch (e) {
-        setStatus("Error: " + ((_b = e == null ? void 0 : e.message) != null ? _b : e));
-        setGenBtn("generate");
+    const step = (t) => {
+      gb.textContent = "\u2026 " + t;
+      setStatus(t);
+    };
+    step("Starting\u2026");
+    await breathe();
+    try {
+      if (!segCache || segCache.pcm !== recPCM) {
+        step("Analyzing sounds\u2026");
+        await breathe();
+        const mono = Float32Array.from(recPCM);
+        highpass(mono, recSR);
+        normalize(mono, 0.98);
+        const stats2 = { onsets: 0, noise: 0, kept: 0, noiseFrac: 0, floorRatio: 0, noisy: false };
+        segCache = { pcm: recPCM, segs: extractAndClassify(mono, recSR, stats2), noisy: stats2.noisy };
       }
-    }, 30);
+      const segs = segCache.segs;
+      const stats = { noisy: segCache.noisy };
+      if (!segs.length) {
+        setStatus("No usable sound found.");
+        setGenBtn("generate");
+        return;
+      }
+      step("Composing\u2026");
+      await breathe();
+      const opts = { bpm, scale, genre, meter };
+      const { events, durationSec } = buildEvents(segs, opts, 60, recSR);
+      step("Mixing\u2026");
+      await breathe();
+      const n = Math.ceil((durationSec + 2) * recSR);
+      const outL = new Float32Array(n);
+      const outR = new Float32Array(n);
+      const CHUNK = 250;
+      for (let i = 0; i < events.length; i += CHUNK) {
+        const end = Math.min(events.length, i + CHUNK);
+        for (let k = i; k < end; k++) {
+          const ev = events[k];
+          mixInto(outL, ev.seg.data, Math.floor(ev.when * recSR), ev.rate, ev.gain, Math.floor(ev.dur * recSR), recSR, ev.sustain, outR, (_a = ev.pan) != null ? _a : 0);
+        }
+        step(`Mixing\u2026 ${Math.round(end / events.length * 100)}%`);
+        await breathe();
+      }
+      step("Mastering\u2026");
+      await breathe();
+      masterStereo(outL, outR, recSR, genre);
+      outPCM = outL;
+      outPCMR = outR;
+      outSR = recSR;
+      $("expBtn").disabled = false;
+      play();
+      const warn = stats.noisy ? " \u26A0\uFE0F Lots of background noise \u2014 for best quality, record in a quieter spot." : "";
+      setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Press Stop/Play, or Export.${warn}`);
+    } catch (e) {
+      setStatus("Error: " + ((_b = e == null ? void 0 : e.message) != null ? _b : e));
+      setGenBtn("generate");
+    }
   }
   var genState = "generate";
   var playToken = 0;
