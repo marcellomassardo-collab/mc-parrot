@@ -26,6 +26,17 @@
     input[type=range] { flex: 1; accent-color: #F5A524; }
     .status { text-align: center; color: #9A9AA8; font-size: 13px; min-height: 18px; margin-top: 12px; }
     .note { color: #7a7a88; font-size: 11px; text-align: center; margin-top: 18px; line-height: 1.5; }
+    /* CONTATORE DI REGISTRAZIONE: cifre grandi e monospaziate (non "ballano"), pallino REC lampeggiante */
+    .rectime { font-size: 26px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+    .recdot { color: #E5484D; animation: blink 1s steps(2, start) infinite; }
+    .recmax { color: #7a7a88; font-size: 12px; }
+    @keyframes blink { to { visibility: hidden; } }
+    /* ONDA SONORA: barre verticali che salgono col volume del microfono.
+       Rosse quando il livello è troppo alto (rischio di distorsione). */
+    .wave { display: flex; align-items: center; justify-content: center; gap: 2px; height: 84px; margin: 10px 0 4px; overflow: hidden; }
+    .wave .bar { width: 4px; border-radius: 2px; background: #2F9BF6; flex: none; }
+    .wave .bar.hot { background: #E5484D; }
+    .waveHint { color: #54546A; font-size: 13px; }
   </style>
 </head>
 <body>
@@ -34,8 +45,10 @@
     <div class="sub">the sounds you record → a song</div>
 
     <div class="card">
+      <div class="row" style="justify-content:center"><span id="recTime" style="color:#9A9AA8;font-size:13px;">Record some ambient sounds (and a bit of voice)</span></div>
+      <!-- ONDA SONORA DAL VIVO: le barre si muovono col microfono (come nell'app) -->
+      <div id="wave" class="wave"><span class="waveHint">Your waveform will appear here</span></div>
       <button id="recBtn" class="big rec">● Record</button>
-      <div class="row"><span id="recTime" style="color:#9A9AA8;font-size:13px;">Record some ambient sounds (and a bit of voice)</span></div>
     </div>
 
     <div class="card">

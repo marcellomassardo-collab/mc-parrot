@@ -2009,6 +2009,40 @@
   var playSrc = null;
   var $ = (id) => document.getElementById(id);
   var setStatus = (t) => $("status").textContent = t;
+  var MAX_REC_SEC = 6 * 60;
+  var mmss = (sec) => {
+    const t = Math.max(0, Math.floor(sec));
+    return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
+  };
+  var WAVE_BARS = 56;
+  var waveLevels = [];
+  var levelFromPeak = (peak) => Math.min(1, Math.pow(Math.min(1, peak), 0.45));
+  function pushLevel(peak) {
+    waveLevels.push({ h: levelFromPeak(peak), hot: peak > 0.92 });
+    if (waveLevels.length > WAVE_BARS) waveLevels.shift();
+  }
+  function renderWave() {
+    var _a;
+    const host = $("wave");
+    if (!waveLevels.length) {
+      host.innerHTML = '<span class="waveHint">Your waveform will appear here</span>';
+      return;
+    }
+    if (host.childElementCount !== waveLevels.length || !((_a = host.firstElementChild) == null ? void 0 : _a.classList.contains("bar"))) {
+      host.innerHTML = "";
+      for (let i = 0; i < waveLevels.length; i++) {
+        const d = document.createElement("div");
+        d.className = "bar";
+        host.appendChild(d);
+      }
+    }
+    for (let i = 0; i < waveLevels.length; i++) {
+      const el = host.children[i];
+      const b = waveLevels[i];
+      el.style.height = (4 + b.h * 76).toFixed(0) + "px";
+      el.className = b.hot ? "bar hot" : "bar";
+    }
+  }
   function buildChips(host, items, get, set) {
     host.innerHTML = "";
     for (const it of items) {
@@ -2073,14 +2107,22 @@
       recNode.onaudioprocess = (e) => {
         const ib = e.inputBuffer;
         const c0 = ib.getChannelData(0);
+        let block;
         if (ib.numberOfChannels > 1) {
           const c1 = ib.getChannelData(1);
           const m = new Float32Array(c0.length);
           for (let i = 0; i < c0.length; i++) m[i] = (c0[i] + c1[i]) * 0.5;
-          recBuffers.push(m);
+          block = m;
         } else {
-          recBuffers.push(Float32Array.from(c0));
+          block = Float32Array.from(c0);
         }
+        recBuffers.push(block);
+        let pk = 0;
+        for (let i = 0; i < block.length; i += 4) {
+          const a = block[i] < 0 ? -block[i] : block[i];
+          if (a > pk) pk = a;
+        }
+        pushLevel(pk);
       };
       recSource.connect(recNode);
       recNode.connect(mute);
@@ -2089,9 +2131,15 @@
       recStart = performance.now();
       $("recBtn").classList.add("on");
       $("recBtn").textContent = "\u25A0 Stop";
-      recTimer = window.setInterval(() => {
-        $("recTime").textContent = "Recording\u2026 " + ((performance.now() - recStart) / 1e3).toFixed(0) + "s";
-      }, 200);
+      waveLevels = [];
+      const tick = () => {
+        const el = (performance.now() - recStart) / 1e3;
+        $("recTime").innerHTML = `<span class="recdot">\u25CF</span> REC <b class="rectime">${mmss(el)}</b> <span class="recmax">/ ${mmss(MAX_REC_SEC)}</span>`;
+        renderWave();
+        if (el >= MAX_REC_SEC) stopRec();
+      };
+      tick();
+      recTimer = window.setInterval(tick, 100);
     } catch (e) {
       const name = (e == null ? void 0 : e.name) || (e == null ? void 0 : e.message) || e;
       setStatus("Microphone unavailable: " + name + ". Allow the mic; on iPhone use Safari directly (not an in-app browser).");
@@ -2127,8 +2175,20 @@
     recBuffers = [];
     stopPlay();
     setGenBtn("generate");
-    $("recTime").textContent = "Recording done.";
-    setStatus(`Recorded ${(recPCM.length / recSR).toFixed(0)}s. Pick a genre and press Generate.`);
+    const recSec = recPCM.length / recSR;
+    $("recTime").innerHTML = `\u2713 Recorded <b class="rectime">${mmss(recSec)}</b>`;
+    waveLevels = [];
+    const step = Math.max(1, Math.floor(recPCM.length / WAVE_BARS));
+    for (let s = 0; s + step <= recPCM.length; s += step) {
+      let pk = 0;
+      for (let i = s; i < s + step; i += 8) {
+        const a = recPCM[i] < 0 ? -recPCM[i] : recPCM[i];
+        if (a > pk) pk = a;
+      }
+      pushLevel(pk);
+    }
+    renderWave();
+    setStatus(`Recorded ${mmss(recSec)}. Pick a genre and press Generate.`);
   }
   $("recBtn").onclick = () => {
     if (recording) stopRec();
