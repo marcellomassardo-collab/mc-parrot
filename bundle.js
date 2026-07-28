@@ -691,23 +691,23 @@
   };
   var ROOT_HZ = 130.81;
   var GENRES = {
-    House: { bpm: 125, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1, hatRate: 1.6, motif: [0, 0, 3, 5], melSteps: [0, 4, 8, 12], noteDur: 0.45, voice: 0.3, seventh: false, arp: false, padGain: 0.22 },
-    Tekno: { bpm: 180, structure: "dance", kick: [0, 4, 8, 12], snare: [], hatStep: 2, kickRate: 0.7, snareRate: 1, hatRate: 2, motif: [0, 0, 0, 3], melSteps: [0, 8], noteDur: 0.3, voice: 0.1, seventh: false, arp: false, padGain: 0.15, chords: [0, 0, 6, 6], halfTime: true },
+    House: { bpm: 125, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1, hatRate: 1.6, motif: [0, 0, 3, 5], melSteps: [0, 4, 8, 12], noteDur: 0.45, voice: 0.5, seventh: false, arp: false, padGain: 0.22 },
+    Tekno: { bpm: 180, structure: "dance", kick: [0, 4, 8, 12], snare: [], hatStep: 2, kickRate: 0.7, snareRate: 1, hatRate: 2, motif: [0, 0, 0, 3], melSteps: [0, 8], noteDur: 0.3, voice: 0.35, seventh: false, arp: false, padGain: 0.15, chords: [0, 0, 6, 6], halfTime: true },
     // halfTime:true = NON dimezzare → spinge a 180 pieno (kick four-on-floor veloce)
-    EDM: { bpm: 128, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.1, hatRate: 1.7, motif: [0, 4, 7, 4], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.22, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
-    Trance: { bpm: 138, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1, hatRate: 1.8, motif: [0, 4, 7, 11], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.2, voice: 0.2, seventh: false, arp: true, padGain: 0.24 },
-    Dubstep: { bpm: 140, structure: "dance", kick: [0, 8], snare: [8], hatStep: 4, kickRate: 0.7, snareRate: 0.9, hatRate: 2, motif: [0, 1, 0, 6], melSteps: [0, 6, 8, 11], noteDur: 0.5, voice: 0.3, seventh: false, arp: false, padGain: 0.18, chords: [0, 0, 5, 5], bassSteps: [0, 1, 2, 4, 8, 9, 10, 12], halfTime: true },
-    DnB: { bpm: 174, structure: "dance", kick: [0, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1.15, hatRate: 1.8, motif: [0, 7, 5, 3], melSteps: [0, 4, 8, 12], noteDur: 0.3, voice: 0.2, seventh: false, arp: false, padGain: 0.2 },
+    EDM: { bpm: 128, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.1, hatRate: 1.7, motif: [0, 4, 7, 4], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.22, voice: 0.45, seventh: false, arp: true, padGain: 0.24 },
+    Trance: { bpm: 138, structure: "dance", kick: [0, 4, 8, 12], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1, hatRate: 1.8, motif: [0, 4, 7, 11], melSteps: [0, 2, 4, 6, 8, 10, 12, 14], noteDur: 0.2, voice: 0.45, seventh: false, arp: true, padGain: 0.24 },
+    Dubstep: { bpm: 140, structure: "dance", kick: [0, 8], snare: [8], hatStep: 4, kickRate: 0.7, snareRate: 0.9, hatRate: 2, motif: [0, 1, 0, 6], melSteps: [0, 6, 8, 11], noteDur: 0.5, voice: 0.5, seventh: false, arp: false, padGain: 0.18, chords: [0, 0, 5, 5], bassSteps: [0, 1, 2, 4, 8, 9, 10, 12], halfTime: true },
+    DnB: { bpm: 174, structure: "dance", kick: [0, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 1.15, hatRate: 1.8, motif: [0, 7, 5, 3], melSteps: [0, 4, 8, 12], noteDur: 0.3, voice: 0.4, seventh: false, arp: false, padGain: 0.2 },
     "Hip-hop": { bpm: 90, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 0.95, hatRate: 1.4, motif: [0, 3, 2, 0], melSteps: [0, 10], noteDur: 0.5, voice: 0.8, seventh: true, arp: false, padGain: 0.18 },
     RnB: { bpm: 85, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 0.9, hatRate: 1.2, motif: [0, 2, 6, 4], melSteps: [0, 6, 12], noteDur: 0.6, voice: 0.85, seventh: true, arp: false, padGain: 0.22 },
     "Lo-fi": { bpm: 82, structure: "chill", kick: [0, 10], snare: [4, 12], hatStep: 4, kickRate: 0.9, snareRate: 0.85, hatRate: 1.3, motif: [0, 6, 4, 2], melSteps: [0, 4, 10], noteDur: 0.6, voice: 0.4, seventh: true, arp: false, padGain: 0.22 },
     Pop: { bpm: 112, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.9, snareRate: 1, hatRate: 1.4, motif: [0, 2, 4, 5], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.75, seventh: false, arp: false, padGain: 0.22 },
     // --- generi aggiunti dai riferimenti (Marley/Doors/Queen/Miles/Norah) ---
-    Reggae: { bpm: 78, structure: "pop", kick: [8], snare: [8], hatStep: 2, kickRate: 0.85, snareRate: 0.95, hatRate: 1.3, motif: [0, 2, 4, 2], melSteps: [8], noteDur: 0.25, voice: 0.55, seventh: false, arp: false, padGain: 0.05, skankSteps: [2, 6, 10, 14] },
+    Reggae: { bpm: 78, structure: "pop", kick: [8], snare: [8], hatStep: 2, kickRate: 0.85, snareRate: 0.95, hatRate: 1.3, motif: [0, 2, 4, 2], melSteps: [8], noteDur: 0.25, voice: 0.65, seventh: false, arp: false, padGain: 0.05, skankSteps: [2, 6, 10, 14] },
     // one-drop + skank in levare
-    Rock: { bpm: 120, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.05, hatRate: 1.5, motif: [0, 4, 5, 4], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.45, seventh: false, arp: false, padGain: 0.14, power: true },
+    Rock: { bpm: 120, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 1.05, hatRate: 1.5, motif: [0, 4, 5, 4], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.6, seventh: false, arp: false, padGain: 0.14, power: true },
     // backbeat + power chord
-    Jazz: { bpm: 120, structure: "chill", kick: [0], snare: [4, 12], hatStep: 2, kickRate: 0.7, snareRate: 0.8, hatRate: 1.2, motif: [0, 2, 4, 6], melSteps: [0, 4, 8, 12], noteDur: 0.35, voice: 0.3, seventh: true, arp: false, padGain: 0.2, swing: 0.33 }
+    Jazz: { bpm: 120, structure: "chill", kick: [0], snare: [4, 12], hatStep: 2, kickRate: 0.7, snareRate: 0.8, hatRate: 1.2, motif: [0, 2, 4, 6], melSteps: [0, 4, 8, 12], noteDur: 0.35, voice: 0.5, seventh: true, arp: false, padGain: 0.2, swing: 0.33 }
     // swing + settime
   };
   for (const g of ["House", "Tekno", "EDM", "Trance", "Dubstep", "DnB"]) {
@@ -716,23 +716,40 @@
       GENRES[g].vocoderGain = 1.3;
     }
   }
-  GENRES.Pop.vocoder = 0.28;
-  GENRES.Pop.vocoderGain = 0.75;
-  GENRES["Hip-hop"].vocoder = 0.28;
-  GENRES["Hip-hop"].vocoderGain = 0.75;
-  GENRES.Pop.autotune = 0.75;
-  GENRES.RnB.autotune = 0.8;
-  GENRES["Lo-fi"].autotune = 0.5;
-  GENRES.Reggae.autotune = 0.55;
-  GENRES.Rock.autotune = 0.5;
-  GENRES.Jazz.autotune = 0.45;
-  GENRES["Hip-hop"].autotune = 0.35;
-  GENRES.House.autotune = 0.6;
-  GENRES.Trance.autotune = 0.6;
-  GENRES.EDM.autotune = 0.6;
-  GENRES.DnB.autotune = 0.5;
-  GENRES.Dubstep.autotune = 0.5;
-  GENRES.Tekno.autotune = 0.4;
+  GENRES.Pop.vocoder = 0.5;
+  GENRES.Pop.vocoderGain = 0.95;
+  GENRES["Hip-hop"].vocoder = 0.55;
+  GENRES["Hip-hop"].vocoderGain = 1;
+  GENRES.RnB.vocoder = 0.45;
+  GENRES.RnB.vocoderGain = 0.9;
+  GENRES["Lo-fi"].vocoder = 0.3;
+  GENRES["Lo-fi"].vocoderGain = 0.8;
+  GENRES.Reggae.vocoder = 0.25;
+  GENRES.Reggae.vocoderGain = 0.8;
+  GENRES.Pop.autotune = 0.95;
+  GENRES.RnB.autotune = 0.95;
+  GENRES["Lo-fi"].autotune = 0.8;
+  GENRES.Reggae.autotune = 0.8;
+  GENRES.Rock.autotune = 0.7;
+  GENRES.Jazz.autotune = 0.65;
+  GENRES["Hip-hop"].autotune = 0.9;
+  GENRES.House.autotune = 0.9;
+  GENRES.Trance.autotune = 0.9;
+  GENRES.EDM.autotune = 0.9;
+  GENRES.DnB.autotune = 0.85;
+  GENRES.Dubstep.autotune = 0.85;
+  GENRES.Tekno.autotune = 0.8;
+  GENRES["Hip-hop"].autotuneHard = 0.85;
+  GENRES.EDM.autotuneHard = 0.75;
+  GENRES.Dubstep.autotuneHard = 0.75;
+  GENRES.Trance.autotuneHard = 0.6;
+  GENRES.Tekno.autotuneHard = 0.6;
+  GENRES.House.autotuneHard = 0.55;
+  GENRES.DnB.autotuneHard = 0.55;
+  GENRES.Pop.autotuneHard = 0.45;
+  GENRES.RnB.autotuneHard = 0.4;
+  GENRES["Lo-fi"].autotuneHard = 0.3;
+  GENRES.Reggae.autotuneHard = 0.25;
   GENRES.Trance.reverb = 0.24;
   GENRES.Trance.roll = 0.85;
   GENRES.EDM.reverb = 0.2;
@@ -988,6 +1005,26 @@
     }
     return onsets;
   }
+  function bandOf(d, sr) {
+    let N = 1;
+    while (N * 2 <= Math.min(2048, d.length)) N *= 2;
+    if (N < 256) return "mid";
+    const fft = new import_fft2.default(N);
+    const inp = new Float64Array(N);
+    for (let i = 0; i < N; i++) inp[i] = d[i] * (0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1)));
+    const out = fft.createComplexArray();
+    fft.realTransform(out, inp);
+    let lo = 0, mid = 0, hi = 0;
+    for (let k = 1; k < N / 2; k++) {
+      const re = out[2 * k], im = out[2 * k + 1];
+      const m = Math.sqrt(re * re + im * im);
+      const hz = k * sr / N;
+      if (hz < 200) lo += m;
+      else if (hz < 2e3) mid += m;
+      else hi += m;
+    }
+    return lo >= mid && lo >= hi ? "low" : hi >= mid ? "high" : "mid";
+  }
   function brightness(d, sr) {
     let N = 1;
     while (N * 2 <= Math.min(2048, d.length)) N *= 2;
@@ -1094,7 +1131,7 @@
       applyFades(slice, sr);
       let e = 0;
       for (let k = 0; k < slice.length; k += 8) e += slice[k] * slice[k];
-      segs.push({ data: slice, role: m.role, pitchHz: m.pitchHz, energy: e, pos: m.start, bright: brightness(slice, sr) });
+      segs.push({ data: slice, role: m.role, pitchHz: m.pitchHz, energy: e, pos: m.start, bright: brightness(slice, sr), band: bandOf(slice, sr) });
     }
     segs.sort((a, b) => b.energy - a.energy);
     if (outStats) {
@@ -1145,10 +1182,14 @@
     const byBright = segs.slice().sort((a, b) => b.bright - a.bright);
     const brightPool = byBright.filter((s) => s.bright > 0.25 && s.role !== "voice" && s.role !== "tonal").slice(0, 8);
     const dark = segs.slice().sort((a, b) => a.bright - b.bright);
-    const kickPool = kicks.length ? kicks : snares.length ? snares : dark.slice(0, 3);
-    const snarePool = snares.length ? snares : others.slice(0, 3);
-    const hatPool = hats.length ? hats : brightPool.length ? brightPool : snares.length ? snares : others.slice(1, 4);
-    const tonalPool = tonals.length ? tonals : voices.length ? voices : others;
+    const byBand = (b) => segs.filter((s) => s.band === b).sort((x, y) => y.energy - x.energy);
+    const lowOthers = others.filter((s) => s.band === "low");
+    const highOthers = others.filter((s) => s.band === "high");
+    const midOthers = others.filter((s) => s.band === "mid");
+    const kickPool = kicks.length ? kicks : lowOthers.length ? lowOthers : byBand("low").length ? byBand("low") : snares.length ? snares : dark.slice(0, 3);
+    const snarePool = snares.length ? snares : midOthers.length ? midOthers : byBand("mid").slice(0, 3);
+    const hatPool = hats.length ? hats : highOthers.length ? highOthers : brightPool.length ? brightPool : byBand("high").slice(0, 3);
+    const tonalPool = tonals.length ? tonals : voices.length ? voices : midOthers.length ? midOthers : others;
     const genreName = (_a = opts.genre) != null ? _a : "House";
     const cfg = GENRES[genreName] || GENRES.House;
     const meter2 = (_b = opts.meter) != null ? _b : "4/4";
@@ -1184,29 +1225,37 @@
       const capS = Math.min(src.data.length, Math.floor((capSec + 0.15) * sr));
       const srcData = src.data.length > capS ? src.data.subarray(0, capS) : src.data;
       const data = vocode(srcData, sr, chordHz);
-      const seg = { data, role: "voice", pitchHz: chordHz[0], energy: src.energy, pos: src.pos, bright: src.bright };
+      const seg = { data, role: "voice", pitchHz: chordHz[0], energy: src.energy, pos: src.pos, bright: src.bright, band: src.band };
       vocCache.set(key, seg);
       return seg;
     };
     const tuneCache = /* @__PURE__ */ new Map();
-    const tuneSeg = (src, root, variant) => {
+    const tuneSeg = (src, root, hard) => {
       if (!src.pitchHz || src.pitchHz < 60) return src;
-      const key = `t_${src.pos}_${src.data.length}_${root}`;
+      const key = `t_${src.pos}_${src.data.length}_${root}_${hard ? "H" : "S"}`;
       const hit = tuneCache.get(key);
       if (hit) return hit;
       const cand = [0, 2, 4].map((d) => scaleFreq(semis, root + d));
-      const oct = Math.round(Math.log2(src.pitchHz / cand[0]));
-      const target = cand.map((f) => f * Math.pow(2, oct));
-      let best = target[variant % target.length];
-      let bestD = 1e9;
-      for (const t of target) {
-        const d = Math.abs(12 * Math.log2(t / src.pitchHz));
-        if (d < bestD) {
-          bestD = d;
-          best = t;
+      let data;
+      let newPitch = src.pitchHz;
+      if (hard) {
+        data = autotuneHard(src.data, sr, cand);
+      } else {
+        const oct = Math.round(Math.log2(src.pitchHz / cand[0]));
+        const target = cand.map((f) => f * Math.pow(2, oct));
+        let best = target[0];
+        let bestD = 1e9;
+        for (const t of target) {
+          const d = Math.abs(12 * Math.log2(t / src.pitchHz));
+          if (d < bestD) {
+            bestD = d;
+            best = t;
+          }
         }
+        data = autotune(src.data, sr, src.pitchHz, best);
+        newPitch = best;
       }
-      const seg = { ...src, data: autotune(src.data, sr, src.pitchHz, best), pitchHz: best };
+      const seg = { ...src, data, pitchHz: newPitch };
       tuneCache.set(key, seg);
       return seg;
     };
@@ -1290,6 +1339,7 @@
     let bar = 0;
     let vhIdx = 0;
     let voiceDebt = 0;
+    const prevPadHz = [0, 0, 0];
     let lastLeadEnd = -1;
     for (let si = 0; si < structure.length; si++) {
       const S = structure[si];
@@ -1344,13 +1394,25 @@
         if (S.bass && tonalPool.length && cfg.padGain > 0) {
           const triad = cfg.power || density < 1 ? [tones[0], tones[2]] : [tones[0], tones[1], tones[2]];
           const padG = cfg.padGain * (0.6 + 0.4 * density);
-          const pulse = Math.max(2, Math.floor(steps / 8));
-          for (let ps = 0; ps < steps; ps += pulse) {
-            for (let c = 0; c < triad.length; c++) {
-              const t = pickTonalFor(scaleFreq(semis, triad[c]), bar * 5 + ps + c, pulse * sixteenth * 1.4);
-              const padPan = c === 0 ? 0 : c === 1 ? -0.4 : 0.4;
-              if (t) push(t.seg, barStart + (ps + c * 0.2) * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), pulse * sixteenth * 1.4, true, padPan);
+          const padDur = barDur * 1.02;
+          const padHz = [];
+          for (let c = 0; c < triad.length; c++) {
+            let hz = scaleFreq(semis, triad[c]);
+            const prev = prevPadHz[c];
+            if (prev > 0) {
+              const oct = Math.round(Math.log2(prev / hz));
+              hz = hz * Math.pow(2, oct);
             }
+            padHz.push(hz);
+          }
+          for (let c = 1; c < padHz.length; c++) {
+            if (padHz[c] < 150 && Math.abs(12 * Math.log2(padHz[c] / padHz[c - 1])) < 4) padHz[c] *= 2;
+          }
+          for (let c = 0; c < triad.length; c++) {
+            const t = pickTonalFor(padHz[c], bar * 5 + c, padDur);
+            const padPan = c === 0 ? 0 : c === 1 ? -0.4 : 0.4;
+            if (t) push(t.seg, barStart + c * 0.25 * sixteenth, t.rate, padG * vol * (c === 0 ? 1 : 0.8), padDur, true, padPan);
+            prevPadHz[c] = padHz[c];
           }
         }
         if (S.bass && tonalPool.length) {
@@ -1404,7 +1466,7 @@
         }
         if (S.voice && vSorted.length) {
           const vocal = cfg.voice >= 0.7;
-          const vMax = vocal ? 6 : 4;
+          const vMax = vocal ? 6 : 5;
           const hookMax = 7;
           const vGap = vocal ? 1.5 : cfg.voice >= 0.35 ? 1.9 : 2.6;
           voiceDebt += barDur / vGap;
@@ -1422,16 +1484,17 @@
             const doVoc = cfg.vocoder ? cfg.vocoder >= 1 ? true : rnd() < cfg.vocoder : false;
             const vocNotes = cfg.vocoder && cfg.vocoder >= 1 ? S.intensity >= 0.9 ? 5 : S.intensity >= 0.6 ? 4 : 3 : 3;
             const doTune = !doVoc && !!cfg.autotune && rnd() < cfg.autotune;
-            const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot, vdur, vocNotes) : doTune ? tuneSeg(rawVseg, chordRoot, vi) : rawVseg;
+            const hardTune = doTune && !!cfg.autotuneHard && rnd() < cfg.autotuneHard;
+            const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot, vdur, vocNotes) : doTune ? tuneSeg(rawVseg, chordRoot, hardTune) : rawVseg;
             const vGainMul = doVoc ? (_c = cfg.vocoderGain) != null ? _c : 1 : 1;
             push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol * vGainMul, vdur);
             lastLeadEnd = vwhen + vdur;
           }
           if (vocal && isChorus && vSorted.length) {
             const chop = vSorted[(bar * 3 + 1) % vSorted.length];
-            push(chop, barStart + Math.floor(steps / 2) * sixteenth, 1, 0.26 * vol, 0.22, false, -0.8);
+            push(chop, barStart + Math.floor(steps / 2) * sixteenth, 0.5, 0.22 * vol, 0.3, false, -0.8);
             const harm = vSorted[(bar * 5 + 2) % vSorted.length];
-            push(harm, barStart + Math.floor(steps * 0.75) * sixteenth, 1.5, 0.18 * vol, 0.3, false, 0.8);
+            push(harm, barStart + Math.floor(steps * 0.75) * sixteenth, 1.5, 0.16 * vol, 0.3, false, 0.8);
           }
         }
         if (charPool.length && bar % 4 === 3 && S.intensity >= 0.5) {
@@ -1625,6 +1688,77 @@
     while (semi < -6) semi += 12;
     if (Math.abs(semi) < 0.15) return Float32Array.from(data);
     return pitchShift(data, sr, semi);
+  }
+  function autotuneHard(data, sr, targetsHz, blockSec = 0.18) {
+    if (data.length < 4096 || !targetsHz.length) return Float32Array.from(data);
+    const B = Math.max(2048, Math.floor(blockSec * sr));
+    const out = new Float32Array(data.length);
+    const xf = Math.floor(sr * 8e-3);
+    for (let s = 0; s < data.length; s += B) {
+      const end = Math.min(data.length, s + B);
+      const len = end - s;
+      if (len < 1024) {
+        for (let i = s; i < end; i++) out[i] = data[i];
+        break;
+      }
+      const block = data.subarray(s, end);
+      const f0 = blockF0(block, sr);
+      let shifted;
+      if (f0 > 60) {
+        let best = targetsHz[0];
+        let bestD = 1e9;
+        for (const t0 of targetsHz) {
+          const oct = Math.round(Math.log2(f0 / t0));
+          const cand = t0 * Math.pow(2, oct);
+          const d = Math.abs(12 * Math.log2(cand / f0));
+          if (d < bestD) {
+            bestD = d;
+            best = cand;
+          }
+        }
+        const semi = 12 * Math.log2(best / f0);
+        shifted = Math.abs(semi) < 0.1 || Math.abs(semi) > 7 ? Float32Array.from(block) : pitchShift(block, sr, semi);
+      } else {
+        shifted = Float32Array.from(block);
+      }
+      for (let i = 0; i < len; i++) {
+        let g = 1;
+        if (s > 0 && i < xf) g = i / xf;
+        out[s + i] += shifted[i] * g;
+        if (s > 0 && i < xf) out[s + i] += out[s + i] * 0;
+      }
+    }
+    return out;
+  }
+  function blockF0(x, sr) {
+    const W = Math.min(2048, x.length);
+    const buf = new Float64Array(W);
+    let mean = 0;
+    for (let i = 0; i < W; i++) mean += x[i];
+    mean /= W;
+    for (let i = 0; i < W; i++) buf[i] = x[i] - mean;
+    const minL = Math.max(2, Math.round(sr / 400));
+    const maxL = Math.min(W - 2, Math.round(sr / 70));
+    const vals = [];
+    for (let tau = minL; tau <= maxL; tau += 2) {
+      let acf = 0, m = 0;
+      const lim = W - tau;
+      for (let i = 0; i < lim; i += 2) {
+        const a = buf[i], b = buf[i + tau];
+        acf += a * b;
+        m += a * a + b * b;
+      }
+      vals.push(m > 1e-12 ? 2 * acf / m : 0);
+    }
+    let mx = 0;
+    for (const v of vals) if (v > mx) mx = v;
+    if (mx < 0.45) return 0;
+    for (let i = 1; i < vals.length - 1; i++) {
+      if (vals[i] >= vals[i - 1] && vals[i] >= vals[i + 1] && vals[i] >= 0.85 * mx) {
+        return sr / (minL + i * 2);
+      }
+    }
+    return 0;
   }
   function delayEffect(data, sr, delaySec, feedback = 0.42, mix = 0.5, taps = 4) {
     const d = Math.max(1, Math.floor(delaySec * sr));
