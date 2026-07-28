@@ -1646,8 +1646,11 @@
   var outPCM = null;
   var outSR = 48e3;
   var ctx = null;
-  var mr = null;
-  var chunks = [];
+  var recStream = null;
+  var recNode = null;
+  var recSource = null;
+  var recBuffers = [];
+  var recording = false;
   var recStart = 0;
   var recTimer;
   var playSrc = null;
@@ -1673,37 +1676,53 @@
       bpm = DEF[v].bpm;
       $("bpm").value = String(bpm);
       $("bpmVal").textContent = String(bpm);
+      onParamsChanged();
     });
     buildChips($("scales"), SCALES2, () => scale, (v) => {
       scale = v;
+      onParamsChanged();
     });
   }
   refreshChips();
   $("bpm").oninput = (e) => {
     bpm = +e.target.value;
     $("bpmVal").textContent = String(bpm);
+    onParamsChanged();
+  };
+  $("surpriseBtn").onclick = () => {
+    genre = GENRES2[Math.floor(Math.random() * GENRES2.length)];
+    scale = SCALES2[Math.floor(Math.random() * SCALES2.length)];
+    const base = DEF[genre].bpm;
+    bpm = Math.max(50, Math.min(180, Math.round(base + (Math.random() * 16 - 8))));
+    $("bpm").value = String(bpm);
+    $("bpmVal").textContent = String(bpm);
+    refreshChips();
+    onParamsChanged();
+    setStatus(`\u{1F3B2} ${genre} \xB7 ${scale} \xB7 ${bpm} BPM \u2014 press Generate!`);
   };
   async function startRec() {
-    var _a;
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setStatus("This browser does not support microphone access. Try Chrome or Safari (latest).");
+        return;
+      }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      recStream = stream;
       ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
-      chunks = [];
-      mr = new MediaRecorder(stream);
-      mr.ondataavailable = (e) => {
-        if (e.data.size) chunks.push(e.data);
+      if (ctx.state === "suspended") await ctx.resume();
+      recSR = ctx.sampleRate;
+      recBuffers = [];
+      recSource = ctx.createMediaStreamSource(stream);
+      recNode = ctx.createScriptProcessor(4096, 1, 1);
+      const mute = ctx.createGain();
+      mute.gain.value = 0;
+      recNode.onaudioprocess = (e) => {
+        recBuffers.push(Float32Array.from(e.inputBuffer.getChannelData(0)));
       };
-      mr.onstop = async () => {
-        stream.getTracks().forEach((t) => t.stop());
-        setStatus("Processing recording\u2026");
-        const arr = await new Blob(chunks).arrayBuffer();
-        const abuf = await ctx.decodeAudioData(arr.slice(0));
-        recSR = abuf.sampleRate;
-        recPCM = Float32Array.from(abuf.getChannelData(0));
-        $("genBtn").disabled = false;
-        setStatus(`Recorded ${(recPCM.length / recSR).toFixed(0)}s. Pick a genre and press Generate.`);
-      };
-      mr.start();
+      recSource.connect(recNode);
+      recNode.connect(mute);
+      mute.connect(ctx.destination);
+      recording = true;
       recStart = performance.now();
       $("recBtn").classList.add("on");
       $("recBtn").textContent = "\u25A0 Stop";
@@ -1711,22 +1730,52 @@
         $("recTime").textContent = "Recording\u2026 " + ((performance.now() - recStart) / 1e3).toFixed(0) + "s";
       }, 200);
     } catch (e) {
-      setStatus("Microphone permission denied or unavailable: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
+      const name = (e == null ? void 0 : e.name) || (e == null ? void 0 : e.message) || e;
+      setStatus("Microphone unavailable: " + name + ". Allow the mic; on iPhone use Safari directly (not an in-app browser).");
     }
   }
   function stopRec() {
-    mr == null ? void 0 : mr.stop();
+    if (!recording) return;
+    recording = false;
     clearInterval(recTimer);
+    try {
+      recSource && recSource.disconnect();
+    } catch {
+    }
+    try {
+      recNode && recNode.disconnect();
+    } catch {
+    }
+    if (recStream) recStream.getTracks().forEach((t) => t.stop());
     $("recBtn").classList.remove("on");
     $("recBtn").textContent = "\u25CF Record";
+    let len = 0;
+    for (const b of recBuffers) len += b.length;
+    if (len < recSR * 0.2) {
+      setStatus("Recording too short \u2014 hold Record a bit longer.");
+      return;
+    }
+    recPCM = new Float32Array(len);
+    let off = 0;
+    for (const b of recBuffers) {
+      recPCM.set(b, off);
+      off += b.length;
+    }
+    recBuffers = [];
+    stopPlay();
+    setGenBtn("generate");
     $("recTime").textContent = "Recording done.";
+    setStatus(`Recorded ${(recPCM.length / recSR).toFixed(0)}s. Pick a genre and press Generate.`);
   }
   $("recBtn").onclick = () => {
-    if (mr && mr.state === "recording") stopRec();
+    if (recording) stopRec();
     else startRec();
   };
   function generate() {
     if (!recPCM) return;
+    const gb = $("genBtn");
+    gb.disabled = true;
+    gb.textContent = "\u2026 Generating";
     setStatus("Generating music\u2026");
     setTimeout(() => {
       var _a;
@@ -1738,6 +1787,7 @@
         const segs = extractAndClassify(mono, recSR, stats);
         if (!segs.length) {
           setStatus("No usable sound found.");
+          setGenBtn("generate");
           return;
         }
         const opts = { bpm, scale, genre, meter };
@@ -1747,31 +1797,67 @@
         masterPCM(out, recSR, genre);
         outPCM = out;
         outSR = recSR;
-        $("playBtn").disabled = false;
         $("expBtn").disabled = false;
         play();
         const warn = stats.noisy ? " \u26A0\uFE0F Lots of background noise \u2014 for best quality, record in a quieter spot." : "";
-        setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Play again or Export.${warn}`);
+        setStatus(`Done! ${durationSec.toFixed(0)}s of ${genre}. Press Stop/Play, or Export.${warn}`);
       } catch (e) {
         setStatus("Error: " + ((_a = e == null ? void 0 : e.message) != null ? _a : e));
+        setGenBtn("generate");
       }
     }, 30);
   }
-  $("genBtn").onclick = generate;
+  var genState = "generate";
+  var playToken = 0;
+  function setGenBtn(state) {
+    genState = state;
+    const b = $("genBtn");
+    b.disabled = false;
+    b.textContent = state === "generate" ? "\u266A Generate music" : state === "stop" ? "\u25A0 Stop" : "\u25B6 Play";
+    b.classList.toggle("rec", state === "stop");
+    b.classList.toggle("gen", state !== "stop");
+  }
+  $("genBtn").onclick = () => {
+    if (genState === "generate") generate();
+    else if (genState === "stop") {
+      stopPlay();
+      setGenBtn("play");
+    } else play();
+  };
   function play() {
     if (!outPCM || !ctx) return;
+    if (ctx.state === "suspended") ctx.resume();
     try {
       playSrc == null ? void 0 : playSrc.stop();
     } catch {
     }
+    const token = ++playToken;
     const buf = ctx.createBuffer(1, outPCM.length, outSR);
     buf.getChannelData(0).set(outPCM);
     playSrc = ctx.createBufferSource();
     playSrc.buffer = buf;
     playSrc.connect(ctx.destination);
+    playSrc.onended = () => {
+      if (token === playToken && genState === "stop") setGenBtn("play");
+    };
     playSrc.start();
+    setGenBtn("stop");
   }
-  $("playBtn").onclick = play;
+  function stopPlay() {
+    playToken++;
+    try {
+      playSrc == null ? void 0 : playSrc.stop();
+    } catch {
+    }
+    playSrc = null;
+  }
+  function onParamsChanged() {
+    if (outPCM) {
+      stopPlay();
+      setGenBtn("generate");
+      $("expBtn").disabled = true;
+    }
+  }
   function pcmToWav(pcm, sr) {
     const n = pcm.length, dataSize = n * 2, buf = new ArrayBuffer(44 + dataSize), v = new DataView(buf);
     const w = (o2, s) => {
@@ -1802,9 +1888,13 @@
     if (!outPCM) return;
     const blob = new Blob([pcmToWav(outPCM, outSR).buffer], { type: "audio/wav" });
     const url = URL.createObjectURL(blob);
+    const cl = (s) => s.replace(/[^A-Za-z0-9]/g, "");
+    const d = /* @__PURE__ */ new Date();
+    const stamp = String(d.getDate()).padStart(2, "0") + String(d.getMonth() + 1).padStart(2, "0") + d.getFullYear();
+    const name = `MCParrot_${cl(genre)}_${Math.round(bpm)}bpm${cl(scale)}${stamp}.wav`;
     const a = document.createElement("a");
     a.href = url;
-    a.download = "mcparrot.wav";
+    a.download = name;
     document.body.appendChild(a);
     a.click();
     a.remove();
