@@ -1191,7 +1191,7 @@
     const tuneCache = /* @__PURE__ */ new Map();
     const tuneSeg = (src, root, variant) => {
       if (!src.pitchHz || src.pitchHz < 60) return src;
-      const key = `t_${src.pos}_${src.data.length}_${root}_${variant % 3}`;
+      const key = `t_${src.pos}_${src.data.length}_${root}`;
       const hit = tuneCache.get(key);
       if (hit) return hit;
       const cand = [0, 2, 4].map((d) => scaleFreq(semis, root + d));
@@ -1566,16 +1566,28 @@
       const outStart = k * Ha;
       if (outStart + W >= outLen) break;
       let best = Math.round(inPos);
-      if (k > 0) {
-        let bestScore = -Infinity;
-        for (let d = -search; d <= search; d++) {
-          const c = Math.round(inPos) + d;
-          if (c < 0 || c + W >= n || prevEnd + Ha >= n) continue;
+      if (k > 0 && prevEnd + Ha < n) {
+        const base = Math.round(inPos);
+        const corr = (c) => {
+          if (c < 0 || c + W >= n) return -Infinity;
           let s = 0;
-          for (let i = 0; i < Ha; i += 2) s += x[c + i] * x[prevEnd + i];
-          if (s > bestScore) {
-            bestScore = s;
-            best = c;
+          for (let i = 0; i < Ha; i += 4) s += x[c + i] * x[prevEnd + i];
+          return s;
+        };
+        let bestScore = -Infinity;
+        for (let d = -search; d <= search; d += 8) {
+          const v = corr(base + d);
+          if (v > bestScore) {
+            bestScore = v;
+            best = base + d;
+          }
+        }
+        const c0 = best;
+        for (let d = -7; d <= 7; d++) {
+          const v = corr(c0 + d);
+          if (v > bestScore) {
+            bestScore = v;
+            best = c0 + d;
           }
         }
       }
@@ -2107,6 +2119,7 @@
   var recStart = 0;
   var recTimer;
   var playSrc = null;
+  var segCache = null;
   var $ = (id) => document.getElementById(id);
   var setStatus = (t) => $("status").textContent = t;
   var MAX_REC_SEC = 6 * 60;
@@ -2303,11 +2316,15 @@
     setTimeout(() => {
       var _a, _b;
       try {
-        const mono = Float32Array.from(recPCM);
-        highpass(mono, recSR);
-        normalize(mono, 0.98);
-        const stats = { onsets: 0, noise: 0, kept: 0, noiseFrac: 0, floorRatio: 0, noisy: false };
-        const segs = extractAndClassify(mono, recSR, stats);
+        if (!segCache || segCache.pcm !== recPCM) {
+          const mono = Float32Array.from(recPCM);
+          highpass(mono, recSR);
+          normalize(mono, 0.98);
+          const stats2 = { onsets: 0, noise: 0, kept: 0, noiseFrac: 0, floorRatio: 0, noisy: false };
+          segCache = { pcm: recPCM, segs: extractAndClassify(mono, recSR, stats2), noisy: stats2.noisy };
+        }
+        const segs = segCache.segs;
+        const stats = { noisy: segCache.noisy };
         if (!segs.length) {
           setStatus("No usable sound found.");
           setGenBtn("generate");
