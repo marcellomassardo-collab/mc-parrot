@@ -701,7 +701,7 @@
     "Hip-hop": { bpm: 90, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.8, snareRate: 0.95, hatRate: 1.4, motif: [0, 3, 2, 0], melSteps: [0, 10], noteDur: 0.5, voice: 0.8, seventh: true, arp: false, padGain: 0.18 },
     RnB: { bpm: 85, structure: "urban", kick: [0, 6, 10], snare: [4, 12], hatStep: 2, kickRate: 0.85, snareRate: 0.9, hatRate: 1.2, motif: [0, 2, 6, 4], melSteps: [0, 6, 12], noteDur: 0.6, voice: 0.85, seventh: true, arp: false, padGain: 0.22 },
     "Lo-fi": { bpm: 82, structure: "chill", kick: [0, 10], snare: [4, 12], hatStep: 4, kickRate: 0.9, snareRate: 0.85, hatRate: 1.3, motif: [0, 6, 4, 2], melSteps: [0, 4, 10], noteDur: 0.6, voice: 0.4, seventh: true, arp: false, padGain: 0.22 },
-    Pop: { bpm: 120, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.9, snareRate: 1, hatRate: 1.4, motif: [0, 2, 4, 5], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.75, seventh: false, arp: false, padGain: 0.22 },
+    Pop: { bpm: 112, structure: "pop", kick: [0, 8], snare: [4, 12], hatStep: 2, kickRate: 0.9, snareRate: 1, hatRate: 1.4, motif: [0, 2, 4, 5], melSteps: [0, 4, 8, 12], noteDur: 0.4, voice: 0.75, seventh: false, arp: false, padGain: 0.22 },
     // --- generi aggiunti dai riferimenti (Marley/Doors/Queen/Miles/Norah) ---
     Reggae: { bpm: 78, structure: "pop", kick: [8], snare: [8], hatStep: 2, kickRate: 0.85, snareRate: 0.95, hatRate: 1.3, motif: [0, 2, 4, 2], melSteps: [8], noteDur: 0.25, voice: 0.55, seventh: false, arp: false, padGain: 0.05, skankSteps: [2, 6, 10, 14] },
     // one-drop + skank in levare
@@ -720,6 +720,19 @@
   GENRES.Pop.vocoderGain = 0.75;
   GENRES["Hip-hop"].vocoder = 0.28;
   GENRES["Hip-hop"].vocoderGain = 0.75;
+  GENRES.Pop.autotune = 0.75;
+  GENRES.RnB.autotune = 0.8;
+  GENRES["Lo-fi"].autotune = 0.5;
+  GENRES.Reggae.autotune = 0.55;
+  GENRES.Rock.autotune = 0.5;
+  GENRES.Jazz.autotune = 0.45;
+  GENRES["Hip-hop"].autotune = 0.35;
+  GENRES.House.autotune = 0.6;
+  GENRES.Trance.autotune = 0.6;
+  GENRES.EDM.autotune = 0.6;
+  GENRES.DnB.autotune = 0.5;
+  GENRES.Dubstep.autotune = 0.5;
+  GENRES.Tekno.autotune = 0.4;
   GENRES.Trance.reverb = 0.24;
   GENRES.Trance.roll = 0.85;
   GENRES.EDM.reverb = 0.2;
@@ -1175,6 +1188,28 @@
       vocCache.set(key, seg);
       return seg;
     };
+    const tuneCache = /* @__PURE__ */ new Map();
+    const tuneSeg = (src, root, variant) => {
+      if (!src.pitchHz || src.pitchHz < 60) return src;
+      const key = `t_${src.pos}_${src.data.length}_${root}_${variant % 3}`;
+      const hit = tuneCache.get(key);
+      if (hit) return hit;
+      const cand = [0, 2, 4].map((d) => scaleFreq(semis, root + d));
+      const oct = Math.round(Math.log2(src.pitchHz / cand[0]));
+      const target = cand.map((f) => f * Math.pow(2, oct));
+      let best = target[variant % target.length];
+      let bestD = 1e9;
+      for (const t of target) {
+        const d = Math.abs(12 * Math.log2(t / src.pitchHz));
+        if (d < bestD) {
+          bestD = d;
+          best = t;
+        }
+      }
+      const seg = { ...src, data: autotune(src.data, sr, src.pitchHz, best), pitchHz: best };
+      tuneCache.set(key, seg);
+      return seg;
+    };
     const prog = cfg.chords || PROGRESSIONS[cfg.structure] || PROGRESSIONS.pop;
     const baseTone = cfg.seventh ? [0, 2, 4, 6] : [0, 2, 4];
     const extLen = baseTone.length * 2;
@@ -1369,9 +1404,9 @@
         }
         if (S.voice && vSorted.length) {
           const vocal = cfg.voice >= 0.7;
-          const vMax = vocal ? 5 : 2.5;
-          const hookMax = 6;
-          const vGap = vocal ? 1.7 : cfg.voice >= 0.35 ? 2.2 : 3.2;
+          const vMax = vocal ? 6 : 4;
+          const hookMax = 7;
+          const vGap = vocal ? 1.5 : cfg.voice >= 0.35 ? 1.9 : 2.6;
           voiceDebt += barDur / vGap;
           const nInBar = Math.floor(voiceDebt);
           voiceDebt -= nInBar;
@@ -1386,7 +1421,8 @@
             const vdur = isHook ? Math.min(hookMax, segLenSec) : Math.min(vMax, slot * 0.92, segLenSec);
             const doVoc = cfg.vocoder ? cfg.vocoder >= 1 ? true : rnd() < cfg.vocoder : false;
             const vocNotes = cfg.vocoder && cfg.vocoder >= 1 ? S.intensity >= 0.9 ? 5 : S.intensity >= 0.6 ? 4 : 3 : 3;
-            const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot, vdur, vocNotes) : rawVseg;
+            const doTune = !doVoc && !!cfg.autotune && rnd() < cfg.autotune;
+            const vseg = doVoc ? vocodeSeg(rawVseg, chordRoot, vdur, vocNotes) : doTune ? tuneSeg(rawVseg, chordRoot, vi) : rawVseg;
             const vGainMul = doVoc ? (_c = cfg.vocoderGain) != null ? _c : 1 : 1;
             push(vseg, vwhen, 1, (0.78 + 0.18 * cfg.voice) * vol * vGainMul, vdur);
             lastLeadEnd = vwhen + vdur;
@@ -1513,6 +1549,70 @@
       res[i] = j + 1 < n ? out[j] * (1 - fr) + out[j + 1] * fr : out[n - 1];
     }
     return res;
+  }
+  function timeStretch(x, factor) {
+    const n = x.length;
+    const W = 1024;
+    const Ha = W >> 2;
+    const search = 220;
+    const outLen = Math.max(W + 1, Math.floor(n * factor));
+    const out = new Float32Array(outLen);
+    const norm = new Float32Array(outLen);
+    const win = new Float32Array(W);
+    for (let i = 0; i < W; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (W - 1));
+    let inPos = 0;
+    let prevEnd = 0;
+    for (let k = 0; ; k++) {
+      const outStart = k * Ha;
+      if (outStart + W >= outLen) break;
+      let best = Math.round(inPos);
+      if (k > 0) {
+        let bestScore = -Infinity;
+        for (let d = -search; d <= search; d++) {
+          const c = Math.round(inPos) + d;
+          if (c < 0 || c + W >= n || prevEnd + Ha >= n) continue;
+          let s = 0;
+          for (let i = 0; i < Ha; i += 2) s += x[c + i] * x[prevEnd + i];
+          if (s > bestScore) {
+            bestScore = s;
+            best = c;
+          }
+        }
+      }
+      if (best < 0 || best + W >= n) break;
+      for (let i = 0; i < W; i++) {
+        out[outStart + i] += x[best + i] * win[i];
+        norm[outStart + i] += win[i];
+      }
+      prevEnd = best + Ha;
+      inPos += Ha / factor;
+      if (inPos + W >= n) break;
+    }
+    for (let i = 0; i < outLen; i++) if (norm[i] > 1e-6) out[i] /= norm[i];
+    return out;
+  }
+  function pitchShift(data, sr, semitones) {
+    if (!semitones || data.length < 2048) return Float32Array.from(data);
+    const r = Math.pow(2, semitones / 12);
+    const stretched = timeStretch(data, r);
+    const n = data.length;
+    const out = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const sp = i * r;
+      const si = Math.floor(sp);
+      if (si + 1 >= stretched.length) break;
+      const fr = sp - si;
+      out[i] = stretched[si] * (1 - fr) + stretched[si + 1] * fr;
+    }
+    return out;
+  }
+  function autotune(data, sr, fromHz, toHz) {
+    if (!(fromHz > 40) || !(toHz > 40)) return Float32Array.from(data);
+    let semi = 12 * Math.log2(toHz / fromHz);
+    while (semi > 6) semi -= 12;
+    while (semi < -6) semi += 12;
+    if (Math.abs(semi) < 0.15) return Float32Array.from(data);
+    return pitchShift(data, sr, semi);
   }
   function delayEffect(data, sr, delaySec, feedback = 0.42, mix = 0.5, taps = 4) {
     const d = Math.max(1, Math.floor(delaySec * sr));
@@ -1984,14 +2084,14 @@
     "Hip-hop": { bpm: 90, scale: "Minor" },
     RnB: { bpm: 85, scale: "Minor" },
     "Lo-fi": { bpm: 82, scale: "Dorian" },
-    Pop: { bpm: 120, scale: "Major" },
+    Pop: { bpm: 112, scale: "Major" },
     Reggae: { bpm: 78, scale: "Major" },
     Rock: { bpm: 120, scale: "Minor" },
     Jazz: { bpm: 120, scale: "Dorian" }
   };
   var genre = "Pop";
   var scale = "Major";
-  var bpm = 120;
+  var bpm = 112;
   var meter = "4/4";
   var recPCM = null;
   var recSR = 48e3;
