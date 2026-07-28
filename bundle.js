@@ -1747,7 +1747,10 @@
     RnB: { monoBelowHz: 110, width: 1.05, lufs: -10, tpDb: -1 },
     "Lo-fi": { monoBelowHz: 100, width: 1, lufs: -14, tpDb: -1 },
     // volutamente non "loud"
-    Pop: { monoBelowHz: 110, width: 1.15, lufs: -9, tpDb: -1.5 },
+    // Pop AGGIORNATO al suono moderno (misurato su "Girl, so confusing" di Charli XCX,
+    // 2024): immagine più LARGA (corr. L/R 0.75 contro 0.84 del pop 2001) ma con i BASSI
+    // ancora più stretti al centro (solo 8% di energia laterale sotto i 100 Hz).
+    Pop: { monoBelowHz: 125, width: 1.45, lufs: -9, tpDb: -1.5 },
     House: { monoBelowHz: 110, width: 1.2, lufs: -9.5, tpDb: -1 },
     // largo sopra il basso, stretto sotto
     Tekno: { monoBelowHz: 110, width: 1.1, lufs: -9.5, tpDb: -1 },
@@ -1851,7 +1854,7 @@
       pcm[i] += v * wet;
     }
   }
-  function monoBelow(L, R, sr, fc = 120) {
+  function monoBelowAndWidth(L, R, sr, fc, width) {
     const n = Math.min(L.length, R.length);
     if (!n) return;
     const side = new Float32Array(n);
@@ -1860,18 +1863,9 @@
     hpfInplace(side, sr, fc);
     for (let i = 0; i < n; i++) {
       const mid = (L[i] + R[i]) * 0.5;
-      L[i] = mid + side[i];
-      R[i] = mid - side[i];
-    }
-  }
-  function stereoWidth(L, R, width) {
-    if (width === 1) return;
-    const n = Math.min(L.length, R.length);
-    for (let i = 0; i < n; i++) {
-      const mid = (L[i] + R[i]) * 0.5;
-      const side = (L[i] - R[i]) * 0.5 * width;
-      L[i] = mid + side;
-      R[i] = mid - side;
+      const s = side[i] * width;
+      L[i] = mid + s;
+      R[i] = mid - s;
     }
   }
   var COMP_THR = 0.25;
@@ -1988,8 +1982,7 @@
         R[i] *= gg;
       }
     }
-    monoBelow(L, R, sr, st.monoBelowHz);
-    stereoWidth(L, R, st.width);
+    monoBelowAndWidth(L, R, sr, st.monoBelowHz, st.width);
     const ceiling = Math.pow(10, st.tpDb / 20);
     let limited = false;
     for (let pass = 0; pass < 2; pass++) {

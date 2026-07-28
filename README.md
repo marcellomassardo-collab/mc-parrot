@@ -3,8 +3,9 @@
 **Turn the sounds you record into a song — entirely on your own device.**
 
 MC Parrot records ambient sounds (and your voice) from the microphone and recomposes them
-into a short musical track, using **only those sounds** as raw material (automatic musique
-concrète). Pick a genre, scale and tempo, generate, listen back, and export an audio file.
+into a short musical track, using **only those sounds** as raw material — basically chaos
+with a tiny bit of music theory. Pick a genre, scale and tempo, generate, listen back,
+and export an audio file.
 
 ## 🔒 Privacy guaranteed — please read
 
