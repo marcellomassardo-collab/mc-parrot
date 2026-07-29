@@ -48,6 +48,18 @@ APIs).
 - 🎛️ **Logic Pro and FL Studio plugin** — bring the engine into the DAW, so the sounds you
   record become material you can arrange and produce like any other instrument.
 
+## Licence — in plain words
+
+| | |
+|---|---|
+| 🎵 **The music you make is yours** | Every track you generate belongs to you. Publish it, release it, **sell it** — no strings, no credit required. |
+| 🆓 **The app is free** | For anyone, forever. No account, no ads, no tracking. |
+| 👀 **The code is open to read** | So you can check for yourself that nothing is uploaded anywhere. That claim shouldn't need trust. |
+| 🚫 **Nobody can sell the software** | You may not sell MC Parrot, or build a paid product or service out of it. Want to? Ask — a commercial licence can be granted. |
+
+Formally: [PolyForm Noncommercial License 1.0.0](LICENSE.md), plus an explicit
+additional permission covering the music you create. Copyright Marcello Massardo.
+
 ---
 
-*Personal, non-commercial project. Made for the fun of playing with sounds. 🎶*
+*Made for the fun of playing with sounds. 🎶*
