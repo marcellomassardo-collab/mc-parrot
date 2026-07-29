@@ -55,6 +55,12 @@
     .fmtChip b { display: block; color: #9A9AA8; font-size: 16px; }
     .fmtChip.on b { color: #F5A524; }
     .fmtChip span { color: #54546A; font-size: 11px; }
+    /* BARRA DI AVANZAMENTO DEL BRANO */
+    .playProg { display: none; margin: 10px 4px 0; }
+    .progTrack { height: 5px; border-radius: 3px; background: #23232D; overflow: hidden; }
+    .progFill { height: 5px; border-radius: 3px; background: #2F9BF6; width: 0; transition: width .1s linear; }
+    .progTimes { display: flex; justify-content: space-between; margin-top: 5px; color: #7A7A8C;
+                 font-size: 11px; font-variant-numeric: tabular-nums; }
     /* SCHERMATA DI SUPPORTO (PayPal) */
     .tipBack { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.72); align-items: center;
                justify-content: center; padding: 22px; z-index: 50; }
@@ -78,7 +84,7 @@
 <body>
   <div class="wrap">
     <h1>MC Parrot 🦜</h1>
-    <div class="sub">the sounds you record → a song</div>
+    <div class="sub">the sounds you record → a song<br /><span style="color:#54546A;font-size:12px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded.</span></div>
 
     <div class="card">
       <div class="row" style="justify-content:center"><span id="recTime" style="color:#9A9AA8;font-size:13px;">Record some ambient sounds (and a bit of voice)</span></div>
@@ -95,6 +101,12 @@
       <div id="scales" class="chips"></div>
       <div class="label">Tempo (BPM): <span id="bpmVal">112</span></div>
       <div class="row"><input id="bpm" type="range" min="50" max="200" value="112" /></div>
+    </div>
+
+    <!-- BARRA DI AVANZAMENTO: appare sopra il tasto mentre il brano suona -->
+    <div id="playProg" class="playProg">
+      <div class="progTrack"><div id="progFill" class="progFill"></div></div>
+      <div class="progTimes"><span id="progNow">0:00</span><span id="progTot">0:00</span></div>
     </div>
 
     <button id="genBtn" class="big gen" disabled>♪ Generate music</button>
@@ -138,7 +150,9 @@
     <div class="note">
       Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.<br />
       <!-- La musica è dell'utente: va detto dove la gente la legge davvero, non solo nella licenza. -->
-      The music you make is yours — publish it, release it, sell it.
+      The music you make is yours — publish it, release it, sell it, just maybe tag us in the credits
+      <!-- "drop a donation" deve portare da qualche parte, altrimenti è un invito a vuoto -->
+      and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.
       <a href="README.md#licence--in-plain-words" style="color:#54546A">Licence</a>
     </div>
   </div>

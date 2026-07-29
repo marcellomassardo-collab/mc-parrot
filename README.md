@@ -12,6 +12,9 @@ and export an audio file.
 - **It is NOT artificial intelligence.** The engine is pure **algorithmic DSP** (frequency
   analysis, sound classification by timbre, recomposition following music theory). No neural
   network, no model, no "AI cloud".
+- **Every sound in the song is yours.** The track is built **only** from the sounds in your own
+  recording — nothing is added from outside, no sample pack, no library, nothing downloaded.
+  If you hear a drum, it is something you recorded.
 - **No file is ever sent to anyone.** The audio you record **never leaves your device**: it is
   processed entirely **in your browser**, locally.
 - **No external server.** The app is just static files (a single web page): there is no
@@ -52,7 +55,7 @@ APIs).
 
 | | |
 |---|---|
-| 🎵 **The music you make is yours** | Every track you generate belongs to you. Publish it, release it, **sell it** — no strings, no credit required. |
+| 🎵 **The music you make is yours** | Every track you generate belongs to you. Publish it, release it, **sell it** — just maybe tag us in the credits and [drop a donation](https://www.paypal.com/paypalme/marcellomassardo). Nice to have, never required. |
 | 🆓 **The app is free** | For anyone, forever. No account, no ads, no tracking. |
 | 👀 **The code is open to read** | So you can check for yourself that nothing is uploaded anywhere. That claim shouldn't need trust. |
 | 🚫 **Nobody can sell the software** | You may not sell MC Parrot, or build a paid product or service out of it. Want to? Ask — a commercial licence can be granted. |
