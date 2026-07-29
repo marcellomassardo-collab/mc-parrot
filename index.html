@@ -55,6 +55,24 @@
     .fmtChip b { display: block; color: #9A9AA8; font-size: 16px; }
     .fmtChip.on b { color: #F5A524; }
     .fmtChip span { color: #54546A; font-size: 11px; }
+    /* SCHERMATA DI SUPPORTO (PayPal) */
+    .tipBack { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.72); align-items: center;
+               justify-content: center; padding: 22px; z-index: 50; }
+    .tipCard { background: #17171E; border: 1px solid #2A2A38; border-radius: 22px; padding: 24px;
+               max-width: 400px; width: 100%; position: relative; }
+    .tipClose { position: absolute; top: 12px; right: 16px; color: #54546A; font-size: 18px; font-weight: 700; cursor: pointer; }
+    .tipParrot { font-size: 44px; text-align: center; margin-bottom: 6px; }
+    .tipTitle { color: #fff; font-size: 21px; font-weight: 800; text-align: center; margin-bottom: 10px; }
+    .tipBody { color: #9A9AA8; font-size: 14px; text-align: center; line-height: 1.5; margin-bottom: 20px; }
+    .tipRow { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tipChip { flex: 1; background: #1B1B22; border: 1px solid #2A2A34; border-radius: 12px; padding: 12px 0;
+               text-align: center; color: #9A9AA8; font-size: 16px; font-weight: 700; cursor: pointer; user-select: none; }
+    .tipChip.on { background: #23232D; border-color: #F5A524; color: #F5A524; }
+    .tipPay { background: #0070BA; color: #fff; border-radius: 26px; padding: 15px; text-align: center;
+              font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 14px; } /* blu PayPal */
+    .tipNo { color: #7A7A8C; font-size: 13px; text-align: center; text-decoration: underline;
+             cursor: pointer; margin-bottom: 16px; }
+    .tipFine { color: #3A3A4A; font-size: 11px; text-align: center; line-height: 1.45; }
   </style>
 </head>
 <body>
@@ -100,6 +118,21 @@
     </div>
 
     <button id="expBtn" class="big exp" disabled>⤓ Download WAV</button>
+
+    <!-- SCHERMATA DI SUPPORTO: appare dopo il download, solo PayPal, nessuna carta -->
+    <div id="tip" class="tipBack">
+      <div class="tipCard">
+        <div id="tipClose" class="tipClose">✕</div>
+        <div class="tipParrot">🦜</div>
+        <div class="tipTitle">Enjoying MC Parrot?</div>
+        <div class="tipBody">The app is free and everything runs in your browser. If it made you smile,
+          you can support it with whatever you think is fair.</div>
+        <div id="tipRow" class="tipRow"></div>
+        <div id="tipPay" class="tipPay">Support with PayPal</div>
+        <div id="tipNo" class="tipNo">No thanks, maybe another time</div>
+        <div class="tipFine">Opens PayPal in a new tab. MC Parrot never sees or stores any payment data.</div>
+      </div>
+    </div>
 
     <div id="status" class="status"></div>
     <div class="note">Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.</div>

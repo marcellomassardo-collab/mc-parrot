@@ -38,6 +38,16 @@ structured song (with a chorus, harmony and mastering) for the chosen genre. It 
 same engine** as the Android version — only the "shell" differs (here it uses the browser's audio
 APIs).
 
+## Coming soon
+
+- 📱 **Android** — native app, same engine
+- 🍎 **iOS** — native app, same engine
+
+## Next step
+
+- 🎛️ **Logic Pro and FL Studio plugin** — bring the engine into the DAW, so the sounds you
+  record become material you can arrange and produce like any other instrument.
+
 ---
 
 *Personal, non-commercial project. Made for the fun of playing with sounds. 🎶*
