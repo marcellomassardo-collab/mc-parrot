@@ -223,6 +223,11 @@
     </div>
 
     <button id="expBtn" class="big exp" disabled>⤓ Download WAV</button>
+    <!-- CONDIVIDI: usa il menu di sistema (Web Share API). Su iPhone è la via NORMALE per
+         salvare o mandare un file — il download di Safari è scomodo e spesso invisibile.
+         Il pulsante compare SOLO se il browser sa condividere file, così non si mostra
+         mai un comando che non funziona. -->
+    <button id="shareBtn" class="big gen" style="display:none" disabled>⤴ Share</button>
 
     <!-- SCHERMATA DI SUPPORTO: appare dopo il download, solo PayPal, nessuna carta -->
     <div id="tip" class="tipBack">
