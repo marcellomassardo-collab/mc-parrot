@@ -50,7 +50,10 @@
     .sub { text-align: center; color: var(--testo-2); font-size: 13px; margin-bottom: 18px; }
     /* Etichette e valori tecnici (generi, scale, tempi, formati) nel carattere retrò:
        sono "dati", e il monospaziato li fa leggere come sul display di un sintetizzatore. */
-    .label, .chip, .fmtChip b, .fmtLabel, .coverBrand, .rectime, .recmax, .progTimes, .coverGenre, .coverMeta, .coverDur {
+    .label, .chip, .fmtChip b, .fmtLabel, .coverBrand, .rectime, .recmax, .progTimes, .coverGenre, .coverMeta, .coverDur,
+    /* anche l'INTERA riga del contatore e i messaggi di stato: lì compaiono minuti e
+       secondi, e vederli in un carattere diverso dal resto dei dati stonava */
+    #recTime, .status {
       font-family: var(--font-retro);
     }
     .label { text-transform: uppercase; letter-spacing: 1.5px; }
@@ -105,6 +108,7 @@
     .fmtChip span { color: var(--testo-3); font-size: 11px; }
     /* BARRA DI AVANZAMENTO DEL BRANO */
     .playProg { display: none; margin: 10px 4px 0; }
+    .progHit { padding: 12px 0; cursor: pointer; touch-action: none; }
     .progTrack { height: 5px; border-radius: 3px; background: var(--blu-3); overflow: hidden; }
     .progFill { height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--blu-5), var(--cresta));
                 width: 0; transition: width .1s linear; }
@@ -186,13 +190,15 @@
       <div id="genres" class="chips"></div>
       <div class="label">Scale</div>
       <div id="scales" class="chips"></div>
-      <div class="label">Tempo (BPM): <span id="bpmVal">120</span></div>
-      <div class="row"><input id="bpm" type="range" min="50" max="200" value="120" /></div>
+      <div class="label">Tempo (BPM): <span id="bpmVal">112</span></div>
+      <div class="row"><input id="bpm" type="range" min="50" max="200" value="112" /></div>
     </div>
 
     <!-- BARRA DI AVANZAMENTO: appare sopra il tasto mentre il brano suona -->
     <div id="playProg" class="playProg">
-      <div class="progTrack"><div id="progFill" class="progFill"></div></div>
+      <!-- l'area cliccabile è molto più alta della barra disegnata (5px): col dito, e
+           anche col mouse, cinque pixel sono un bersaglio scomodo -->
+      <div id="progHit" class="progHit" title="Click to jump to a point"><div class="progTrack"><div id="progFill" class="progFill"></div></div></div>
       <div class="progTimes"><span id="progNow">0:00</span><span id="progTot">0:00</span></div>
     </div>
 
