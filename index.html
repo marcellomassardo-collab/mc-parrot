@@ -22,6 +22,15 @@
       --cresta:      #F0A45C;  /* ARANCIO PALLIDO — la cresta. L'accento. */
       --cresta-vivo: #FFC48A;  /* punta della cresta, stati attivi */
       --cresta-cupo: #C97C39;  /* premuto */
+      /* ARANCIO PIENO E GIALLO — il terzo e quarto colore della skin (richiesta utente:
+         "tutto sul blu e giallo e arancione"). L'arancio pallino sopra è una tinta
+         smorzata, buona per i bordi e i dettagli; questi due sono i colori ACCESI, quelli
+         che si vedono da lontano: il tasto registra, i picchi dell'onda, il logo.
+         Il giallo mancava del tutto e la skin restava su due soli colori. */
+      --arancio: #FF8A2B;      /* arancio pieno: il tasto REGISTRA */
+      --arancio-cupo: #D96A15; /* premuto */
+      --giallo: #FFD54A;       /* giallo insegna: accenti e stati attivi */
+      --giallo-cupo: #E0A81E;
       --testo:   #E8F1FB;
       --testo-2: #9DB6D0;
       --testo-3: #5E7A99;
@@ -34,8 +43,20 @@
       --font-retro: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
     }
     * { box-sizing: border-box; }
+    /* ⚠️ I CAMPI DI MODULO NON EREDITANO IL CARATTERE. È la classica eccezione del CSS:
+       `button`, `select`, `input` e `textarea` usano il carattere del SISTEMA anche se il
+       `body` ne dichiara un altro. Misurato sulla pagina vera: con il monospaziato
+       impostato sul body, i pulsanti restavano in Arial — cioè proprio i "registra",
+       "genera" e "scarica", gli elementi più grandi della schermata. */
+    button, select, input, textarea { font: inherit; }
     body {
-      margin: 0; font-family: -apple-system, system-ui, sans-serif; color: var(--testo);
+      /* MONOSPAZIATO OVUNQUE (richiesta utente, ribadita: "font unicode ovunque").
+         Prima il corpo della pagina era in system-ui e solo i "dati" — generi, tempi,
+         contatore — erano nel carattere retrò: due caratteri diversi nella stessa
+         schermata, che è proprio ciò che rendeva la skin incoerente. Ora l'intera pagina
+         usa la stessa famiglia, e le regole più sotto che la riassegnavano ai dati sono
+         rimaste solo perché non fanno danno. */
+      margin: 0; font-family: var(--font-retro); color: var(--testo);
       -webkit-tap-highlight-color: transparent;
       /* sfumatura appena percettibile: dà profondità senza distrarre */
       background: radial-gradient(120% 80% at 50% 0%, var(--blu-1) 0%, var(--blu-0) 60%) fixed, var(--blu-0);
@@ -44,9 +65,32 @@
     .wrap { max-width: 560px; margin: 0 auto; padding: 20px 16px 60px; }
     /* Titolo in stile insegna al neon: maiuscolo, spaziato, con un alone appena acceso.
        L'alone è tenue di proposito — il neon vero non acceca, illumina. */
-    h1 { font-family: var(--font-retro); font-size: 25px; text-align: center; margin: 8px 0 2px;
-         text-transform: uppercase; letter-spacing: 3px; font-weight: 700;
-         text-shadow: 0 0 14px rgba(127,185,240,.45), 0 0 3px rgba(240,164,92,.35); }
+    /* LOGO ANNI 80 (richiesta utente). Gli ingredienti di un'insegna di quegli anni sono
+       tre, e ci sono tutti e tre: il TRAMONTO SFUMATO dal giallo all'arancio dentro le
+       lettere, le RIGHE ORIZZONTALI che lo attraversano (l'effetto "sole a strisce" dei
+       loghi da copertina), e l'ALONE al neon. Tutto in CSS su testo vero: resta
+       selezionabile, leggibile dagli screen reader e non pesa un byte in più. */
+    h1 { font-family: var(--font-retro); font-size: 27px; text-align: center; margin: 10px 0 2px;
+         text-transform: uppercase; letter-spacing: 4px; font-weight: 700; }
+    h1 span {
+      background-image:
+        /* le righe: sottili, trasparenti, solo nella metà bassa delle lettere */
+        repeating-linear-gradient(180deg,
+          transparent 0 3px, rgba(6,13,24,.55) 3px 5px),
+        /* il tramonto: giallo in alto, arancio in basso */
+        linear-gradient(180deg, var(--giallo) 0%, var(--giallo) 34%, var(--cresta) 62%, var(--arancio) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      /* l'alone sta SOTTO le lettere: un `text-shadow` sparirebbe col testo trasparente */
+      filter: drop-shadow(0 0 10px rgba(255,138,43,.40)) drop-shadow(0 0 22px rgba(127,185,240,.28));
+    }
+    /* riga di orizzonte sotto il logo, come nelle copertine dell'epoca */
+    .logoRow::after {
+      content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+      bottom: -6px; width: 172px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--arancio) 22%, var(--giallo) 50%, var(--arancio) 78%, transparent);
+      opacity: .75; border-radius: 2px;
+    }
     .sub { text-align: center; color: var(--testo-2); font-size: 13px; margin-bottom: 18px; }
     /* Etichette e valori tecnici (generi, scale, tempi, formati) nel carattere retrò:
        sono "dati", e il monospaziato li fa leggere come sul display di un sintetizzatore. */
@@ -64,13 +108,21 @@
     .chip { padding: 8px 14px; border-radius: 20px; background: var(--blu-3); color: var(--testo-2);
             border: 1px solid transparent; font-size: 13px; cursor: pointer; user-select: none; transition: background .12s, color .12s; }
     .chip:hover { background: var(--blu-4); }
-    .chip.on { background: var(--cresta); color: var(--blu-0); font-weight: 700; border-color: var(--cresta-vivo); }
+    /* stato attivo in GIALLO: si distingue a colpo d'occhio dall'arancio del tasto registra */
+    .chip.on { background: var(--giallo); color: var(--blu-0); font-weight: 700; border-color: var(--giallo-cupo); }
     .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
     button.big { width: 100%; padding: 16px; border: none; border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-    .rec { background: var(--pericolo); color: #fff; }
-    .rec.on { background: var(--blu-3); color: var(--cresta-vivo); box-shadow: inset 0 0 0 2px var(--pericolo); }
+    /* TASTO REGISTRA: ARANCIO PIENO (richiesta utente). Era rosso-arancio `--pericolo`,
+       che è il colore del "attenzione, stai saturando": usarlo anche per il tasto
+       principale confondeva i due significati. Ora registra è arancio, e il rosso resta
+       riservato al livello troppo alto. */
+    .rec { background: linear-gradient(180deg, var(--arancio), var(--arancio-cupo)); color: #2A1400;
+           font-weight: 700; letter-spacing: 1px; }
+    .rec:active { background: var(--arancio-cupo); }
+    /* mentre registra: il tasto si spegne e resta l'anello arancio che pulsa */
+    .rec.on { background: var(--blu-3); color: var(--giallo); box-shadow: inset 0 0 0 2px var(--arancio); }
     .gen { background: linear-gradient(180deg, var(--blu-5), #2C6AA8); color: #fff; }
-    .exp { background: var(--cresta); color: var(--blu-0); }
+    .exp { background: linear-gradient(180deg, var(--giallo), var(--cresta)); color: var(--blu-0); font-weight: 700; }
     button:disabled { opacity: .4; cursor: default; }
     input[type=range] { flex: 1; accent-color: var(--cresta); }
     .status { text-align: center; color: var(--testo-2); font-size: 13px; min-height: 18px; margin-top: 12px; }
@@ -92,7 +144,7 @@
              border: 1px solid var(--blu-4); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
     .coverParrot { line-height: 0; margin-bottom: 10px; }
     .coverParrot svg { width: 96px; height: 96px; display: block; }
-    .coverGenre { color: var(--blu-6); font-size: 30px; font-weight: 800; letter-spacing: 2px; }
+    .coverGenre { color: var(--giallo); font-size: 30px; font-weight: 800; letter-spacing: 2px; }
     .coverLine { width: 56px; height: 3px; border-radius: 2px; background: var(--cresta); margin: 12px 0; }
     .coverMeta { color: var(--testo); font-size: 15px; font-weight: 600; }
     .coverDur { color: var(--testo-2); font-size: 13px; margin-top: 4px; font-variant-numeric: tabular-nums; }
@@ -134,8 +186,10 @@
              cursor: pointer; margin-bottom: 16px; }
     .tipFine { color: var(--testo-3); font-size: 11px; text-align: center; line-height: 1.45; }
     /* IL CACATUA: disegnato in SVG, non un'emoji — così è davvero blu con la cresta arancio */
-    .logoRow { display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .logoRow svg { width: 42px; height: 42px; }
+    .logoRow { display: flex; align-items: center; justify-content: center; gap: 12px; position: relative; }
+    .logoRow svg { width: 52px; height: 52px;
+      /* stesso alone del testo: il cacatua fa parte dell'insegna, non le sta accanto */
+      filter: drop-shadow(0 0 8px rgba(127,185,240,.45)) drop-shadow(0 0 16px rgba(255,138,43,.22)); }
   </style>
 </head>
 <body>
