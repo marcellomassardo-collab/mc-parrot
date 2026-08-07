@@ -89,7 +89,7 @@
  content: ''; position: absolute; left: 50%; transform: translateX(-50%);
  bottom: -6px; width: 172px; height: 2px;
  background: linear-gradient(90deg, transparent, var(--arancio) 22%, var(--giallo) 50%, var(--arancio) 78%, transparent);
- opacity: .75; border-radius: 2px;
+ opacity: .75; border-radius: 0;
     }
     .sub { text-align: center; color: var(--testo-2); font-size: 13px; margin-bottom: 18px; }
     /* Etichette e valori tecnici (generi, scale, tempi, formati) nel carattere retrò:
@@ -102,16 +102,16 @@
     }
     .label { text-transform: uppercase; letter-spacing: 1.5px; }
     .chip { letter-spacing: .4px; }
-    .card { background: var(--blu-2); border: 1px solid var(--blu-4); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+    .card { background: var(--blu-2); border: 2px solid var(--testo-2); border-radius: 0; padding: 16px; margin-bottom: 14px; }
     .label { color: var(--testo-2); font-size: 13px; font-weight: 600; margin: 10px 0 6px; }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip { padding: 8px 14px; border-radius: 20px; background: var(--blu-3); color: var(--testo-2);
- border: 1px solid transparent; font-size: 13px; cursor: pointer; user-select: none; transition: background .12s, color .12s; }
+    .chip { padding: 8px 14px; border-radius: 0; background: var(--blu-3); color: var(--testo-2);
+ border: 2px solid var(--blu-4); font-size: 13px; cursor: pointer; user-select: none; transition: background .12s, color .12s; }
     .chip:hover { background: var(--blu-4); }
     /* stato attivo in GIALLO: si distingue a colpo d'occhio dall'arancio del tasto registra */
-    .chip.on { background: var(--giallo); color: var(--blu-0); font-weight: 700; border-color: var(--giallo-cupo); }
+    .chip.on { background: var(--giallo); color: var(--blu-0); font-weight: 700; border-color: var(--testo); box-shadow: 3px 3px 0 var(--testo); }
     .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
- button.big { width: 100%; padding: 16px; border: none; border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+ button.big { width: 100%; padding: 16px; border: 3px solid var(--testo); box-shadow: 6px 6px 0 var(--testo); border-radius: 0; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
     /* TASTO REGISTRA: ARANCIO PIENO (richiesta utente). Era rosso-arancio `--pericolo`,
  che è il colore del "attenzione, stai saturando": usarlo anche per il tasto
  principale confondeva i due significati. Ora registra è arancio, e il rosso resta
@@ -135,24 +135,24 @@
     /* ONDA SONORA: barre verticali che salgono col volume del microfono.
        Blu chiaro normalmente, ARANCIO quando il livello rischia di distorcere. */
     .wave { display: flex; align-items: center; justify-content: center; gap: 2px; height: 84px; margin: 10px 0 4px; overflow: hidden; }
-    .wave .bar { width: 4px; border-radius: 2px; background: var(--blu-6); flex: none; }
+    .wave .bar { width: 4px; border-radius: 0; background: var(--blu-6); flex: none; }
     .wave .bar.hot { background: var(--pericolo); }
     .waveHint { color: var(--testo-3); font-size: 13px; }
     /* SCHERMATA DEL BRANO: copertina quadrata + scelta del formato (come nell'app) */
-    .cover { aspect-ratio: 1; max-width: 340px; margin: 18px auto 12px; border-radius: 24px;
+    .cover { aspect-ratio: 1; max-width: 340px; margin: 18px auto 12px; border-radius: 0;
  background: radial-gradient(90% 70% at 50% 22%, var(--blu-3) 0%, var(--blu-2) 55%, var(--blu-1) 100%);
- border: 1px solid var(--blu-4); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+ border: 2px solid var(--testo-2); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
     .coverParrot { line-height: 0; margin-bottom: 10px; }
     .coverParrot svg { width: 96px; height: 96px; display: block; }
     .coverGenre { color: var(--giallo); font-size: 30px; font-weight: 800; letter-spacing: 2px; }
-    .coverLine { width: 56px; height: 3px; border-radius: 2px; background: var(--cresta); margin: 12px 0; }
+    .coverLine { width: 56px; height: 3px; border-radius: 0; background: var(--cresta); margin: 12px 0; }
     .coverMeta { color: var(--testo); font-size: 15px; font-weight: 600; }
     .coverDur { color: var(--testo-2); font-size: 13px; margin-top: 4px; font-variant-numeric: tabular-nums; }
     .coverBrand { position: absolute; bottom: 16px; color: var(--blu-4); font-size: 11px; letter-spacing: 3px; font-weight: 700; }
     .trackName { color: var(--testo-2); font-size: 12px; text-align: center; margin-bottom: 14px; word-break: break-all; }
     .fmtLabel { color: var(--testo-2); font-size: 12px; text-align: center; margin-bottom: 8px; letter-spacing: 1px; }
     .fmtRow { display: flex; gap: 10px; }
-    .fmtChip { flex: 1; background: var(--blu-2); border: 1px solid var(--blu-4); border-radius: 14px; padding: 12px;
+    .fmtChip { flex: 1; background: var(--blu-2); border: 2px solid var(--testo-2); border-radius: 0; padding: 12px;
  text-align: center; cursor: pointer; user-select: none; }
     .fmtChip.on { background: var(--blu-3); border-color: var(--cresta); }
     .fmtChip b { display: block; color: var(--testo-2); font-size: 16px; }
@@ -161,15 +161,15 @@
     /* BARRA DI AVANZAMENTO DEL BRANO */
     .playProg { display: none; margin: 10px 4px 0; }
     .progHit { padding: 12px 0; cursor: pointer; touch-action: none; }
-    .progTrack { height: 5px; border-radius: 3px; background: var(--blu-3); overflow: hidden; }
-    .progFill { height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--blu-5), var(--cresta));
+    .progTrack { height: 5px; border-radius: 0; background: var(--blu-3); overflow: hidden; }
+    .progFill { height: 5px; border-radius: 0; background: linear-gradient(90deg, var(--blu-5), var(--cresta));
  width: 0; transition: width .1s linear; }
     .progTimes { display: flex; justify-content: space-between; margin-top: 5px; color: var(--testo-2);
  font-size: 11px; font-variant-numeric: tabular-nums; }
     /* SCHERMATA DI SUPPORTO (PayPal) */
     .tipBack { display: none; position: fixed; inset: 0; background: rgba(3,8,16,.78); align-items: center;
  justify-content: center; padding: 22px; z-index: 50; }
-    .tipCard { background: var(--blu-2); border: 1px solid var(--blu-4); border-radius: 22px; padding: 24px;
+    .tipCard { background: var(--blu-2); border: 2px solid var(--testo-2); border-radius: 0; padding: 24px;
  max-width: 400px; width: 100%; position: relative; }
     .tipClose { position: absolute; top: 12px; right: 16px; color: var(--testo-3); font-size: 18px; font-weight: 700; cursor: pointer; }
     .tipParrot { line-height: 0; text-align: center; margin-bottom: 10px; }
@@ -177,10 +177,10 @@
     .tipTitle { color: var(--testo); font-size: 21px; font-weight: 800; text-align: center; margin-bottom: 10px; }
     .tipBody { color: var(--testo-2); font-size: 14px; text-align: center; line-height: 1.5; margin-bottom: 20px; }
     .tipRow { display: flex; gap: 8px; margin-bottom: 20px; }
-    .tipChip { flex: 1; background: var(--blu-3); border: 1px solid var(--blu-4); border-radius: 12px; padding: 12px 0;
+    .tipChip { flex: 1; background: var(--blu-3); border: 2px solid var(--testo-2); border-radius: 0; padding: 12px 0;
  text-align: center; color: var(--testo-2); font-size: 16px; font-weight: 700; cursor: pointer; user-select: none; }
     .tipChip.on { background: var(--blu-4); border-color: var(--cresta); color: var(--cresta); }
-    .tipPay { background: #0070BA; color: #fff; border-radius: 26px; padding: 15px; text-align: center;
+    .tipPay { background: #0070BA; color: #fff; border-radius: 0; padding: 15px; text-align: center;
  font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 14px; } /* blu PayPal, colore del marchio */
     .tipNo { color: var(--testo-2); font-size: 13px; text-align: center; text-decoration: underline;
  cursor: pointer; margin-bottom: 16px; }
