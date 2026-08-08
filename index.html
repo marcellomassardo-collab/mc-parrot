@@ -98,13 +98,7 @@
       /* l'alone sta SOTTO le lettere: un `text-shadow` sparirebbe col testo trasparente */
  filter: drop-shadow(0 0 10px rgba(255,138,43,.40)) drop-shadow(0 0 22px rgba(127,185,240,.28));
     }
-    /* riga di orizzonte sotto il logo, come nelle copertine dell'epoca */
-    .logoRow::after {
- content: ''; position: absolute; left: 50%; transform: translateX(-50%);
- bottom: -6px; width: 172px; height: 2px;
- background: linear-gradient(90deg, transparent, var(--arancio) 22%, var(--giallo) 50%, var(--arancio) 78%, transparent);
- opacity: .75; border-radius: 0;
-    }
+    /* (riga di orizzonte sotto il logo rimossa su richiesta) */
     .sub { text-align: center; color: var(--testo-2); font-size: 11px; margin-bottom: 18px; }
     /* Etichette e valori tecnici (generi, scale, tempi, formati) nel carattere retrò:
  sono "dati", e il monospaziato li fa leggere come sul display di un sintetizzatore. */
@@ -135,8 +129,11 @@
     .rec:active { background: var(--arancio-cupo); }
     /* mentre registra: il tasto si spegne e resta l'anello arancio che pulsa */
     .rec.on { background: var(--blu-3); color: var(--giallo); box-shadow: inset 0 0 0 2px var(--arancio); }
-    .gen { background: linear-gradient(180deg, var(--blu-5), #2C6AA8); color: #fff; }
-    .exp { background: linear-gradient(180deg, var(--giallo), var(--cresta)); color: var(--blu-0); font-weight: 700; }
+    /* ⚠️ ARANCIONE TRAMONTO per le azioni principali (Generate/Share/Download): prima
+       erano ciano su ciano (illeggibili). L'arancio del tramonto vaporwave le fa
+       risaltare sul viola/magenta, e il bordo resta ciano (il tocco voluto). */
+    .gen { background: linear-gradient(180deg, #FF9E5C, #E5703A); color: #2A1400; }
+    .exp { background: linear-gradient(180deg, #FFB36B, #E5703A); color: #2A1400; font-weight: 700; }
  button:disabled { opacity: .4; cursor: default; }
  input[type=range] { flex: 1; accent-color: var(--cresta); }
     .status { text-align: center; color: var(--testo-2); font-size: 13px; min-height: 18px; margin-top: 12px; }
@@ -200,10 +197,13 @@
  cursor: pointer; margin-bottom: 16px; }
     .tipFine { color: var(--testo-3); font-size: 11px; text-align: center; line-height: 1.45; }
     /* IL CACATUA: disegnato in SVG, non un'emoji — così è davvero blu con la cresta arancio */
-    .logoRow { display: flex; align-items: center; justify-content: center; gap: 12px; position: relative; }
-    .logoRow svg { width: 52px; height: 52px;
-      /* stesso alone del testo: il cacatua fa parte dell'insegna, non le sta accanto */
- filter: drop-shadow(0 0 8px rgba(127,185,240,.45)) drop-shadow(0 0 16px rgba(255,138,43,.22)); }
+    .logoRow { display: flex; align-items: center; justify-content: center; gap: 14px; position: relative; }
+    /* CACATUA PIÙ GRANDE (richiesta utente): fa da cornice laterale al titolo. Alone
+       vaporwave (cyan + magenta) invece del vecchio blu/arancio. */
+    .logoRow img.parrot { width: 96px; height: 96px; flex: none; object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(1,205,254,.35)) drop-shadow(0 0 20px rgba(204,122,206,.25)); }
+    .logoRow svg { width: 86px; height: 86px; flex: none;
+ filter: drop-shadow(0 0 8px rgba(1,205,254,.45)) drop-shadow(0 0 16px rgba(204,122,206,.30)); }
   </style>
 </head>
 <body>
@@ -211,13 +211,18 @@
        Corpo in sfumatura blu, cresta arancio pallido — sono i due colori della skin,
  quindi il logo e l'interfaccia si spiegano a vicenda invece di convivere e basta. -->
   <svg style="display:none" aria-hidden="true">
-    <symbol id="cacatua" viewBox="12 -1 40 62">
+    <!-- CACATUA VAPORWAVE CON CUFFIE (richiesta utente). Corpo cyan→magenta,
+         cresta magenta→cyan, cuffie con archetto e padiglione. -->
+    <symbol id="cacatua" viewBox="10 -2 44 64">
       <defs>
-        <linearGradient id="corpo" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#A2CEFF"/><stop offset="1" stop-color="#2F6FB0"/>
+        <linearGradient id="corpo" x1="0" y1="0" x2="0.35" y2="1">
+          <stop offset="0" stop-color="#01CDFE"/><stop offset="0.55" stop-color="#8FA6E8"/><stop offset="1" stop-color="#CC7ACE"/>
         </linearGradient>
         <linearGradient id="piuma" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" stop-color="#FFB468"/><stop offset="1" stop-color="#FFD4A3"/>
+          <stop offset="0" stop-color="#CC7ACE"/><stop offset="1" stop-color="#01CDFE"/>
+        </linearGradient>
+        <linearGradient id="cuffia" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#01CDFE"/><stop offset="1" stop-color="#CC7ACE"/>
         </linearGradient>
       </defs>
       <!-- cresta: tre penne che si aprono all'indietro -->
@@ -225,25 +230,25 @@
       <path d="M35 14C35 7 38 3 43 1c-2 5-3 9-4 13z" fill="url(#piuma)"/>
       <path d="M27 16C25 10 25 6 26 3c2 4 3 8 4 12z" fill="url(#piuma)"/>
       <!-- coda -->
-      <path d="M38 40c6 4 10 10 12 19-6-3-11-8-14-14z" fill="#2F6FB0"/>
+      <path d="M38 40c6 4 10 10 12 19-6-3-11-8-14-14z" fill="#9A5AB0"/>
       <!-- corpo -->
       <path d="M31 13c9 0 15 7 15 15 0 9-5 16-12 19-7-3-12-10-12-19 0-8 5-15 9-15z" fill="url(#corpo)"/>
       <!-- guancia chiara -->
-      <ellipse cx="27" cy="25" rx="6" ry="7" fill="#A9D2F7" opacity=".55"/>
+      <ellipse cx="27" cy="25" rx="6" ry="7" fill="#E4B8FF" opacity=".5"/>
       <!-- becco uncinato -->
-      <path d="M22 24c-4 1-6 3-6 6 0 3 3 5 6 5-2-2-3-4-3-6s1-4 3-5z" fill="#E8C9A0"/>
-      <path d="M22 30c-2 2-2 5 0 7 2-1 3-3 3-5z" fill="#C9A47B"/>
+      <path d="M22 24c-4 1-6 3-6 6 0 3 3 5 6 5-2-2-3-4-3-6s1-4 3-5z" fill="#FFB36B"/>
+      <path d="M22 30c-2 2-2 5 0 7 2-1 3-3 3-5z" fill="#E5703A"/>
       <!-- occhio -->
-      <circle cx="27" cy="22" r="2.6" fill="#06101D"/>
-      <circle cx="27.9" cy="21.2" r=".9" fill="#EAF4FF"/>
+      <circle cx="27" cy="22" r="2.6" fill="#150618"/>
+      <circle cx="27.9" cy="21.2" r=".9" fill="#FFFFFF"/>
       <!-- ala -->
-      <path d="M36 22c4 2 6 7 6 12s-2 9-5 12c1-5 1-10 0-14s-2-7-1-10z" fill="#245C96" opacity=".85"/>
+      <path d="M36 22c4 2 6 7 6 12s-2 9-5 12c1-5 1-10 0-14s-2-7-1-10z" fill="#9A5AB0" opacity=".8"/>
     </symbol>
   </svg>
 
   <div class="wrap">
-    <h1 class="logoRow"><svg><use href="#cacatua"/></svg><span>MC Parrot</span></h1>
-    <div class="sub">the sounds you record → a song<br /><span style="color:var(--testo-3);font-size:11px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:11px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded.</span></div>
+    <h1 class="logoRow"><img class="parrot" src="parrot.png" alt="MC Parrot DJ cockatoo" /><span>MC Parrot</span></h1>
+    <div class="sub">the sounds you record → a song<br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:11px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded.</span></div>
 
     <div class="card">
       <div class="row" style="justify-content:center"><span id="recTime" style="color:var(--testo-3);font-size:13px;">Record some ambient sounds (and a bit of voice)</span></div>
@@ -275,7 +280,7 @@
     <!-- SCHERMATA DEL BRANO: appare dopo la generazione, come nell'app -->
     <div id="result" style="display:none">
       <div class="cover">
-        <div class="coverParrot"><svg><use href="#cacatua"/></svg></div>
+        <div class="coverParrot"><img class="parrot" src="parrot.png" alt="MC Parrot" style="width:96px;height:96px;object-fit:contain" /></div>
         <div id="coverGenre" class="coverGenre">HOUSE</div>
         <div class="coverLine"></div>
         <div id="coverMeta" class="coverMeta">125 BPM · Minor</div>
