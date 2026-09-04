@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>MC Parrot 🦜</title>
+  <style>
+    /* ================= SKIN "CACATUA" =================================
+       Blu profondo per tutto l'ambiente, arancione PALLIDO come unico accento:
+ sono i colori dell'uccello — corpo blu, cresta arancio tenue.
+       L'accento è raro di proposito: se coloriamo tutto, non risalta più niente.
+       Tutti i colori stanno qui: per cambiare skin si toccano solo queste righe. */
+    :root {
+ color-scheme: dark;
+      /* ⚠️ PALETTE VAPORWAVE — richiesta utente 08/08/2026: «anni 80 vaporwave».
+         Il vaporwave viene dai colori dei tramonti in Miami, degli schermi CRT dei
+         primi personal computer e delle copertine di Yellow Magic Orchestra: viola
+         profondo che scivola verso rosa/magenta al centro e cyan/turchese in alto.
+         I nomi delle variabili restano `--blu-*` per non toccare cento regole a valle:
+         cambia solo il valore. Il brutalismo delle cornici resta identico. */
+      --blu-0:  #150618;   /* viola-notte, fondo pagina */
+      --blu-1:  #260A2C;   /* viola più caldo per la sfumatura */
+      --blu-2:  #2C0F2E;   /* schede */
+      --blu-3:  #48204A;   /* rialzati / chip a riposo */
+      --blu-4:  #CC7ACE;   /* MAGENTA vaporwave: i bordi (era azzurro) */
+      --blu-5:  #01CDFE;   /* CYAN vaporwave: accenti vivi (era blu vivo) */
+      --blu-6:  #CC7ACE;   /* VIOLA lavanda: riflessi, onda sonora (era blu chiaro) */
+      --cresta:      #CC7ACE;  /* magenta: la cresta è tinta rosa */
+      --cresta-vivo: #E0A6E2;  /* rosa più chiaro */
+      --cresta-cupo: #9A5A9C;  /* rosa cupo */
+      --arancio: #CC7ACE;      /* GIALLO cadmio: il tasto REGISTRA è giallo, non arancio,
+                                  per il contrasto tramonto→sole della palette */
+      --arancio-cupo: #9A5A9C;
+      --giallo: #01CDFE;       /* VERDE al posto del giallo per gli stati attivi:
+                                  è il verde CRT — chip acceso, LED che risponde */
+      --giallo-cupo: #04B8D8;
+      --testo:   #FFFFFF;      /* bianco pieno per il testo — brilla sul viola */
+      --testo-2: #ECBEE6;      /* lavanda per i secondari */
+      --testo-3: #C6A1C2;      /* lilla per i terziari */
+      --pericolo: #E85AD0;     /* magenta acceso per registrazione/clip: sta dentro la palette */
+      /* CARATTERE "LO-FI ANNI 80": monospaziato, come i sintetizzatori e i computer
+ dell'epoca. Sono font GIÀ PRESENTI nel sistema: nessuna richiesta esterna, che
+ romperebbe la promessa "niente esce dal tuo dispositivo" scritta in fondo alla
+ pagina. Il sapore retrò viene da maiuscolo + spaziatura larga + alone tenue,
+ non dal file del font. */
+      --font-retro: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    /* ⚠️ I CAMPI DI MODULO NON EREDITANO IL CARATTERE. È la classica eccezione del CSS:
+       `button`, `select`, `input` e `textarea` usano il carattere del SISTEMA anche se il
+       `body` ne dichiara un altro. Misurato sulla pagina vera: con il monospaziato
+ impostato sul body, i pulsanti restavano in Arial — cioè proprio i "registra",
+       "genera" e "scarica", gli elementi più grandi della schermata. */
+ button, select, input, textarea { font: inherit; }
+ body {
+      /* MONOSPAZIATO OVUNQUE (richiesta utente, ribadita: "font unicode ovunque").
+         Prima il corpo della pagina era in system-ui e solo i "dati" — generi, tempi,
+ contatore — erano nel carattere retrò: due caratteri diversi nella stessa
+ schermata, che è proprio ciò che rendeva la skin incoerente. Ora l'intera pagina
+ usa la stessa famiglia, e le regole più sotto che la riassegnavano ai dati sono
+ rimaste solo perché non fanno danno. */
+ margin: 0; font-family: var(--font-retro); color: var(--testo);
+      -webkit-tap-highlight-color: transparent;
+      /* TRAMONTO VAPORWAVE: cyan alto → magenta centro → viola profondo basso.
+         È il retino tipico delle copertine anni 80: il sole rosa che scende sull'acqua
+         viola. Fisso perché scrollando non si perde l'effetto. */
+      background:
+        linear-gradient(180deg,
+          #150618 0%,
+          #260A2C 20%,
+          #5A1668 45%,
+          #CC7ACE 62%,
+          #CC7ACE 66%,
+          #01CDFE 82%,
+          #150618 100%) fixed,
+        var(--blu-0);
+ min-height: 100vh;
+    }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 20px 16px 60px; }
+    /* Titolo in stile insegna al neon: maiuscolo, spaziato, con un alone appena acceso.
+       L'alone è tenue di proposito — il neon vero non acceca, illumina. */
+    /* LOGO ANNI 80 (richiesta utente). Gli ingredienti di un'insegna di quegli anni sono
+ tre, e ci sono tutti e tre: il TRAMONTO SFUMATO dal giallo all'arancio dentro le
+ lettere, le RIGHE ORIZZONTALI che lo attraversano (l'effetto "sole a strisce" dei
+ loghi da copertina), e l'ALONE al neon. Tutto in CSS su testo vero: resta
+ selezionabile, leggibile dagli screen reader e non pesa un byte in più. */
+ h1 { font-family: var(--font-retro); font-size: 27px; text-align: center; margin: 10px 0 2px;
+ text-transform: uppercase; letter-spacing: 4px; font-weight: 700; }
+ h1 span {
+ background-image:
+        /* le righe: sottili, trasparenti, solo nella metà bassa delle lettere */
+ repeating-linear-gradient(180deg,
+ transparent 0 3px, rgba(6,13,24,.55) 3px 5px),
+        /* il tramonto: giallo in alto, arancio in basso */
+ linear-gradient(180deg, var(--giallo) 0%, var(--giallo) 34%, var(--cresta) 62%, var(--arancio) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      /* l'alone sta SOTTO le lettere: un `text-shadow` sparirebbe col testo trasparente */
+ filter: drop-shadow(0 0 10px rgba(255,138,43,.40)) drop-shadow(0 0 22px rgba(127,185,240,.28));
+    }
+    /* (riga di orizzonte sotto il logo rimossa su richiesta) */
+    .sub { text-align: center; color: var(--testo-2); font-size: 11px; margin-bottom: 18px; }
+    /* Etichette e valori tecnici (generi, scale, tempi, formati) nel carattere retrò:
+ sono "dati", e il monospaziato li fa leggere come sul display di un sintetizzatore. */
+    .label, .chip, .fmtChip b, .fmtLabel, .rectime, .recmax, .progTimes,
+    /* anche l'INTERA riga del contatore e i messaggi di stato: lì compaiono minuti e
+ secondi, e vederli in un carattere diverso dal resto dei dati stonava */
+    #recTime, .status {
+ font-family: var(--font-retro);
+    }
+    .label { text-transform: uppercase; letter-spacing: 1.5px; }
+    .chip { letter-spacing: .4px; }
+    .card { background: var(--blu-2); border: 2px solid var(--cresta); border-radius: 0; padding: 16px; margin-bottom: 14px; }
+    .label { color: var(--testo-2); font-size: 13px; font-weight: 600; margin: 10px 0 6px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 8px 14px; border-radius: 0; background: var(--blu-3); color: var(--testo-2);
+ border: 2px solid var(--blu-4); font-size: 13px; cursor: pointer; user-select: none; transition: background .12s, color .12s; }
+    .chip:hover { background: var(--blu-4); }
+    /* stato attivo in GIALLO: si distingue a colpo d'occhio dall'arancio del tasto registra */
+    .chip.on { background: var(--giallo); color: var(--blu-0); font-weight: 700; border-color: var(--testo); box-shadow: 3px 3px 0 var(--testo); }
+    .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+ button.big { width: 100%; padding: 16px; border: 3px solid var(--blu-5); box-shadow: 6px 6px 0 var(--cresta); border-radius: 0; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+    /* TASTO REGISTRA: ARANCIO PIENO (richiesta utente). Era rosso-arancio `--pericolo`,
+ che è il colore del "attenzione, stai saturando": usarlo anche per il tasto
+ principale confondeva i due significati. Ora registra è arancio, e il rosso resta
+ riservato al livello troppo alto. */
+    .rec { background: linear-gradient(180deg, var(--arancio), var(--arancio-cupo)); color: #2A1400;
+ font-weight: 700; letter-spacing: 1px; }
+    .rec:active { background: var(--arancio-cupo); }
+    /* mentre registra: il tasto si spegne e resta l'anello arancio che pulsa */
+    .rec.on { background: var(--blu-3); color: var(--giallo); box-shadow: inset 0 0 0 2px var(--arancio); }
+    /* ⚠️ ARANCIONE TRAMONTO per le azioni principali (Generate/Share/Download): prima
+       erano ciano su ciano (illeggibili). L'arancio del tramonto vaporwave le fa
+       risaltare sul viola/magenta, e il bordo resta ciano (il tocco voluto). */
+    .gen { background: linear-gradient(180deg, #FF9E5C, #E5703A); color: #2A1400; }
+    .exp { background: linear-gradient(180deg, #FFB36B, #E5703A); color: #2A1400; font-weight: 700; }
+ button:disabled { opacity: .4; cursor: default; }
+ input[type=range] { flex: 1; accent-color: var(--cresta); }
+    .status { text-align: center; color: var(--testo-2); font-size: 13px; min-height: 18px; margin-top: 12px; }
+    .note { color: var(--testo-3); font-size: 11px; text-align: center; margin-top: 18px; line-height: 1.5; }
+    /* CONTATORE DI REGISTRAZIONE: cifre grandi e monospaziate (non "ballano"), pallino REC lampeggiante */
+    .rectime { font-size: 15px; font-weight: 700; color: var(--testo); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+    .recdot { color: var(--pericolo); animation: blink 1s steps(2, start) infinite; }
+    .recmax { color: var(--testo-3); font-size: 12px; }
+    @keyframes blink { to { visibility: hidden; } }
+    /* ONDA SONORA: barre verticali che salgono col volume del microfono.
+       Blu chiaro normalmente, ARANCIO quando il livello rischia di distorcere. */
+    .wave { display: flex; align-items: center; justify-content: center; gap: 2px; height: 84px; margin: 10px 0 4px; overflow: hidden; }
+    .wave .bar { width: 4px; border-radius: 0; background: var(--blu-6); flex: none; }
+    .wave .bar.hot { background: var(--pericolo); }
+    .waveHint { color: var(--testo-3); font-size: 15px; }
+    /* INTRO ("Record a mix…") resta leggibile; le 4 righe di suggerimento MOLTO più piccole e
+       UNIFORMI (richiesta utente: schermata meno caotica, testi molto più piccoli, «melody» come le altre). */
+    .recHint { color: var(--testo-2); font-size: 12px; line-height: 1.4; text-align: center; margin: 2px 2px 10px; }
+    .recHint .rh { display: block; margin-top: 4px; color: var(--testo-3); font-size: 9px; }
+    .recHint .rh b { color: var(--testo-2); font-weight: 700; }
+    .recHint .rhMel b { color: var(--testo-2); } /* «melody» stesso colore delle altre (non più magenta) */
+    /* SCHERMATA DEL BRANO: copertina quadrata + scelta del formato (come nell'app) */
+    /* (19/08 audit) regole .cover* rimosse: il riquadro copertina non esiste più (tolto su richiesta utente) */
+    .trackName { color: var(--testo-2); font-size: 12px; text-align: center; margin-bottom: 14px; word-break: break-all; }
+    /* Nota sotto il player: ogni generazione è una presa diversa, quindi una canzone che piace
+       va salvata subito. Discreta — è un consiglio, non un allarme: nessun bordo, testo secondario. */
+    .keepHint { color: var(--testo-3); font-size: 12px; line-height: 1.45; text-align: center; margin: 0 4px 14px; }
+    .fmtLabel { color: var(--testo-2); font-size: 12px; text-align: center; margin-bottom: 8px; letter-spacing: 1px; }
+    .fmtRow { display: flex; gap: 10px; }
+    .fmtChip { flex: 1; background: var(--blu-2); border: 2px solid var(--cresta); border-radius: 0; padding: 12px;
+ text-align: center; cursor: pointer; user-select: none; }
+    .fmtChip.on { background: var(--blu-3); border-color: var(--cresta); }
+    .fmtChip b { display: block; color: var(--testo-2); font-size: 16px; }
+    .fmtChip.on b { color: var(--cresta); }
+    .fmtChip span { color: var(--testo-3); font-size: 11px; }
+    /* BARRA DI AVANZAMENTO DEL BRANO */
+    .playProg { display: none; margin: 10px 4px 0; }
+    .progHit { padding: 12px 0; cursor: pointer; touch-action: none; }
+    .progTrack { height: 5px; border-radius: 0; background: var(--blu-3); overflow: hidden; }
+    .progFill { height: 5px; border-radius: 0; background: linear-gradient(90deg, var(--blu-5), var(--cresta));
+ width: 0; transition: width .1s linear; }
+    .progTimes { display: flex; justify-content: space-between; margin-top: 5px; color: var(--testo-2);
+ font-size: 11px; font-variant-numeric: tabular-nums; }
+    /* SCHERMATA DI SUPPORTO (PayPal) */
+    .tipBack { display: none; position: fixed; inset: 0; background: rgba(3,8,16,.78); align-items: center;
+ justify-content: center; padding: 22px; z-index: 50; }
+    .tipCard { background: var(--blu-2); border: 2px solid var(--cresta); border-radius: 0; padding: 24px;
+ max-width: 400px; width: 100%; position: relative; }
+    .tipClose { position: absolute; top: 12px; right: 16px; color: var(--testo-3); font-size: 18px; font-weight: 700; cursor: pointer; }
+    .tipParrot { line-height: 0; text-align: center; margin-bottom: 10px; }
+    .tipTitle { color: var(--testo); font-size: 21px; font-weight: 800; text-align: center; margin-bottom: 10px; }
+    .tipBody { color: var(--testo-2); font-size: 14px; text-align: center; line-height: 1.5; margin-bottom: 20px; }
+    .tipRow { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tipChip { flex: 1; background: var(--blu-3); border: 2px solid var(--cresta); border-radius: 0; padding: 12px 0;
+ text-align: center; color: var(--testo-2); font-size: 16px; font-weight: 700; cursor: pointer; user-select: none; }
+    .tipChip.on { background: var(--blu-4); border-color: var(--cresta); color: var(--cresta); }
+    .tipPay { background: #0070BA; color: #fff; border-radius: 0; padding: 15px; text-align: center;
+ font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 14px; } /* blu PayPal, colore del marchio */
+    .tipNo { color: var(--testo-2); font-size: 13px; text-align: center; text-decoration: underline;
+ cursor: pointer; margin-bottom: 16px; }
+    .tipFine { color: var(--testo-3); font-size: 11px; text-align: center; line-height: 1.45; }
+    /* IL CACATUA: disegnato in SVG, non un'emoji — così è davvero blu con la cresta arancio */
+    .logoRow { display: flex; align-items: center; justify-content: center; gap: 14px; position: relative; }
+    /* CACATUA PIÙ GRANDE (richiesta utente): fa da cornice laterale al titolo. Alone
+       vaporwave (cyan + magenta) invece del vecchio blu/arancio. */
+    .logoRow img.parrot { width: 96px; height: 96px; flex: none; object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(1,205,254,.35)) drop-shadow(0 0 20px rgba(204,122,206,.25)); }
+    /* CRONOLOGIA: pannello a tutto schermo con le liste, stile coerente col modale tip */
+    .histPanel { display: none; position: fixed; inset: 0; background: rgba(3,8,16,.82); align-items: center;
+      justify-content: center; padding: 18px; z-index: 60; }
+    .histCard { background: var(--blu-2); border: 2px solid var(--cresta); border-radius: 0; padding: 16px;
+      max-width: 460px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; position: relative; }
+    .histHead { display: flex; justify-content: space-between; align-items: center; color: var(--testo); font-size: 18px;
+      font-weight: 800; margin-bottom: 12px; }
+    .histClose { color: var(--testo-3); font-size: 20px; font-weight: 700; cursor: pointer; padding: 0 6px; }
+    .histBodyScroll { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .histH { color: var(--cresta); font-size: 13px; font-weight: 700; letter-spacing: 1px; margin: 14px 0 8px; }
+    .histEmpty { color: var(--testo-3); font-size: 13px; padding: 6px 2px 10px; }
+    .histItem { background: var(--blu-3); border: 2px solid var(--cresta-cupo); border-radius: 0; padding: 10px; margin-bottom: 10px; }
+    .histTop { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .histTitle { color: var(--testo-2); font-size: 13px; font-weight: 700; word-break: break-all; }
+    .histSub { color: var(--testo-3); font-size: 11px; margin: 2px 0 8px; }
+    .histActs { display: flex; gap: 4px; flex: none; position: relative; }
+    .histA { background: var(--blu-2); color: var(--testo-2); border: 2px solid var(--cresta-cupo); border-radius: 0;
+      font-size: 15px; padding: 2px 8px; cursor: pointer; line-height: 1.4; }
+    /* menù a tendina delle azioni (18/08: voci SCRITTE, niente icone criptiche) */
+    .histMenu { display: none; position: absolute; right: 0; top: calc(100% + 4px); z-index: 30;
+      background: #000; border: 2px solid var(--cresta-cupo); min-width: 210px; flex-direction: column; }
+    .histMenu.open { display: flex; }
+    .histMenu button { background: #000; color: var(--testo-2); border: 0; border-bottom: 1px solid var(--cresta-cupo);
+      border-radius: 0; text-align: left; font-size: 13px; padding: 9px 12px; cursor: pointer; font-family: inherit; }
+    .histMenu button:last-child { border-bottom: 0; }
+    .histMenu button:active { background: var(--blu-2); }
+    .histItem audio { width: 100%; height: 34px; margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <!-- IL CACATUA: definito una volta sola qui, poi richiamato con <use> dove serve.
+       Corpo in sfumatura blu, cresta arancio pallido — sono i due colori della skin,
+ quindi il logo e l'interfaccia si spiegano a vicenda invece di convivere e basta. -->
+
+  <div class="wrap">
+    <h1 class="logoRow"><img class="parrot" src="parrot.png" alt="MC Parrot DJ cockatoo" /><span>MC Parrot</span></h1>
+    <div class="sub">the sounds you record → a song<br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:11px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded.</span></div>
+
+    <div class="card">
+      <div class="row" style="justify-content:center"><span id="recTime" style="color:var(--testo-2);font-size:14px;font-weight:700;">Ready to record</span></div>
+      <!-- SUGGERIMENTI RICCHI (restano visibili ANCHE durante la registrazione, non li tocca il timer):
+           le 4 famiglie che servono al motore. La MELODIA è quella che di solito manca (senza suoni
+           intonati il brano esce "industrial" — misurato): perciò è evidenziata. -->
+      <div id="recHint" class="recHint">
+        Record a mix of sounds — the more musical and varied, the richer the song:<br />
+        <span class="rh">🥁 <b>Beat</b> — tap objects, clap, knock, tick</span>
+        <span class="rh rhMel">🎵 <b>Melody</b> — hum a tune, whistle, a few notes on any instrument, tink a glass or bottle</span>
+        <span class="rh">🔊 <b>Bass</b> — a low “boom”, a soft thump, a low hum</span>
+        <span class="rh">🎤 <b>Voice</b> — say or sing a short phrase (repeat it a couple of times)</span>
+      </div>
+      <!-- ONDA SONORA DAL VIVO: le barre si muovono col microfono (come nell'app) -->
+      <div id="wave" class="wave"><span class="waveHint">Your waveform will appear here</span></div>
+      <!-- Durante la REC: Record diventa Pause/Resume e a fianco compare Stop (richiesta 19/08:
+           «pausa per saltare suoni inutili, stop per chiudere definitivamente») -->
+      <div style="display:flex;gap:8px;align-items:stretch">
+        <button id="recBtn" class="big rec" style="flex:2">● Record</button>
+        <button id="pauseBtn" class="big" style="display:none;flex:1;background:var(--pericolo);color:var(--blu-0);margin-top:10px">■ Stop</button>
+      </div>
+      <button id="recPlayBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5);margin-top:8px">▶ Play recording</button>
+    </div>
+
+    <!-- GENERATORE: nascosto finché non c'è materiale (registrazione o history) — richiesta 19/08 -->
+    <div class="card" id="genPanel" style="display:none">
+      <button id="surpriseBtn" class="big" style="background:var(--blu-3);color:var(--blu-5);margin-top:0">🎲 Surprise me</button>
+      <div class="label">Genre</div>
+      <div id="genres" class="chips"></div>
+      <div class="label">Scale</div>
+      <div id="scales" class="chips"></div>
+      <div class="label">Meter</div>
+      <div id="meters" class="chips"></div>
+      <div class="label">Tempo (BPM): <span id="bpmVal">112</span></div>
+      <div class="row"><input id="bpm" type="range" min="50" max="200" value="112" /></div>
+    </div>
+
+    <!-- BARRA DI AVANZAMENTO: appare sopra il tasto mentre il brano suona -->
+    <div id="playProg" class="playProg">
+      <!-- l'area cliccabile è molto più alta della barra disegnata (5px): col dito, e
+ anche col mouse, cinque pixel sono un bersaglio scomodo -->
+      <div id="progHit" class="progHit" title="Click to jump to a point"><div class="progTrack"><div id="progFill" class="progFill"></div></div></div>
+      <div class="progTimes"><span id="progNow">0:00</span><span id="progTot">0:00</span></div>
+    </div>
+
+    <button id="genBtn" class="big gen" style="display:none" disabled>♪ Generate music</button>
+
+    <!-- SCHERMATA DEL BRANO: appare dopo la generazione, come nell'app -->
+    <div id="result" style="display:none">
+      <div id="trackName" class="trackName"></div>
+      <!-- KEEP IT WHILE YOU HAVE IT: every generation is a new take — the engine re-rolls the
+           arrangement each time, so pressing Generate again gives you a different song, not the
+           same one. If this one works, save it now. -->
+      <div id="keepHint" class="keepHint">Like this one? Download or share it now — press Generate again and you'll get a different take, not this one.</div>
+      <div class="fmtLabel">Download as</div>
+      <div class="fmtRow">
+        <div id="fmt-wav" class="fmtChip on"><b>WAV</b><span>lossless · big</span></div>
+        <div id="fmt-mp3" class="fmtChip"><b>MP3</b><span>320 kbps · small</span></div>
+      </div>
+    </div>
+
+    <button id="expBtn" class="big exp" style="display:none" disabled>⤓ Download WAV</button>
+    <!-- CONDIVIDI: usa il menu di sistema (Web Share API). Su iPhone è la via NORMALE per
+ salvare o mandare un file — il download di Safari è scomodo e spesso invisibile.
+         Il pulsante compare SOLO se il browser sa condividere file, così non si mostra
+ mai un comando che non funziona. -->
+    <button id="shareBtn" class="big gen" style="display:none" disabled>⤴ Share</button>
+
+    <!-- CRONOLOGIA: ultimi 10 registrati + prodotti (IndexedDB, offline). Il conteggio è nel testo. -->
+    <button id="histBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">⏱ History</button>
+
+    <!-- OPEN AUDIO FILES (user request, 24/08): someone who recorded with a real microphone, or on
+         another device, must be able to bring that sound in here instead of re-recording it on the
+         phone. You can pick SEVERAL files at once — record your snare, your piano and your voice
+         separately and they become one song. The actual input stays hidden: you click the big
+         button, like every other control.
+         The files NEVER leave the device: they are decoded locally, exactly like a recording. -->
+    <button id="openBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open audio files</button>
+    <input id="openInput" type="file" multiple accept="audio/*,.wav,.mp3,.m4a,.aac,.ogg,.flac" style="display:none" />
+    <div id="histPanel" class="histPanel">
+      <div class="histCard">
+        <div class="histHead"><span>⏱ History</span><div id="histClose" class="histClose">✕</div></div>
+        <div id="histBody" class="histBodyScroll"></div>
+      </div>
+    </div>
+
+    <!-- SCHERMATA DI SUPPORTO: appare dopo il download, solo PayPal, nessuna carta -->
+    <div id="tip" class="tipBack">
+      <div class="tipCard">
+        <div id="tipClose" class="tipClose">✕</div>
+        <div class="tipParrot"><img class="parrot" src="parrot.png" alt="MC Parrot" style="width:64px;height:64px;object-fit:contain" /></div>
+        <div class="tipTitle">Enjoying MC Parrot?</div>
+        <div class="tipBody">The app is free and everything runs in your browser. If it made you smile,
+ you can support it with whatever you think is fair.</div>
+        <div id="tipRow" class="tipRow"></div>
+        <div id="tipPay" class="tipPay">Support with PayPal</div>
+        <div id="tipNo" class="tipNo">No thanks, maybe another time</div>
+        <div class="tipFine">Opens PayPal in a new tab. MC Parrot never sees or stores any payment data.</div>
+      </div>
+    </div>
+
+    <div id="status" class="status"></div>
+    <!-- Riepilogo dei suoni riconosciuti dall'analisi (richiesta 18/08: rimesso in fondo) -->
+    <div id="sndRecap" style="display:none;margin-top:10px;padding:8px 10px;border:2px solid var(--blu-3);color:var(--blu-4);font-size:12px;letter-spacing:0.02em"></div>
+    <div class="note">
+      Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.<br />
+      <!-- La musica è dell'utente: va detto dove la gente la legge davvero, non solo nella licenza. -->
+      The music you make is yours — publish it, release it, sell it, just maybe tag us in the credits
+      <!-- "drop a donation" deve portare da qualche parte, altrimenti è un invito a vuoto -->
+ and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.
+      <a href="README.md#licence--in-plain-words" style="color:#54546A">Licence</a>
+    </div>
+  </div>
+  <script src="./bundle.js"></script>
+</body>
+</html>
