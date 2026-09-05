@@ -49,7 +49,7 @@ APIs).
 
 ## Coming soon
 
-- 📱 **Android** — native app, same engine
+- 📱 **Android** — native app, same engine — [download the .apk](MC-Parrot.apk) (unsigned build: Android will ask you to allow installation from an unknown developer)
 - 🍎 **iOS** — native app, same engine
 
 ## Next step
