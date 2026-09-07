@@ -99,6 +99,12 @@
  filter: drop-shadow(0 0 10px rgba(255,138,43,.40)) drop-shadow(0 0 22px rgba(127,185,240,.28));
     }
     /* (riga di orizzonte sotto il logo rimossa su richiesta) */
+    /* 05/09 — LINGUE: cinese, giapponese, coreano e arabo non esistono nel carattere "da
+       sintetizzatore": per loro si passa al carattere di sistema, che li disegna davvero. */
+    body.linguaNonMono, body.linguaNonMono .label, body.linguaNonMono .chip, body.linguaNonMono .sub,
+    body.linguaNonMono .recHint, body.linguaNonMono button, body.linguaNonMono .note {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif !important;
+    }
     .sub { text-align: center; color: var(--testo-2); font-size: 14px; margin-bottom: 18px; } /* 05/09: sottotitolo un po' piu' grande (era 11) */
     /* Etichette e valori tecnici (generi, scale, tempi, formati) nel carattere retrò:
  sono "dati", e il monospaziato li fa leggere come sul display di un sintetizzatore. */
@@ -237,7 +243,7 @@
 
   <div class="wrap">
     <h1 class="logoRow"><img class="parrot" src="parrot.png" alt="MC Parrot DJ cockatoo" /><span>MC Parrot</span></h1>
-    <div class="sub">the sounds you record → a song<br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:9px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded. Works in airplane mode.</span></div>
+    <div class="sub"><span>the sounds you record → a song</span><br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:9px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded. Works in airplane mode.</span></div>
 
     <div class="card">
       <div class="row" style="justify-content:center"><span id="recTime" style="color:var(--testo-2);font-size:19px;font-weight:700;">Ready to record</span></div>
@@ -245,7 +251,7 @@
            le 4 famiglie che servono al motore. La MELODIA è quella che di solito manca (senza suoni
            intonati il brano esce "industrial" — misurato): perciò è evidenziata. -->
       <div id="recHint" class="recHint">
-        Record a mix of sounds — the more musical and varied, the richer the song:<br />
+        <span>Record a mix of sounds — the more musical and varied, the richer the song:</span><br />
         <span class="rh">🥁 <b>Beat</b> — tap objects, clap, knock, tick</span>
         <span class="rh rhMel">🎵 <b>Melody</b> — hum a tune, whistle, a few notes on any instrument, tink a glass or bottle</span>
         <span class="rh">🔊 <b>Bass</b> — a low “boom”, a soft thump, a low hum, a punch in the wall or table</span>
