@@ -158,12 +158,12 @@
     /* INTRO ("Record a mix…") resta leggibile; le 4 righe di suggerimento MOLTO più piccole e
        UNIFORMI (richiesta utente: schermata meno caotica, testi molto più piccoli, «melody» come le altre). */
     .recHint { color: var(--testo-2); font-size: 12px; line-height: 1.4; text-align: center; margin: 14px 2px 10px; } /* 05/09: aria fra «Ready to record» e le istruzioni */
-    .recHint .rh { display: block; margin-top: 4px; color: var(--testo-3); font-size: 9px; }
+    .recHint .rh { display: block; margin-top: 1px; color: var(--testo-3); font-size: 9px; line-height: 1.25; } /* 07/09: righe piu' vicine */
     .recHint .rh b { color: var(--testo-2); font-weight: 700; }
     .recHint .rhMel b { color: var(--testo-2); } /* «melody» stesso colore delle altre (non più magenta) */
     /* SCHERMATA DEL BRANO: copertina quadrata + scelta del formato (come nell'app) */
     /* (19/08 audit) regole .cover* rimosse: il riquadro copertina non esiste più (tolto su richiesta utente) */
-    .trackName { color: var(--testo-2); font-size: 12px; text-align: center; margin-bottom: 14px; word-break: break-all; }
+    .trackName { color: var(--testo-2); font-size: 12px; text-align: center; margin: 10px 0 14px; word-break: break-all; } /* 07/09: staccato dal tasto (copriva l'ombra) */
     /* Nota sotto il player: ogni generazione è una presa diversa, quindi una canzone che piace
        va salvata subito. Discreta — è un consiglio, non un allarme: nessun bordo, testo secondario. */
     .keepHint { color: var(--testo-3); font-size: 12px; line-height: 1.45; text-align: center; margin: 0 4px 14px; }
@@ -243,7 +243,7 @@
 
   <div class="wrap">
     <h1 class="logoRow"><img class="parrot" src="parrot.png" alt="MC Parrot DJ cockatoo" /><span>MC Parrot</span></h1>
-    <div class="sub"><span>the sounds you record → a song</span><br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:9px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded. Works in airplane mode.</span></div>
+    <div class="sub"><span>the sounds you record → a song</span><br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:9px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded. It works in airplane mode too.</span></div>
 
     <div class="card">
       <div class="row" style="justify-content:center"><span id="recTime" style="color:var(--testo-2);font-size:19px;font-weight:700;">Ready to record</span></div>
@@ -349,7 +349,7 @@
     <!-- Riepilogo dei suoni riconosciuti dall'analisi (richiesta 18/08: rimesso in fondo) -->
     <div id="sndRecap" style="display:none;margin-top:10px;padding:8px 10px;border:2px solid var(--blu-3);color:var(--blu-4);font-size:12px;letter-spacing:0.02em"></div>
     <div class="note">
-      Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.<br />
+      <span>Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.</span><br />
       <!-- La musica è dell'utente: va detto dove la gente la legge davvero, non solo nella licenza. -->
       The music you make is yours — publish it, release it, sell it, just maybe tag us in the credits
       <!-- "drop a donation" deve portare da qualche parte, altrimenti è un invito a vuoto -->
