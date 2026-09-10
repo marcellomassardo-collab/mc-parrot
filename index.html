@@ -4,6 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>MC Parrot 🦜</title>
+  <!-- (10/09) App installabile e funzionante senza rete: il manifesto la rende installabile (ed è
+       quello che chiede lo store di Windows), il gestore in fondo alla pagina la fa aprire in
+       modalità aereo. Sul telefono i file sono già dentro il pacchetto: questo serve al web. -->
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="theme-color" content="#150618" />
+  <link rel="icon" href="./icon-192.png" sizes="192x192" type="image/png" />
   <style>
     /* ================= SKIN "CACATUA" =================================
        Blu profondo per tutto l'ambiente, arancione PALLIDO come unico accento:
@@ -360,5 +366,16 @@
     </div>
   </div>
   <script src="./bundle.js"></script>
+  <!-- (10/09) Registrazione del gestore offline. In coda al corpo, senza bloccare niente: se il
+       browser non lo supporta o la pagina non è servita in modo sicuro, non succede nulla e l'app
+       funziona come prima. Dentro l'app Android il gestore non serve (i file sono nel pacchetto) e
+       non dà fastidio. -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () { /* senza gestore si va lo stesso in rete */ });
+      });
+    }
+  </script>
 </body>
 </html>
