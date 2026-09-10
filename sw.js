@@ -12,7 +12,7 @@
 // fatto male fa più danni che utile.
 // I quattro file dell'app si servono dalla credenza (sono quelli che devono esserci in aereo);
 // tutto il resto passa dalla rete come se questo file non ci fosse.
-const VERSIONE = 'beta-3-95';
+const VERSIONE = '3.96';
 const CREDENZA = 'mcparrot-' + VERSIONE;
 const FILE = ['./', './index.html', './bundle.js', './analysis-worker.js', './manifest.webmanifest', './parrot.png', './icon-192.png', './icon-512.png'];
 
