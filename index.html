@@ -130,6 +130,10 @@
     .chip:hover { background: var(--blu-4); }
     /* stato attivo in GIALLO: si distingue a colpo d'occhio dall'arancio del tasto registra */
     .chip.on { background: var(--giallo); color: var(--blu-0); font-weight: 700; border-color: var(--testo); box-shadow: 3px 3px 0 var(--testo); }
+    /* pastiglia BLOCCATA: si vede, si legge, invita — ma è spenta. Mai nascosta: nascondere la
+       funzione a chi non l'ha sbloccata vuol dire che non saprà mai che esiste. */
+    .chip.bloccato { opacity: 0.55; border-style: dashed; }
+    .chipSub { display: block; font-size: 9px; opacity: 0.7; letter-spacing: 0.02em; }
     .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
  button.big { width: 100%; padding: 16px; border: 3px solid var(--blu-5); box-shadow: 6px 6px 0 var(--cresta); border-radius: 0; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
     /* TASTO REGISTRA: ARANCIO PIENO (richiesta utente). Era rosso-arancio `--pericolo`,
@@ -285,6 +289,21 @@
       <div id="meters" class="chips"></div>
       <div class="label">Tempo (BPM): <span id="bpmVal">112</span></div>
       <div class="row"><input id="bpm" type="range" min="50" max="200" value="112" /></div>
+      <!-- DURATA (10/09): il selettore finale chiesto dall'utente, ed è l'ultima cosa che si legge
+           prima di premere Genera. La seconda pastiglia si vede SEMPRE, anche da bloccati: è la
+           vetrina, e vedere cosa si compra è metà della vendita — mai display:none.
+           ⚠️ SCRITTO STATICO QUI, non generato da codice: marcaTesti() (web/lingue.ts) gira UNA
+           VOLTA SOLA all'avvio e marca solo gli elementi già presenti nel documento. Un selettore
+           iniettato dopo non verrebbe MAI tradotto in nessuna delle 11 lingue. -->
+      <div class="label">Length</div>
+      <div id="lengths" class="chips">
+        <div id="lenShort" class="chip on">1 minute</div>
+        <!-- ⚠️ La scritta sta in un <span> SUO, separata dal lucchetto e dal sottotitolo. Motivo:
+             marcaTesti() confronta l'innerHTML INTERO dell'elemento con il dizionario inglese —
+             «🔒 Full song<span…>2:30 - 3:30</span>» non corrisponderebbe a nulla e la pastiglia
+             resterebbe in inglese in tutte e 11 le lingue. Così invece «Full song» combacia. -->
+        <div id="lenFull" class="chip bloccato"><span id="lenFullLock">🔒 </span><span>Full song</span><span class="chipSub">2:30 - 3:30</span></div>
+      </div>
     </div>
 
     <!-- BARRA DI AVANZAMENTO: appare sopra il tasto mentre il brano suona -->
@@ -348,6 +367,32 @@
         <div id="tipPay" class="tipPay">Support with PayPal</div>
         <div id="tipNo" class="tipNo">No thanks, maybe another time</div>
         <div class="tipFine">Opens PayPal in a new tab. MC Parrot never sees or stores any payment data.</div>
+      </div>
+    </div>
+
+    <!-- SCHERMATA DI SBLOCCO (10/09). Riusa la struttura del modale delle donazioni: stile e
+         comportamento sono già scritti e già tradotti, e si guadagna coerenza visiva a costo zero.
+         ⚠️ Il tasto «acquista nello store» NON c'è finché l'acquisto interno non esiste davvero:
+         un tasto che non fa niente è peggio di un tasto che manca. -->
+    <div id="unlock" class="tipBack">
+      <div class="tipCard">
+        <div id="unlockClose" class="tipClose">✕</div>
+        <div class="tipParrot"><img class="parrot" src="parrot.png" alt="MC Parrot" style="width:64px;height:64px;object-fit:contain" /></div>
+        <div class="tipTitle">Full song</div>
+        <div class="tipBody">The full song builds a real structure for the genre: intro, verses, chorus,
+ bridge, ending. Two and a half to three and a half minutes. It also raises the recording limit from 7 to 15 minutes.</div>
+        <div id="unlockCodeRow" style="display:none;margin-top:10px">
+          <input id="unlockCode" maxlength="19" autocomplete="off" autocapitalize="characters" spellcheck="false"
+ placeholder="XXXX-XXXX-XXXX-XXXX"
+ style="width:100%;padding:12px;border:2px solid var(--blu-4);background:var(--blu-3);color:var(--testo);font-family:monospace;font-size:15px;letter-spacing:0.08em;text-align:center;border-radius:0;box-sizing:border-box" />
+          <div id="unlockGo" class="tipPay" style="margin-top:8px">Confirm</div>
+        </div>
+        <div id="unlockAsk" class="tipPay">I have a code</div>
+        <div id="unlockMsg" class="tipFine" style="min-height:14px"></div>
+        <!-- Chi ha sbloccato con un codice deve poterlo RITROVARE: se disinstalla e reinstalla,
+             deve ridigitarlo, e non può chiederlo a noi ogni volta. -->
+        <div id="unlockMine" class="tipFine" style="display:none">Your code: <b id="unlockMineVal" style="font-family:monospace;letter-spacing:0.08em"></b></div>
+        <div id="unlockNo" class="tipNo">Close</div>
       </div>
     </div>
 
