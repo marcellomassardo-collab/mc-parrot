@@ -12,13 +12,23 @@
 // fatto male fa più danni che utile.
 // I quattro file dell'app si servono dalla credenza (sono quelli che devono esserci in aereo);
 // tutto il resto passa dalla rete come se questo file non ci fosse.
-const VERSIONE = '4.00';
+const VERSIONE = '4.01';
 const CREDENZA = 'mcparrot-' + VERSIONE;
+// ⚠️ RETE DI SICUREZZA (10/09). Il numero qui sopra lo scrive la procedura di pubblicazione, che
+// sostituisce il segnaposto. Se per un errore venisse pubblicato il MODELLO com'è, il nome della
+// credenza sarebbe identico a ogni versione: le copie vecchie non verrebbero mai buttate e l'app
+// resterebbe congelata su una versione passata, per sempre, senza nessun errore visibile. È il
+// guasto peggiore che questo file possa causare, quindi si riconosce da solo: se il segnaposto è
+// ancora lì, il gestore non tiene NIENTE da parte e lascia passare tutto alla rete. Si perde la
+// modalità aereo — che è grave — ma non si congela l'app, che è peggio, e la prossima pubblicazione
+// rimette tutto a posto invece di dover chiedere a ognuno di cancellare i dati del sito.
+const TARATO = VERSIONE.indexOf('SW_VERSION') < 0;
 const FILE = ['./', './index.html', './bundle.js', './analysis-worker.js', './manifest.webmanifest', './parrot.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
   // si prende tutto subito, e non si aspetta che le schede aperte vengano chiuse
-  e.waitUntil(caches.open(CREDENZA).then((c) => c.addAll(FILE)).then(() => self.skipWaiting()));
+  // Se il segnaposto non e' stato sostituito non si tiene niente da parte: vedi TARATO.
+  e.waitUntil((TARATO ? caches.open(CREDENZA).then((c) => c.addAll(FILE)) : Promise.resolve()).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
@@ -30,23 +40,51 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// ⭐⭐ PRIMA LA RETE, POI LA CREDENZA — corretto il 10/09/2026, e il difetto l'ha trovato l'utente:
+// «si è aperto il browser con le 3.96» il giorno in cui era pubblicata la 4.00.
+// La prima stesura serviva SEMPRE la copia salvata quando c'era. Ma un gestore offline si aggiorna
+// così: la pagina si apre con i file VECCHI, e solo MENTRE si apre il browser scarica il gestore
+// nuovo. Il risultato è che a ogni pubblicazione la prima apertura mostra la versione PRECEDENTE, e
+// quella giusta arriva solo alla seconda. Per chi prova le versioni è una trappola perfetta: si
+// guarda il numero in alto a destra e si conclude che la pubblicazione non è andata.
+//
+// Ora: si prova la RETE, con un tetto di attesa; se risponde si serve quella e si aggiorna la copia
+// salvata. Se la rete manca, è lenta o risponde male, si serve la copia salvata. Senza rete il
+// tentativo fallisce subito e la credenza risponde all'istante: la modalità aereo resta intatta —
+// è la promessa dell'app e non si tocca. L'attesa serve solo a non restare appesi a una rete che
+// c'è ma non va (l'aeroporto, il treno): dopo il tetto si serve comunque ciò che si ha.
+const ATTESA_RETE_MS = 3000;
+
+const dallaRete = (req) =>
+  new Promise((risolvi, rifiuta) => {
+    const orologio = setTimeout(() => rifiuta(new Error('rete lenta')), ATTESA_RETE_MS);
+    fetch(req).then(
+      (r) => { clearTimeout(orologio); risolvi(r); },
+      (err) => { clearTimeout(orologio); rifiuta(err); },
+    );
+  });
+
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // roba di altri: non ci si mette in mezzo
+  if (!TARATO) return; // modello non sostituito: ci si toglie di mezzo del tutto
   e.respondWith(
-    caches.match(req).then((salvata) => {
-      if (salvata) return salvata;
-      return fetch(req)
-        .then((risposta) => {
-          // si tiene da parte solo ciò che è nostro e che è andato a buon fine
-          if (!risposta || risposta.status !== 200 || risposta.type !== 'basic') return risposta;
-          const copia = risposta.clone();
-          caches.open(CREDENZA).then((c) => c.put(req, copia));
-          return risposta;
-        })
-        .catch(() => caches.match('./index.html')); // senza rete: si torna alla pagina dell'app
-    }),
+    dallaRete(req)
+      .then((risposta) => {
+        // ⚠️ Una risposta SBAGLIATA non deve scalzare una copia buona: un 500 o un 404 di passaggio
+        // (la rete del treno, un intoppo del servizio) manderebbe altrimenti l'app in errore pur
+        // avendo tutto su disco. Si accetta solo ciò che è nostro e andato a buon fine.
+        if (!risposta || !risposta.ok || risposta.type !== 'basic') throw new Error('risposta non buona');
+        const copia = risposta.clone();
+        caches.open(CREDENZA).then((c) => c.put(req, copia));
+        return risposta;
+      })
+      .catch(() =>
+        caches.match(req).then((salvata) => salvata
+          || caches.match('./index.html') // senza rete e senza copia: si torna alla pagina dell'app
+          || fetch(req)),                  // ultima spiaggia: si lascia decidere al browser
+      ),
   );
 });
