@@ -12,7 +12,7 @@
 // fatto male fa più danni che utile.
 // I quattro file dell'app si servono dalla credenza (sono quelli che devono esserci in aereo);
 // tutto il resto passa dalla rete come se questo file non ci fosse.
-const VERSIONE = '4.21';
+const VERSIONE = '4.22';
 const CREDENZA = 'mcparrot-' + VERSIONE;
 // ⚠️ RETE DI SICUREZZA (10/09). Il numero qui sopra lo scrive la procedura di pubblicazione, che
 // sostituisce il segnaposto. Se per un errore venisse pubblicato il MODELLO com'è, il nome della
