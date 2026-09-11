@@ -253,7 +253,7 @@
 
   <div class="wrap">
     <h1 class="logoRow"><img class="parrot" src="parrot.png" alt="MC Parrot DJ cockatoo" /><span>MC Parrot</span></h1>
-    <div class="sub"><span>the sounds you record → a song</span><br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:9px">Every sound comes only from your own recording — nothing added from outside, nothing downloaded. It works in airplane mode too.</span></div>
+    <div class="sub"><span>the sounds you record → a song</span><br /><span style="color:var(--testo-3);font-size:9px">We don't collect cookies or any personal data. We don't care who you are. Just have fun.</span><br /><span style="color:var(--testo-3);font-size:9px">Every sound comes only from your own recording: nothing added from outside, nothing downloaded. It works in airplane mode too.</span></div>
 
     <div class="card">
       <div class="row" style="justify-content:center"><span id="recTime" style="color:var(--testo-2);font-size:19px;font-weight:700;">Ready to record</span></div>
@@ -261,11 +261,11 @@
            le 4 famiglie che servono al motore. La MELODIA è quella che di solito manca (senza suoni
            intonati il brano esce "industrial" — misurato): perciò è evidenziata. -->
       <div id="recHint" class="recHint">
-        <span>Record a mix of sounds — the more musical and varied, the richer the song:</span><br />
-        <span class="rh">🥁 <b>Beat</b> — tap objects, clap, knock, tick</span>
-        <span class="rh rhMel">🎵 <b>Melody</b> — hum a tune, whistle, a few notes on any instrument, tink a glass or bottle</span>
-        <span class="rh">🔊 <b>Bass</b> — a low “boom”, a soft thump, a low hum, a punch in the wall or table</span>
-        <span class="rh">🎤 <b>Voice</b> — say or sing a short phrase (repeat it a couple of times)</span>
+        <span>Record a mix of sounds. The more musical and varied, the richer the song:</span><br />
+        <span class="rh">🥁 <b>Beat</b>: tap objects, clap, knock, tick</span>
+        <span class="rh rhMel">🎵 <b>Melody</b>: hum a tune, whistle, a few notes on any instrument, tink a glass or bottle</span>
+        <span class="rh">🔊 <b>Bass</b>: a low “boom”, a soft thump, a low hum, a punch in the wall or table</span>
+        <span class="rh">🎤 <b>Voice</b>: say or sing a short phrase (repeat it a couple of times)</span>
       </div>
       <!-- ONDA SONORA DAL VIVO: le barre si muovono col microfono (come nell'app) -->
       <div id="wave" class="wave"><span class="waveHint">Your waveform will appear here</span></div>
@@ -322,7 +322,7 @@
       <!-- KEEP IT WHILE YOU HAVE IT: every generation is a new take — the engine re-rolls the
            arrangement each time, so pressing Generate again gives you a different song, not the
            same one. If this one works, save it now. -->
-      <div id="keepHint" class="keepHint">Like this one? Download or share it now — press Generate again and you'll get a different take, not this one.</div>
+      <div id="keepHint" class="keepHint">Like this one? Download or share it now: press Generate again and you'll get a different take, not this one.</div>
       <div class="fmtLabel">Download as</div>
       <div class="fmtRow">
         <div id="fmt-wav" class="fmtChip on"><b>WAV</b><span>lossless · big</span></div>
@@ -401,10 +401,15 @@
     <div id="sndRecap" style="display:none;margin-top:10px;padding:8px 10px;border:2px solid var(--blu-3);color:var(--blu-4);font-size:12px;letter-spacing:0.02em"></div>
     <div class="note">
       <span>Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.</span><br />
-      <!-- La musica è dell'utente: va detto dove la gente la legge davvero, non solo nella licenza. -->
-      The music you make is yours — publish it, release it, sell it, just maybe tag us in the credits
-      <!-- "drop a donation" deve portare da qualche parte, altrimenti è un invito a vuoto -->
- and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.
+      <!-- La musica è dell'utente: va detto dove la gente la legge davvero, non solo nella licenza.
+           "drop a donation" deve portare da qualche parte, altrimenti è un invito a vuoto.
+           ⚠️ 11/09 — QUESTA FRASE DEVE STARE DENTRO UN <span> SUO, tutta su una riga e senza commenti
+           in mezzo. La marcatura delle lingue confronta l'innerHTML di ogni elemento col dizionario
+           inglese e salta i contenitori con più di un figlio: qui il testo era NUDO dentro .note (che
+           ha span + br + a), quindi non veniva mai marcato e restava in inglese in tutte e 11 le
+           lingue, anche se la traduzione nel dizionario c'era. Stessa famiglia del menu cronologia
+           mezzo spagnolo. E i commenti in mezzo finiscono dentro innerHTML: il confronto non torna. -->
+      <span>The music you make is yours: publish it, release it, sell it, just maybe tag us in the credits and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.</span>
       <a href="README.md#licence--in-plain-words" style="color:#54546A">Licence</a>
       <!-- Android build: unsigned, so Android will warn about an "unknown developer" — say it up front -->
       <a href="MC-Parrot.apk" style="color:#54546A">Android app (.apk, unsigned)</a>
