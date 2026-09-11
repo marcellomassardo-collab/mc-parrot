@@ -411,8 +411,11 @@
            mezzo spagnolo. E i commenti in mezzo finiscono dentro innerHTML: il confronto non torna. -->
       <span>The music you make is yours: publish it, release it, sell it, just maybe tag us in the credits and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.</span>
       <a href="README.md#licence--in-plain-words" style="color:#54546A">Licence</a>
-      <!-- Android build: unsigned, so Android will warn about an "unknown developer" — say it up front -->
-      <a href="MC-Parrot.apk" style="color:#54546A">Android app (.apk, unsigned)</a>
+      <!-- ⚠️ 11/09 — L'APK E' FIRMATO, con chiave di rilascio RSA 4096 (verificato con apksigner:
+           schema v2, CN=Marcello Massardo). Qui c'era scritto «unsigned», ed era falso. Android chiede
+           comunque il permesso per installare da fuori dallo store, ma quello riguarda la PROVENIENZA,
+           non la firma. ⚠️ L'installer Windows invece non e' firmato davvero: li' non si scrive «signed». -->
+      <a href="MC-Parrot.apk" style="color:#54546A">Android app (.apk, signed)</a>
     </div>
   </div>
   <script src="./bundle.js"></script>
