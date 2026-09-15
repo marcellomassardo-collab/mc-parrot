@@ -387,11 +387,15 @@
  style="width:100%;padding:12px;border:2px solid var(--blu-4);background:var(--blu-3);color:var(--testo);font-family:monospace;font-size:15px;letter-spacing:0.08em;text-align:center;border-radius:0;box-sizing:border-box" />
           <div id="unlockGo" class="tipPay" style="margin-top:8px">Confirm</div>
         </div>
+        <!-- (16/09) La seconda via: l'acquisto nello store. Il contenitore ha DUE figli apposta: la marcatura
+             delle lingue traduce lo span del testo e lascia in pace il prezzo, che lo formatta lo store. -->
+        <div id="unlockBuy" class="tipPay" style="display:none"><span>Buy the full song</span> <span id="unlockPrice"></span></div>
         <div id="unlockAsk" class="tipPay">I have a code</div>
         <div id="unlockMsg" class="tipFine" style="min-height:14px"></div>
         <!-- Chi ha sbloccato con un codice deve poterlo RITROVARE: se disinstalla e reinstalla,
              deve ridigitarlo, e non può chiederlo a noi ogni volta. -->
         <div id="unlockMine" class="tipFine" style="display:none">Your code: <b id="unlockMineVal" style="font-family:monospace;letter-spacing:0.08em"></b></div>
+        <div id="unlockRestore" class="tipFine" style="display:none;cursor:pointer;text-decoration:underline">Restore purchase</div>
         <div id="unlockNo" class="tipNo">Close</div>
       </div>
     </div>
