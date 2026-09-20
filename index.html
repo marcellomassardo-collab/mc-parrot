@@ -130,6 +130,17 @@
     .chip:hover { background: var(--blu-4); }
     /* stato attivo in GIALLO: si distingue a colpo d'occhio dall'arancio del tasto registra */
     .chip.on { background: var(--giallo); color: var(--blu-0); font-weight: 700; border-color: var(--testo); box-shadow: 3px 3px 0 var(--testo); }
+    /* «?» sulle pastiglie delle scale (20/09): spiega che mood trasmette ognuna, per chi non sa
+       cosa sia la locria. La pastiglia diventa il riferimento della nuvoletta. */
+    .chip { position: relative; }
+    .chipQ { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px;
+ margin-left: 7px; border: 1.5px solid currentColor; border-radius: 50%; font-size: 10px; font-weight: 700;
+ line-height: 1; opacity: .55; vertical-align: 1px; }
+    .chipQ:hover { opacity: 1; }
+    .chipTip { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(100% + 8px);
+ z-index: 40; width: max-content; max-width: 210px; padding: 8px 10px; background: var(--blu-0);
+ color: var(--testo); border: 2px solid var(--giallo); box-shadow: 3px 3px 0 var(--testo);
+ font-size: 12px; font-weight: 600; line-height: 1.35; white-space: normal; text-align: left; cursor: default; }
     /* pastiglia BLOCCATA: si vede, si legge, invita — ma è spenta. Mai nascosta: nascondere la
        funzione a chi non l'ha sbloccata vuol dire che non saprà mai che esiste. */
     .chip.bloccato { opacity: 0.55; border-style: dashed; }
@@ -225,6 +236,45 @@
     .histHead { display: flex; justify-content: space-between; align-items: center; color: var(--testo); font-size: 18px;
       font-weight: 800; margin-bottom: 12px; }
     .histClose { color: var(--testo-3); font-size: 20px; font-weight: 700; cursor: pointer; padding: 0 6px; }
+    /* TIMELINE (20/09): la riga di lettura sopra il disegno e la nota sotto. Il canvas si
+       ridisegna da solo quando la finestra cambia larghezza (vedi disegnaTimeline). */
+    .tlInfo { color: var(--giallo); font-size: 12px; font-family: ui-monospace, monospace;
+ margin: 2px 0 8px; min-height: 16px; }
+    .tlNota { color: var(--testo-3); font-size: 11px; margin-top: 10px; }
+    #tlCanvas { display: block; image-rendering: pixelated; cursor: crosshair; max-width: 100%; }
+    /* ⚠️ NIENTE BARRA ORIZZONTALE, MAI: il disegno si adatta in larghezza, quindi se compare
+       vuol dire che il canvas ha sforato di qualche pixel — e una barra che non serve fa
+       sembrare rotto il pannello. In verticale invece si scorre SOLO se serve davvero: su un PC
+       ci sta tutto, su un telefono girato con molti strati no, ed è giusto che li' scorra. */
+    #tlPanel .histBodyScroll { overflow-x: hidden; max-height: calc(100vh - 220px); }
+    /* EDITOR DEL BRANO (21/09). Tutto piccolo e in riga: sono nove comandi per strato e devono
+       stare sotto il disegno senza rubargli lo schermo. `flex-wrap` fa il resto — su un telefono
+       girato la riga va a capo da sola invece di comparire una barra orizzontale. */
+    #edPanel { border-top: 1px solid var(--blu-3); margin-top: 10px; padding-top: 8px; }
+    .edRiga { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 3px 0;
+      border-bottom: 1px solid rgba(154,90,156,.18); }
+    .edNome { width: 58px; font: 700 11px ui-monospace, monospace; }
+    .edT { width: 22px; height: 22px; padding: 0; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--blu-3); background: transparent; color: var(--testo-3);
+      font: 700 11px ui-monospace, monospace; }
+    .edT.on { background: var(--giallo); color: #1C0A22; border-color: var(--giallo); }
+    .edC { display: flex; align-items: center; gap: 3px; color: var(--testo-3); font-size: 10px; }
+    .edC input[type=range] { width: 66px; accent-color: var(--cresta); }
+    .edC b { color: var(--testo); font: 700 10px ui-monospace, monospace; min-width: 30px; }
+    .edSel { background: #1C0A22; color: var(--testo); border: 1px solid var(--blu-3);
+      border-radius: 5px; font-size: 10px; padding: 2px 3px; }
+    .edLiv { margin-left: auto; color: var(--giallo); font: 10px ui-monospace, monospace; }
+    .edEq { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0 6px; }
+    .edEq .edTit { color: var(--cresta); font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+    .edBarra { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+    .edBarra button { border-radius: 8px; cursor: pointer; border: 1px solid var(--blu-3);
+      background: var(--blu-3); color: var(--blu-5); font-size: 12px; font-weight: 700; padding: 6px 12px; }
+    .edBarra button:disabled { opacity: .4; cursor: default; }
+    /* il tasto «Applica» si accende quando c'è qualcosa da applicare: è l'unico modo di sapere
+       che il disegno è già cambiato ma il suono no. */
+    .edBarra button.edPronto { background: var(--giallo); color: #1C0A22; border-color: var(--giallo); }
+    #edSwap { display: none; gap: 4px; align-items: center; }
+    #edStato { color: var(--testo-3); font-size: 11px; }
     .histBodyScroll { overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .histH { color: var(--cresta); font-size: 13px; font-weight: 700; letter-spacing: 1px; margin: 14px 0 8px; }
     .histEmpty { color: var(--testo-3); font-size: 13px; padding: 6px 2px 10px; }
@@ -336,6 +386,43 @@
          Il pulsante compare SOLO se il browser sa condividere file, così non si mostra
  mai un comando che non funziona. -->
     <button id="shareBtn" class="big gen" style="display:none" disabled>⤴ Share</button>
+
+    <!-- TIMELINE (20/09): far VEDERE il brano. Il motore lavora già su una lista di eventi
+         (strato, quando, durata, volume, da quale frammento): qui la si disegna, una riga per
+         strato. Sola lettura per ora. Compare solo dopo una generazione, solo se sbloccato e
+         solo su schermi larghi: su un telefono in verticale sette righe non ci stanno. -->
+    <button id="tlBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5)">▦ Timeline</button>
+    <div id="tlPanel" class="histPanel">
+      <div class="histCard" style="max-width:1100px;width:96vw">
+        <div class="histHead"><span>▦ Timeline</span><div id="tlClose" class="histClose">✕</div></div>
+        <div id="tlInfo" class="tlInfo"></div>
+        <div class="histBodyScroll"><canvas id="tlCanvas"></canvas></div>
+        <div class="tlNota">Click a block to see where it came from. Drag it to move it in time (snaps to 1/16).</div>
+        <!-- EDITOR: compare solo da sbloccati e solo se il brano è nato nel worker (vedi edModificabile) -->
+        <div id="edPanel" style="display:none">
+          <div id="edRighe"></div>
+          <!-- ⚠️ Ogni scritta sta in un elemento SUO, senza icone attaccate: marcaTesti() confronta
+               l'innerHTML INTERO con il dizionario inglese, quindi «↺ Apply» non corrisponderebbe
+               a niente e resterebbe in inglese per sempre (trappola gia' pagata il 10/09). -->
+          <div class="edEq">
+            <span class="edTit">Track EQ</span>
+            <label class="edC"><span>sub cut</span><input type="range" id="edHpf" min="0" max="120" step="5" value="0"><b>off</b></label>
+            <label class="edC"><span>low</span><input type="range" id="edGrave" min="-6" max="6" step="0.5" value="0"><b>0.0</b></label>
+            <label class="edC"><span>mid</span><input type="range" id="edMid" min="-6" max="6" step="0.5" value="0"><b>0.0</b></label>
+            <label class="edC"><span>high</span><input type="range" id="edHigh" min="-6" max="6" step="0.5" value="0"><b>0.0</b></label>
+          </div>
+          <div class="edBarra">
+            <button id="edApply">Apply</button>
+            <button id="edAb" disabled>A/B</button>
+            <button id="edReset">Reset</button>
+            <button id="edSave">Save to history</button>
+            <span id="edSwap"><span class="edC">sample</span><button id="edPrev">◀</button><button id="edNext">▶</button></span>
+            <span id="edStato"></span>
+          </div>
+          <div class="tlNota">Everything here changes THIS track only — nothing is saved as a genre preset. Levels are applied to the clips before the EQ.</div>
+        </div>
+      </div>
+    </div>
 
     <!-- CRONOLOGIA: ultimi 10 registrati + prodotti (IndexedDB, offline). Il conteggio è nel testo. -->
     <button id="histBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">⏱ History</button>
