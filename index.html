@@ -294,6 +294,10 @@
     .edBarra button.edEsp { background: linear-gradient(180deg, #FFB36B, #E5703A); color: #2A1400;
       border-color: #E5703A; padding: 8px 16px; }
     #tlPanel .histClose { font-size: 24px; padding: 0 10px 0 0; }
+    /* Solo il simbolo, niente parola: ▶ e ■ si capiscono in tutte le lingue e stanno in un tasto
+       piccolo che non ruba larghezza al titolo su un telefono. */
+    .edPlayBtn { min-width: 46px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 15px;
+      border: 2px solid var(--blu-5); background: var(--giallo); color: #1C0A22; font-weight: 700; }
     #edSwap { display: none; gap: 4px; align-items: center; }
     #edStato { color: var(--testo-3); font-size: 11px; }
     /* ⚠️ IL TELEFONO IN VERTICALE (21/09). A 384 px una riga di comandi non ci sta su una riga
@@ -428,7 +432,10 @@
     <button id="tlBtn" class="big edb" style="display:none">✎ Send to editor</button>
     <div id="tlPanel" class="histPanel">
       <div class="histCard" style="max-width:1100px;width:96vw">
-        <div class="histHead"><div id="tlClose" class="histClose" title="Back">←</div><span>✎ Editor</span><span style="width:22px"></span></div>
+        <!-- ⚠️ IL PLAY STA NELL'INTESTAZIONE, che e' appiccicata in alto (21/09, richiesta
+             dell'utente): si muove una manopola in fondo a nove strati e si vuole sentire il
+             risultato SENZA risalire. In una barra in fondo sarebbe fuori schermo meta' del tempo. -->
+        <div class="histHead"><div id="tlClose" class="histClose" title="Back">←</div><span>✎ Editor</span><button id="edPlay" class="edPlayBtn">▶</button></div>
         <div id="tlInfo" class="tlInfo"></div>
         <div class="histBodyScroll"><canvas id="tlCanvas"></canvas></div>
         <div class="tlNota">Click a block to see where it came from. Drag it to move it in time (snaps to 1/16).</div>
