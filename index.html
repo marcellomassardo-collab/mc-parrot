@@ -245,6 +245,16 @@
  margin: 2px 0 8px; min-height: 16px; }
     .tlNota { color: var(--testo-3); font-size: 11px; margin-top: 10px; }
     #tlCanvas { display: block; image-rendering: pixelated; cursor: crosshair; max-width: 100%; }
+    #tlWrap { position: relative; width: max-content; max-width: 100%; }
+    /* `pointer-events: none`: il cursore passa sopra le clip e non deve rubare il tocco a chi
+       vuole trascinarne una. `will-change` dice al browser di tenerlo su un piano suo. */
+    /* LE CLIP CHE SUONANO ADESSO: uno strato trasparente sopra il disegno. Si ripulisce e si
+       ridisegna SOLO quando il gruppo di clip cambia — dieci rettangoli invece dei millecento
+       del disegno sotto, che resta fermo. */
+    #tlLuci { position: absolute; top: 0; left: 0; pointer-events: none; }
+    #tlCursore { position: absolute; top: 0; left: 0; width: 2px; display: none;
+      background: #FFE066; box-shadow: 0 0 6px rgba(255,224,102,.9); pointer-events: none;
+      will-change: transform; }
     /* ⚠️ NIENTE BARRA ORIZZONTALE, MAI: il disegno si adatta in larghezza, quindi se compare
        vuol dire che il canvas ha sforato di qualche pixel — e una barra che non serve fa
        sembrare rotto il pannello. In verticale invece si scorre SOLO se serve davvero: su un PC
@@ -281,6 +291,11 @@
     .edSel { background: #1C0A22; color: var(--testo); border: 1px solid var(--blu-3);
       border-radius: 5px; font-size: 10px; padding: 2px 3px; }
     .edLiv { margin-left: auto; color: var(--giallo); font: 10px ui-monospace, monospace; }
+    /* LA RIGA DELLO STRATO CHE STA SUONANDO. Un filo giallo a sinistra e un fondo appena acceso:
+       si vede con la coda dell'occhio mentre si guarda il disegno, senza far ballare la pagina
+       (niente che cambi le dimensioni, altrimenti le righe si muoverebbero sotto il dito). */
+    .edRiga.suona { background: rgba(255,224,102,.07); box-shadow: inset 3px 0 0 #FFE066; }
+    .edRiga.suona .edNome { color: #FFE066 !important; }
     .edEq { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0 6px; }
     .edEq .edTit { color: var(--cresta); font-size: 11px; font-weight: 700; letter-spacing: 1px; }
     .edBarra { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
@@ -437,7 +452,12 @@
              risultato SENZA risalire. In una barra in fondo sarebbe fuori schermo meta' del tempo. -->
         <div class="histHead"><div id="tlClose" class="histClose" title="Back">←</div><span>✎ Editor</span><button id="edPlay" class="edPlayBtn">▶</button></div>
         <div id="tlInfo" class="tlInfo"></div>
-        <div class="histBodyScroll"><canvas id="tlCanvas"></canvas></div>
+        <!-- ⚠️ IL CURSORE E' UN ELEMENTO SOPRA IL DISEGNO, NON UNA RIGA DISEGNATA (21/09).
+             Ridisegnare il canvas a ogni fotogramma vorrebbe dire rifare mille e passa blocchi
+             sessanta volte al secondo: su un telefono e' proprio il tipo di lavoro che fa
+             scattare l'interfaccia. Cosi' invece si muove un solo elemento con `transform`, che
+             il telefono sposta con la scheda grafica senza ridisegnare niente. -->
+        <div class="histBodyScroll"><div id="tlWrap"><canvas id="tlCanvas"></canvas><canvas id="tlLuci"></canvas><div id="tlCursore"></div></div></div>
         <div class="tlNota">Click a block to see where it came from. Drag it to move it in time (snaps to 1/16).</div>
         <!-- EDITOR: compare solo da sbloccati e solo se il brano è nato nel worker (vedi edModificabile) -->
         <div id="edPanel" style="display:none">
