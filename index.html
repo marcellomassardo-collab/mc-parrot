@@ -380,7 +380,7 @@
         <div class="tipParrot"><img class="parrot" src="parrot.png" alt="MC Parrot" style="width:64px;height:64px;object-fit:contain" /></div>
         <div class="tipTitle">Full song</div>
         <div class="tipBody">The full song builds a real structure for the genre: intro, verses, chorus,
- bridge, ending. Two and a half to three and a half minutes. It also raises the recording limit from 7 to 15 minutes.</div>
+ bridge, ending. Two and a half to three and a half minutes. It also raises the recording limit from 7 to 30 minutes.</div>
         <div id="unlockCodeRow" style="display:none;margin-top:10px">
           <input id="unlockCode" maxlength="19" autocomplete="off" autocapitalize="characters" spellcheck="false"
  placeholder="XXXX-XXXX-XXXX-XXXX"
@@ -403,6 +403,9 @@
     <div id="status" class="status"></div>
     <!-- Riepilogo dei suoni riconosciuti dall'analisi (richiesta 18/08: rimesso in fondo) -->
     <div id="sndRecap" style="display:none;margin-top:10px;padding:8px 10px;border:2px solid var(--blu-3);color:var(--blu-4);font-size:12px;letter-spacing:0.02em"></div>
+    <!-- (18/09) una riga per file aperto: quanti frammenti e in quali famiglie. Piccolo, schematico, interlinea
+         stretta, in fondo alla pagina. Col microfono resta nascosto. -->
+    <pre id="recapFile" style="display:none;margin:4px 0 0;padding:6px 10px;border:2px solid var(--blu-3);color:var(--blu-4);font-size:10px;line-height:1.15;white-space:pre;overflow:auto;max-height:190px"></pre>
     <div class="note">
       <span>Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.</span><br />
       <!-- La musica è dell'utente: va detto dove la gente la legge davvero, non solo nella licenza.
