@@ -391,6 +391,12 @@
         <button id="pauseBtn" class="big" style="display:none;flex:1;background:var(--pericolo);color:var(--blu-0);margin-top:10px">■ Stop</button>
       </div>
       <button id="recPlayBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5);margin-top:8px">▶ Play recording</button>
+      <!-- la stessa barra del brano, ma per il RIASCOLTO della registrazione: senza, di una
+           registrazione da dieci minuti non si sa a che punto si e' ne' si puo' saltare -->
+      <div id="recProg" class="playProg" style="display:none">
+        <div id="recHit" class="progHit" title="Click to jump to a point"><div class="progTrack"><div id="recFill" class="progFill"></div></div></div>
+        <div class="progTimes"><span id="recNow">0:00</span><span id="recTot">0:00</span></div>
+      </div>
     </div>
 
     <!-- GENERATORE: nascosto finché non c'è materiale (registrazione o history) — richiesta 19/08 -->
