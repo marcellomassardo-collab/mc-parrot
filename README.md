@@ -1,11 +1,23 @@
 # MC Parrot 🦜
 
-**Turn the sounds you record into a song: entirely on your own device.**
+**Turn the sounds you record into a finished song. On your own device, in seconds.**
 
-MC Parrot records ambient sounds (and your voice) from the microphone and recomposes them
-into a short musical track, using **only those sounds** as raw material: basically chaos
-with a tiny bit of music theory. Pick a genre, scale and tempo, generate, listen back,
-and export an audio file.
+> **Bring your sounds → get a song that is in time, in key, mixed and mastered → change whatever
+> you want → export it, or finish it in another app.**
+
+MC Parrot is a tool for making music fast. You bring the sounds — tap the table, hum a line,
+whistle, sing a phrase, or drop in a folder of samples you already have — and the engine builds
+a real song out of them: key, chord progression, rhythm, arrangement, **mix and master**. Pick a
+genre, press generate, listen.
+
+**No hours lost on levels, mixing and mastering.** That is a job in itself, and it is the part
+that stops most people from ever finishing anything. Here the algorithms do it with you, every
+time, for every genre — and they do it on **your** material, so nothing about the result is
+generic.
+
+Every sound in the song came out of your own recording, which makes it original by construction.
+And it is not a dead end: you can edit the song right here, or take it into another app and
+finish it your way.
 
 ## 🔒 Privacy guaranteed: please read
 
@@ -29,15 +41,52 @@ simply nowhere your sounds could go.
 
 1. Open the link in your browser (phone or computer).
 2. Allow the **microphone** and press **Record**: capture some ambient sounds (objects, taps,
-   a bit of voice, an instrument…).
-   Already recorded something elsewhere? Press **📂 Open audio files** instead and bring it in:
-   useful if you captured it with a proper microphone or another device. You can pick **several
-   files at once**: record your snare, your piano and your voice separately and they become one
-   song. Mono and stereo files can be mixed freely, and the song always comes out in stereo.
-   Up to 7 minutes in total. They are decoded on your own device like any recording, and they
-   never leave it either.
+   a bit of voice, an instrument…). Or press **📂 Open audio files** and bring in material you
+   already have — see *bring your own material*, below. Up to 7 minutes in total (30 with Full
+   song); whatever you open is decoded on your own device and never leaves it either.
 3. Choose **genre**, **scale** and **tempo**.
 4. Press **Generate music**, listen back, and optionally **Export** the WAV file.
+5. Want a whole song instead of a minute? See **Full song** below.
+
+## Bring your own material (this part is for producers)
+
+If you already record properly — a real mic, an interface, a folder of one-shots, stems from a
+session, a sample library you bought — open those files instead of the microphone, or alongside
+it. Several at once, mono and stereo mixed freely.
+
+MC Parrot decodes them on your device, works out what each fragment is (kick, snare, hat, a
+pitched note, a voice, an effect), **tunes everything that has a pitch to the scale you picked**
+and **lays it all on a grid that is in time**. Name a file `kick`, `vocals`, `stab` and it is
+taken at its word; name it nothing and the engine decides by listening.
+
+That is the part a producer cares about: what comes back is not a loop pack and not a random
+collage — it is **your own material, already in time and in key**, arranged, mixed and mastered.
+A starting point, not a novelty: keep working on it in the editor here, or take it into your DAW.
+
+## Free, and Full song
+
+MC Parrot is **free**, and it stays free: record, generate, listen, export, share. That is the
+whole app for most people, and nothing about it is crippled or time-limited.
+
+**Full song** is a one-off in-app purchase for anyone who wants to actually work with it:
+
+| | free | Full song |
+|---|---|---|
+| **Recording** | up to 7 minutes | up to **30 minutes** (record over several takes, or bring in a folder of samples) |
+| **Song length** | 1 minute | **2:30 - 3:30**, with the real structure of the genre you picked (intro, verse, chorus, bridge, drops) |
+| **Editor** | — | a **timeline of your song**: mute, solo, move clips in time, set volume, pan and density per layer, tweak the track EQ, swap the sample under a clip, and A/B your change against the previous version |
+| **Metadata in the WAV** | — | the full **track sheet** written inside the file, so the song can be reopened as a **project in FL Studio** once the plugin lands (see below) |
+| **Everything else** | the same engine, the same genres, the same privacy | the same |
+
+Bought once, kept forever, and it keeps working with **no connection**: the unlock lives on your
+device, not on a server. Airplane mode is not a limitation here, it is the normal case.
+
+## What the editor actually does (and why that matters)
+
+It does not chop up the audio. It changes the **parameters** and asks the engine to build the song
+again. So whatever you touch, what you hear is exactly what the engine would have produced with
+those settings: there is no second effects chain that could drift out of sync, and no "sounds
+different once exported". It also means you can always go back.
 
 ## How it works (in short)
 
@@ -56,6 +105,13 @@ APIs).
 
 - 🎛️ **FL Studio plugin**: bring the engine into your music production software, so the sounds you
   record become material you can arrange and produce like any other instrument.
+  **Full song WAVs are already getting ready for it**: every one of them carries a track sheet
+  inside the file (in iXML, a standard field that field recorders and editing software have used
+  for years, so the file stays an ordinary WAV everywhere else). The sheet lists the source files,
+  where each one was cut, and every clip with its layer, position, length and pitch — plus the
+  settings of our own effects. When the plugin lands, a song you exported today can be reopened
+  as a session: clips on separate tracks, named, with the effects already in place, instead of
+  one flat stereo mix.
 - 🎬 **MC Parrot Video**: the same idea, for video: record with the camera or bring in clips already
   on your phone, and the engine builds the music out of the sound that is already in them.
 
@@ -66,12 +122,12 @@ APIs).
 | 🎵 **The music you make is yours** | Every track you generate belongs to you. Publish it, release it, **sell it**: just maybe tag us in the credits and [drop a donation](https://www.paypal.com/paypalme/marcellomassardo). Nice to have, never required. |
 | 🆓 **The app is free** | For anyone, forever. No account, no ads, no tracking. |
 | 📴 **Everything runs on your phone** | Recording, analysis and generation all happen on your device, offline. Your audio never leaves it. |
-| 🔒 **Closed source** | MC Parrot is free to use, but the code is not open source and not Creative Commons: you may not reuse, modify or redistribute it. Want a commercial licence? Ask. |
-| 💬 **Feedback welcome** | Bug reports and ideas are very welcome. |
+| 🔒 **The code is mine, and it is closed** | MC Parrot is **not open source** and **not Creative Commons**. It is proprietary software, all rights reserved: you may run the official app, and that is all — no reuse of the code, no copying, no modifying, no redistributing, no building a product or a service on top of it. A website has to send your browser its compiled code in order to run at all: being able to download that code grants you none of those rights. Want a commercial licence? Ask, one can be granted. |
+| 💬 **Feedback welcome** | Bug reports and ideas are very welcome. Code contributions are not accepted: one author, on purpose. |
 
-Formally: proprietary licence, all rights reserved: see [LICENSE](LICENSE.md).
-Copyright © 2026 Marcello Massardo.
+Formally: proprietary licence, **all rights reserved** — see [LICENSE](LICENSE.md).
+Copyright © 2026 Marcello Massardo. The app is mine; the music you make with it is yours.
 
 ---
 
-*Made for the fun of playing with sounds. 🎶*
+*Bring your sounds. Let the algorithms work with you. 🎶*

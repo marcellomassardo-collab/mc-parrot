@@ -1,7 +1,7 @@
 {
   "name": "MC Parrot",
   "short_name": "MC Parrot",
-  "description": "Record the sounds around you and turn them into a song. Everything happens on your device.",
+  "description": "Your sounds become a real song: in time, in key, mixed and mastered. All on your device, no AI, no cloud.",
   "id": "/mc-parrot/",
   "start_url": "./index.html",
   "scope": "./",
