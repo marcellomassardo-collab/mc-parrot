@@ -245,7 +245,12 @@
  margin: 2px 0 8px; min-height: 16px; }
     .tlNota { color: var(--testo-3); font-size: 11px; margin-top: 10px; }
     #tlCanvas { display: block; image-rendering: pixelated; cursor: crosshair; max-width: 100%; }
-    #tlWrap { position: relative; width: max-content; max-width: 100%; }
+    /* ⚠️ `width: 100%`, MAI `max-content` (regressione della 4.88, segnalata dall'utente con uno
+       screenshot: disegno largo 320 px in una finestra da 1300). La larghezza del disegno si
+       MISURA da questo contenitore: con `max-content` il contenitore e' largo quanto il canvas e
+       il canvas si dimensiona sul contenitore — i due si avvitano e cadono sul minimo di 320.
+       Serve un contenitore che sappia la sua larghezza SENZA guardare cosa c'e' dentro. */
+    #tlWrap { position: relative; width: 100%; }
     /* `pointer-events: none`: il cursore passa sopra le clip e non deve rubare il tocco a chi
        vuole trascinarne una. `will-change` dice al browser di tenerlo su un piano suo. */
     /* LE CLIP CHE SUONANO ADESSO: uno strato trasparente sopra il disegno. Si ripulisce e si
@@ -311,6 +316,13 @@
     #tlPanel .histClose { font-size: 24px; padding: 0 10px 0 0; }
     /* Solo il simbolo, niente parola: ▶ e ■ si capiscono in tutte le lingue e stanno in un tasto
        piccolo che non ruba larghezza al titolo su un telefono. */
+    /* I comandi dello zoom stanno accanto al play, nell'intestazione appiccicata: si zooma
+       mentre si guarda, senza risalire. Il numero in mezzo e' anche il tasto «torna a tutto». */
+    .tlZoomBox { display: flex; align-items: center; gap: 4px; }
+    .tlZoomBox button { height: 30px; min-width: 30px; border-radius: 7px; cursor: pointer;
+      border: 1px solid var(--blu-3); background: #1C0A22; color: var(--testo); font-size: 14px;
+      font-weight: 700; padding: 0 6px; }
+    #tlZoomVal { min-width: 46px; font: 700 11px ui-monospace, monospace; color: var(--giallo); }
     .edPlayBtn { min-width: 46px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 15px;
       border: 2px solid var(--blu-5); background: var(--giallo); color: #1C0A22; font-weight: 700; }
     #edSwap { display: none; gap: 4px; align-items: center; }
@@ -450,7 +462,7 @@
         <!-- ⚠️ IL PLAY STA NELL'INTESTAZIONE, che e' appiccicata in alto (21/09, richiesta
              dell'utente): si muove una manopola in fondo a nove strati e si vuole sentire il
              risultato SENZA risalire. In una barra in fondo sarebbe fuori schermo meta' del tempo. -->
-        <div class="histHead"><div id="tlClose" class="histClose" title="Back">←</div><span>✎ Editor</span><button id="edPlay" class="edPlayBtn">▶</button></div>
+        <div class="histHead"><div id="tlClose" class="histClose" title="Back">←</div><span>✎ Editor</span><span class="tlZoomBox"><button id="tlZoomMeno" title="zoom out">−</button><button id="tlZoomVal" title="fit">1.0×</button><button id="tlZoomPiu" title="zoom in">+</button><button id="edPausa" class="edPlayBtn" style="visibility:hidden" title="pause">⏸</button><button id="edPlay" class="edPlayBtn">▶</button></span></div>
         <div id="tlInfo" class="tlInfo"></div>
         <!-- ⚠️ IL CURSORE E' UN ELEMENTO SOPRA IL DISEGNO, NON UNA RIGA DISEGNATA (21/09).
              Ridisegnare il canvas a ogni fotogramma vorrebbe dire rifare mille e passa blocchi
