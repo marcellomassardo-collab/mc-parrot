@@ -71,12 +71,12 @@ Measured, not guessed: every format below was tried through the app's own loadin
 |---|---|
 | **Microphone (Android app)** | native recording, **unprocessed**: no noise suppression, no echo cancelling, no automatic gain — 48 kHz, 16 bit. The phone's clean-up would eat exactly the ambient detail this app is made of. |
 | **Microphone (browser / Windows)** | same idea: AGC, noise suppression and echo cancelling switched off explicitly. |
-| **Audio files** | WAV (8, 16, 24, 32-bit and float) · MP3 · M4A · AAC · OGG Vorbis · **Opus** · FLAC |
+| **Audio files** | WAV (8, 16, 24, 32-bit and float) · **AIFF** and AIFF-C · MP3 · M4A · AAC · OGG Vorbis · **Opus** · FLAC — no browser decodes AIFF, so MC Parrot reads it itself |
 | **Voice notes** | the WhatsApp ones open directly: Opus-in-Ogg from Android, M4A from iPhone |
 | **Video files** | MP4 · MOV · WEBM · MKV · 3GP — the picture is ignored, the **soundtrack** is taken. Pull the audio out of your old clips and make a song with it. |
 | **Odd WAVs** | some sample libraries ship WAVs that are only a shell, with compressed Ogg Vorbis, FLAC or MP3 inside. Browsers refuse those. MC Parrot opens the shell and reads what is in it. |
 | **Mixing them** | mono and stereo together, any sample rate, any bit depth, any loudness: everything is brought to the same footing on your device, and the song always comes out in stereo. |
-| **Not supported** | AIFF and WMA — no browser decodes them. Convert to WAV first. |
+| **Not supported** | WMA — no browser decodes it. Convert to WAV first. |
 
 Up to 7 minutes in total, 30 with Full song. Nothing is uploaded: files are decoded on your own
 device like any recording.
