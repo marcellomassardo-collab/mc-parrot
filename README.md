@@ -142,6 +142,7 @@ APIs).
 | 📴 **Everything runs on your phone** | Recording, analysis and generation all happen on your device, offline. Your audio never leaves it. |
 | 🔒 **The code is mine, and it is closed** | MC Parrot is **not open source** and **not Creative Commons**. It is proprietary software, all rights reserved: you may run the official app, and that is all — no reuse of the code, no copying, no modifying, no redistributing, no building a product or a service on top of it. A website has to send your browser its compiled code in order to run at all: being able to download that code grants you none of those rights. Want a commercial licence? Ask, one can be granted. |
 | 💬 **Feedback welcome** | Bug reports and ideas are very welcome. Code contributions are not accepted: one author, on purpose. |
+| 🧩 **Other people's components** | The app ships with a few components written by others: the MP3 encoder, a Fourier transform, and the shells that run it on Android and Windows. They keep their own licences and are listed in [credits.html](credits.html). The MP3 encoder travels as a separate file, `lame.js`, that you can replace. |
 
 Formally: proprietary licence, **all rights reserved** — see [LICENSE](LICENSE.md).
 Copyright © 2026 Marcello Massardo. The app is mine; the music you make with it is yours.

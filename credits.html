@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MC Parrot — Third-party licences</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14141C; color: #E8E8F0; font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 28px; margin: 0 0 4px; }
+  h2 { font-size: 19px; margin: 32px 0 8px; color: #F5A524; }
+  h3 { font-size: 16px; margin: 22px 0 4px; color: #fff; }
+  .date { color: #8A8AA0; font-size: 14px; margin-bottom: 28px; }
+  strong { color: #fff; }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; }
+  a { color: #F5A524; }
+  code { background: #1A1A24; border: 1px solid #2A2A3A; padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+  .box { border: 1px solid #2A2A3A; border-radius: 10px; padding: 16px 18px; background: #1A1A24; margin: 24px 0; }
+  footer { margin-top: 40px; color: #54546A; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Third-party licences — MC Parrot</h1>
+<div class="date">Last updated: 29 September 2026</div>
+
+<div class="box">
+<strong>Short version:</strong> MC Parrot's own code is written by its author and is proprietary
+(see the <a href="LICENSE.md">licence</a>). It ships together with a few components made by other
+people, listed here. Those components stay under their own licences, and their authors have our thanks.
+</div>
+
+<h2>In every version (web, Android, Windows)</h2>
+
+<h3>MP3 encoder — lamejs</h3>
+<ul>
+<li><strong>What it does:</strong> it writes the file when you export a song as MP3. Nothing else uses it.</li>
+<li><strong>Package:</strong> @breezystack/lamejs 1.2.7, a maintained build of lamejs, the JavaScript port
+of the LAME encoder (<a href="https://lame.sourceforge.net" target="_blank" rel="noopener noreferrer">lame.sourceforge.net</a>).</li>
+<li><strong>Licence:</strong> GNU Lesser General Public License, version 3.
+Full texts: <a href="licences/LGPL-3.0.txt">LGPL 3.0</a> and <a href="licences/GPL-3.0.txt">GPL 3.0</a>.</li>
+<li><strong>Source code:</strong>
+<a href="https://github.com/shijinyu/lamejs" target="_blank" rel="noopener noreferrer">github.com/shijinyu/lamejs</a>.</li>
+<li><strong>How it is shipped:</strong> as a separate file, <code>lame.js</code>, byte for byte the file the
+package publishes (<code>dist/lamejs.iife.js</code>). It is not modified, not merged into our code and not
+obfuscated. MC Parrot loads it only when an MP3 export starts, and talks to it through its public
+interface (<code>lamejs.Mp3Encoder</code>).</li>
+<li><strong>You can replace it:</strong> build your own version of the library as a script that defines a
+global <code>lamejs</code> object with the same interface, and put it in place of <code>lame.js</code>.
+On the web it sits next to <code>index.html</code>. On Windows it is inside the application archive
+(<code>resources/app.asar</code>, folder <code>app</code>). On Android it is inside the package
+(<code>assets/public/lame.js</code>).</li>
+</ul>
+
+<h3>FFT — fft.js</h3>
+<ul>
+<li><strong>What it does:</strong> the Fourier transform used to analyse the sounds you record.</li>
+<li><strong>Package:</strong> fft.js 4.0.4, Copyright Fedor Indutny, 2017.</li>
+<li><strong>Licence:</strong> MIT. Full text: <a href="licences/MIT-fft.js.txt">MIT licence of fft.js</a>.</li>
+<li><strong>Source code:</strong>
+<a href="https://github.com/indutny/fft.js" target="_blank" rel="noopener noreferrer">github.com/indutny/fft.js</a>.</li>
+</ul>
+
+<h2>Android app only</h2>
+<ul>
+<li><strong>Capacitor</strong> 8 (core, Android runtime, Share and Filesystem plugins) — MIT licence.
+It is the shell that runs the app on the phone.
+<a href="https://github.com/ionic-team/capacitor" target="_blank" rel="noopener noreferrer">github.com/ionic-team/capacitor</a></li>
+<li><strong>AndroidX libraries</strong> — Apache License 2.0, The Android Open Source Project.</li>
+<li><strong>Google Play Billing Library</strong> 8.3.0 — Android Software Development Kit licence.
+Used only by the optional in-app purchase.</li>
+</ul>
+
+<h2>Windows app only</h2>
+<ul>
+<li><strong>Electron</strong> 44 — MIT licence — and <strong>Chromium</strong> with its components, under
+BSD-style and other licences. Their complete notices are installed together with the app, in the
+installation folder: <code>LICENSE.electron.txt</code> and <code>LICENSES.chromium.html</code>.</li>
+</ul>
+
+<h2>What is not here</h2>
+<p>No sound library, no sample pack, no loop and no model ships with MC Parrot. Every sound in a song
+comes from what you recorded or from the files you opened.</p>
+
+<footer>
+<a href="index.html">Back to MC Parrot</a>
+</footer>
+
+</div>
+</body>
+</html>

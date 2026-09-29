@@ -22,6 +22,16 @@ listed above.
 
 Want to license it commercially? Ask — a commercial licence can be granted.
 
+THIRD-PARTY COMPONENTS
+MC Parrot ships together with a few components written by other people: an MP3
+encoder, an FFT routine, and the shells that run the app on Android and
+Windows. They are listed in credits.html, each with its licence. Those
+components are not covered by this licence: each one stays under its own.
+Nothing above limits the rights their licences give you. In particular you may
+replace the MP3 encoder (the separate file lame.js, under the LGPL 3.0) with
+your own version of it, and study the app as far as needed to make that
+replacement work.
+
 YOUR MUSIC IS YOURS
 The recordings you make with MC Parrot, and the music the app generates from
 them, belong 100% to you, including for commercial use. Publish, release, and
