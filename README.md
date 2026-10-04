@@ -41,9 +41,11 @@ simply nowhere your sounds could go.
 
 1. Open the link in your browser (phone or computer).
 2. Allow the **microphone** and press **Record**: capture some ambient sounds (objects, taps,
-   a bit of voice, an instrument…). Or press **📂 Open audio files** and bring in material you
-   already have — see *bring your own material*, below. Up to 7 minutes in total (30 with Full
-   song); whatever you open is decoded on your own device and never leaves it either.
+   a bit of voice, an instrument…). Or press **📂 Open audio or video files** and bring in material
+   you already have — see *bring your own material*, below. Once something is loaded or recorded,
+   **➕ Add files** puts more on top of it instead of replacing it. Up to 7 minutes in total (30
+   with Full song); whatever you open is decoded on your own device and never leaves it either.
+   Only use audio you have permission to use.
 3. Choose **genre**, **scale** and **tempo**.
 4. Press **Generate music**, listen back, and optionally **Export** the WAV file.
 5. Want a whole song instead of a minute? See **Full song** below.
@@ -73,6 +75,8 @@ Measured, not guessed: every format below was tried through the app's own loadin
 | **Microphone (browser / Windows)** | same idea: AGC, noise suppression and echo cancelling switched off explicitly. |
 | **Audio files** | WAV (8, 16, 24, 32-bit and float) · **AIFF** and AIFF-C · MP3 · M4A · AAC · OGG Vorbis · **Opus** · FLAC — no browser decodes AIFF, so MC Parrot reads it itself |
 | **Voice notes** | the WhatsApp ones open directly: Opus-in-Ogg from Android, M4A from iPhone |
+| **From other apps (Android app)** | **Share → MC Parrot** from WhatsApp, the gallery, the voice recorder or any app that shares audio or video: the file lands in the app, and if something is already loaded it is added to it. The Open button also jumps straight to the usual folders — voice recorder, camera videos, WhatsApp media, Instagram. |
+| **Drag and drop (browser / Windows)** | drop audio or video files on the window: same door as the Open button. |
 | **Video files** | MP4 · MOV · WEBM · MKV · 3GP — the picture is ignored, the **soundtrack** is taken. Pull the audio out of your old clips and make a song with it. |
 | **Odd WAVs** | some sample libraries ship WAVs that are only a shell, with compressed Ogg Vorbis, FLAC or MP3 inside. Browsers refuse those. MC Parrot opens the shell and reads what is in it. |
 | **Mixing them** | mono and stereo together, any sample rate, any bit depth, any loudness: everything is brought to the same footing on your device, and the song always comes out in stereo. |

@@ -402,12 +402,29 @@
 
     <button id="histBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">⏱ History</button>
 
-    <button id="openBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open audio files</button>
+    <button id="openBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open audio or video files</button>
+
+    <button id="addBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5)">➕ Add files</button>
+    <div id="openPerm" class="tipFine" style="margin-top:12px;color:var(--testo-2);font-size:12px">Only use audio you have permission to use.</div>
     <input id="openInput" type="file" multiple accept="audio/*,video/*,.wav,.mp3,.m4a,.aac,.ogg,.flac,.opus,.aiff,.aif,.mp4,.m4v,.mov,.webm,.mkv,.3gp" style="display:none" />
     <div id="histPanel" class="histPanel">
       <div class="histCard">
         <div class="histHead"><span>⏱ History</span><div id="histClose" class="histClose">✕</div></div>
         <div id="histBody" class="histBodyScroll"></div>
+      </div>
+    </div>
+
+    <div id="src" class="tipBack">
+      <div class="tipCard">
+        <div id="srcClose" class="tipClose">✕</div>
+        <div class="tipTitle">Open from…</div>
+        <button id="srcFiles" class="big" style="background:var(--blu-3);color:var(--blu-5)">📁 Phone folders</button>
+        <button id="srcRec" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎙 Voice recorder</button>
+        <button id="srcCam" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎥 Camera videos</button>
+        <button id="srcWa" class="big" style="background:var(--blu-3);color:var(--blu-5)">💬 WhatsApp</button>
+        <button id="srcIg" class="big" style="background:var(--blu-3);color:var(--blu-5)">📸 Instagram</button>
+        <div class="tipFine" style="margin-top:18px">Or from any other app: Share → MC Parrot</div>
+        <div class="tipFine" style="margin-top:8px">Only use audio you have permission to use.</div>
       </div>
     </div>
 
@@ -462,11 +479,11 @@
     <div class="note">
       <span>Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.</span><br />
 
-      <span>The music you make is yours: publish it, release it, sell it, just maybe tag us in the credits and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.</span>
+      <span id="noteRights">The music you make is yours: publish it, release it, sell it, just maybe tag us in the credits and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.</span>
       <a href="README.md#licence--in-plain-words" style="color:#54546A">Licence</a>
       <a href="https://marcellomassardo-collab.github.io/mc-parrot/credits.html" target="_blank" rel="noopener noreferrer" style="color:#54546A">Third-party licences</a>
 
-      <a href="MC-Parrot.apk" style="color:#54546A">Android app (.apk, signed)</a>
+      <a id="apkLink" href="MC-Parrot.apk" style="color:#54546A">Android app (.apk, signed)</a>
     </div>
   </div>
   <script src="./bundle.js"></script>
