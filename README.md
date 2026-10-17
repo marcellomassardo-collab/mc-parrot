@@ -69,6 +69,23 @@ A starting point, not a novelty: keep working on it in the editor here, or take 
 
 Measured, not guessed: every format below was tried through the app's own loading path.
 
+```
+  YOUR SOUNDS                         THE DOOR                                  WHAT HAPPENS
+  ────────────────────────────────    ─────────────────────────────────────    ────────────────────────────
+  microphone                       →  ● Record                                  unprocessed on Android
+  WAV · AIFF · MP3 · M4A · AAC     →  📂 Open · ➕ Add files · drag & drop      decoded on your device,
+  OGG Vorbis · Opus · FLAC                                                      any rate, bits, mono/stereo
+  MP4 · MOV · WEBM · MKV · 3GP     →  same buttons                              the soundtrack is taken,
+                                                                                the picture is ignored
+  WhatsApp voice notes, Instagram, →  Share → MC Parrot (Android app),          added to what is loaded
+  voice recorder, camera videos       or Open → those folders directly
+  "WAV" with Ogg / FLAC / MP3      →  opened like a WAV                          the shell is unwrapped
+  inside (some sample packs)
+  WMA                              →  not supported: convert to WAV first
+                                                                              ↓
+                                       one recording, up to 7 min (30 with Full song) → the engine
+```
+
 | | |
 |---|---|
 | **Microphone (Android app)** | native recording, **unprocessed**: no noise suppression, no echo cancelling, no automatic gain — 48 kHz, 16 bit. The phone's clean-up would eat exactly the ambient detail this app is made of. |
