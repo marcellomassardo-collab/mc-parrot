@@ -63,7 +63,7 @@ taken at its word; name it nothing and the engine decides by listening.
 
 That is the part a producer cares about: what comes back is not a loop pack and not a random
 collage — it is **your own material, already in time and in key**, arranged, mixed and mastered.
-A starting point, not a novelty: keep working on it in the editor here, or take it into your DAW.
+A starting point, not a novelty: keep working on it in the editor here, or take it into FL Studio (our plugin and the Studio app are built for it).
 
 ## What you can open
 
