@@ -1,4 +1,4 @@
-const VERSIONE = '5.57';
+const VERSIONE = '5.58';
 const CREDENZA = 'mcparrot-' + VERSIONE;
 
 const TARATO = VERSIONE.indexOf('SW_VERSION') < 0;
