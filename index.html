@@ -365,25 +365,15 @@
       <div id="trackName" class="trackName"></div>
 
       <div id="keepHint" class="keepHint">Like this one? Download or share it now: press Generate again and you'll get a different take, not this one.</div>
-      <div class="fmtLabel">Download as</div>
-      <div class="fmtRow">
-        <div id="fmt-wav" class="fmtChip on"><b>WAV</b><span>lossless · big</span></div>
-        <div id="fmt-mp3" class="fmtChip"><b>MP3</b><span>320 kbps · small</span></div>
-      </div>
     </div>
 
-    <button id="expBtn" class="big exp" style="display:none" disabled>⤓ Download WAV</button>
+    <button id="expBtn" class="big exp" style="display:none" disabled>⤓ Download</button>
 
     <button id="shareBtn" class="big gen" style="display:none" disabled>⤴ Share</button>
 
     <button id="stemsBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5)" disabled>🎚 Stems (separate tracks)</button>
 
     <div id="videoBox" style="display:none;margin-top:10px">
-      <div class="chips" id="videoModi" style="justify-content:center">
-        <div class="chip on" data-modo="onda">📊 Waveform</div>
-        <div class="chip" data-modo="timeline">🎞 Timeline</div>
-        <div class="chip" data-modo="cerchio">💿 Circle</div>
-      </div>
       <button id="videoBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎬 Make a video</button>
     </div>
 
@@ -427,11 +417,9 @@
       </div>
     </div>
 
-    <button id="histBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">⏱ History</button>
-
     <button id="tutBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎓 Tutorial</button>
 
-    <button id="openBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open audio or video files</button>
+    <button id="openBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open</button>
 
     <button id="addBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5)">➕ Add files</button>
     <div id="openPerm" class="tipFine" style="margin-top:12px;color:var(--testo-2);font-size:12px">Only use audio you have permission to use.</div>
@@ -466,13 +454,39 @@
       <div class="tipCard">
         <div id="srcClose" class="tipClose">✕</div>
         <div class="tipTitle">Open from…</div>
+
+        <button id="histBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">⏱ History</button>
+        <button id="srcPagina" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open audio or video files</button>
         <button id="srcFiles" class="big" style="background:var(--blu-3);color:var(--blu-5)">📁 Phone folders</button>
         <button id="srcRec" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎙 Voice recorder</button>
         <button id="srcCam" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎥 Camera videos</button>
         <button id="srcWa" class="big" style="background:var(--blu-3);color:var(--blu-5)">💬 WhatsApp</button>
         <button id="srcIg" class="big" style="background:var(--blu-3);color:var(--blu-5)">📸 Instagram</button>
-        <div class="tipFine" style="margin-top:18px">Or from any other app: Share → MC Parrot</div>
+        <div id="srcHint" class="tipFine" style="margin-top:18px">Or from any other app: Share → MC Parrot</div>
         <div class="tipFine" style="margin-top:8px">Only use audio you have permission to use.</div>
+      </div>
+    </div>
+
+    <div id="fmtSheet" class="tipBack" style="z-index:70">
+      <div class="tipCard">
+        <div id="fmtClose" class="tipClose">✕</div>
+        <div id="fmtTit" class="tipTitle">Download as</div>
+        <div class="fmtRow">
+          <div id="fmt-wav" class="fmtChip on"><b>WAV</b><span>lossless · big</span></div>
+          <div id="fmt-mp3" class="fmtChip"><b>MP3</b><span>320 kbps · small</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="vidSheet" class="tipBack" style="z-index:70">
+      <div class="tipCard">
+        <div id="vidClose" class="tipClose">✕</div>
+        <div class="tipTitle">🎬 Make a video</div>
+        <div class="chips" id="videoModi" style="justify-content:center">
+          <div class="chip on" data-modo="onda">📊 Waveform</div>
+          <div class="chip" data-modo="timeline">🎞 Timeline</div>
+          <div class="chip" data-modo="cerchio">💿 Circle</div>
+        </div>
       </div>
     </div>
 
