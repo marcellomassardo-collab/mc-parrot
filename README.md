@@ -94,7 +94,7 @@ Measured, not guessed: every format below was tried through the app's own loadin
 | **Voice notes** | the WhatsApp ones open directly: Opus-in-Ogg from Android, M4A from iPhone |
 | **From other apps (Android app)** | **Share → MC Parrot** from WhatsApp, the gallery, the voice recorder or any app that shares audio or video: the file lands in the app, and if something is already loaded it is added to it. The Open button also jumps straight to the usual folders — voice recorder, camera videos, WhatsApp media, Instagram. |
 | **Drag and drop (browser / Windows)** | drop audio or video files on the window: same door as the Open button. |
-| **Video files** | MP4 · MOV · WEBM · MKV · 3GP — the picture is ignored, the **soundtrack** is taken. Pull the audio out of your old clips and make a song with it. |
+| **Video files** | MP4 · MOV · WEBM · MKV · 3GP — the **soundtrack** is taken to build the song, and the picture stays available: «Make a video → Your videos» cuts your own clips to the music (see below). |
 | **Odd WAVs** | some sample libraries ship WAVs that are only a shell, with compressed Ogg Vorbis, FLAC or MP3 inside. Browsers refuse those. MC Parrot opens the shell and reads what is in it. |
 | **Mixing them** | mono and stereo together, any sample rate, any bit depth, any loudness: everything is brought to the same footing on your device, and the song always comes out in stereo. |
 | **Not supported** | WMA — no browser decodes it. Convert to WAV first. |
@@ -151,8 +151,12 @@ APIs).
   settings of our own effects. When the plugin lands, a song you exported today can be reopened
   as a session: clips on separate tracks, named, with the effects already in place, instead of
   one flat stereo mix.
-- 🎬 **MC Parrot Video**: the same idea, for video: record with the camera or bring in clips already
-  on your phone, and the engine builds the music out of the sound that is already in them.
+- 🎬 **MC Parrot Video**: the same idea, for video. The first step is in: bring in clips already on your
+  phone, the engine builds the music out of the sound that is in them, and «Make a video → Your videos»
+  cuts those same clips to the song it made: every shot is a clip the engine chose (voice first, then
+  melody, bass, drums), shown from the second it was taken, cut on the beat (wider in verses and intros,
+  tighter in choruses and drops); a clip the song repeats is a shot the video repeats. The track sheet
+  and the cut list travel inside the MP4/WebM, so the video reopens in the app like a song.
 
 ## Licence: in plain words
 
