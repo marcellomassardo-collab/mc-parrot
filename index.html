@@ -213,6 +213,7 @@
     #tlScrollIn { height: 1px; }
 
     #tlLuci { position: absolute; top: 0; left: 0; pointer-events: none; }
+    #tlCursore::before { content: ''; position: absolute; top: 0; left: -6px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 11px solid #FFE066; }
     #tlCursore { position: absolute; top: 0; left: 0; width: 2px; display: none;
       background: #FFE066; box-shadow: 0 0 6px rgba(255,224,102,.9); pointer-events: none;
       will-change: transform; }
@@ -466,6 +467,7 @@
         <button id="srcRec" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎙 Voice recorder</button>
         <button id="srcCam" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎥 Camera videos</button>
         <button id="srcWa" class="big" style="background:var(--blu-3);color:var(--blu-5)">💬 WhatsApp</button>
+        <button id="srcWaAudio" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎤 WhatsApp audio</button>
         <button id="srcIg" class="big" style="background:var(--blu-3);color:var(--blu-5)">📸 Instagram</button>
         <div id="srcHint" class="tipFine" style="margin-top:18px">Or from any other app: Share → MC Parrot</div>
         <div class="tipFine" style="margin-top:8px">Only use audio you have permission to use.</div>

@@ -1,8 +1,8 @@
-const VERSIONE = '6.15';
+const VERSIONE = '6.26';
 const CREDENZA = 'mcparrot-' + VERSIONE;
 
 const TARATO = VERSIONE.indexOf('SW_VERSION') < 0;
-const FILE = ['./', './index.html', './bundle.js', './analysis-worker.js', './lame.js', './dsp/mcparrot_dsp.js', './dsp/mcparrot_dsp.wasm', './manifest.webmanifest', './parrot.png', './icon-192.png', './icon-512.png'];
+const FILE = ['./', './index.html', './bundle.js', './analysis-worker.js', './lame.js', './dsp/mcparrot_dsp.js', './dsp/mcparrot_dsp.wasm', './mp3/mp3wasm.js', './mp3/mp3wasm.wasm', './manifest.webmanifest', './parrot.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
 

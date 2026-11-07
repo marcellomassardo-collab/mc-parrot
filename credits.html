@@ -35,7 +35,14 @@ people, listed here. Those components stay under their own licences, and their a
 
 <h2>In every version (web, Android, Windows)</h2>
 
-<h3>MP3 encoder — lamejs</h3>
+<h3>MP3 encoder — LAME 3.100 (WebAssembly)</h3>
+<ul>
+<li><strong>Package:</strong> LAME 3.100, the MP3 encoder (<a href="https://lame.sourceforge.net" target="_blank" rel="noopener noreferrer">lame.sourceforge.net</a>), compiled to WebAssembly with Emscripten from the unmodified sources of <code>libmp3lame</code>.</li>
+<li><strong>Licence:</strong> GNU Lesser General Public License, version 2.1 or later (LAME's own licence). Full text: <a href="licences/LGPL-3.0.txt">LGPL 3.0</a>.</li>
+<li><strong>How it is shipped:</strong> as separate files, <code>mp3/mp3wasm.js</code> and <code>mp3/mp3wasm.wasm</code>, next to the app. The only code of ours inside is a tiny C wrapper (<code>mp3wasm.c</code>, a few lines that call the public LAME API) and a hand-written <code>config.h</code>; both ship with the sources. It is not merged into our code and not obfuscated.</li>
+<li><strong>Replacing it:</strong> build any version of LAME the same way (or delete the two files): the app then falls back to <code>lame.js</code> below.</li>
+</ul>
+<h3>MP3 encoder — lamejs (fallback)</h3>
 <ul>
 <li><strong>What it does:</strong> it writes the file when you export a song as MP3. Nothing else uses it.</li>
 <li><strong>Package:</strong> @breezystack/lamejs 1.2.7, a maintained build of lamejs, the JavaScript port
