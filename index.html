@@ -5,44 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>MC Parrot 🦜</title>
   <meta name="description" content="Your sounds become a real song: in time, in key, mixed and mastered. Record, or open files you already have. All on your device: no AI, no cloud, no account." />
-
+  
   <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#150618" />
   <link rel="icon" href="./icon-192.png" sizes="192x192" type="image/png" />
   <style>
-
+    
     :root {
  color-scheme: dark;
-
-      --blu-0:  #150618;
-      --blu-1:  #260A2C;
-      --blu-2:  #2C0F2E;
-      --blu-3:  #48204A;
-      --blu-4:  #CC7ACE;
-      --blu-5:  #01CDFE;
-      --blu-6:  #CC7ACE;
-      --cresta:      #CC7ACE;
-      --cresta-vivo: #E0A6E2;
-      --cresta-cupo: #9A5A9C;
-      --arancio: #CC7ACE;
+      
+      --blu-0:  #150618;   
+      --blu-1:  #260A2C;   
+      --blu-2:  #2C0F2E;   
+      --blu-3:  #48204A;   
+      --blu-4:  #CC7ACE;   
+      --blu-5:  #01CDFE;   
+      --blu-6:  #CC7ACE;   
+      --cresta:      #CC7ACE;  
+      --cresta-vivo: #E0A6E2;  
+      --cresta-cupo: #9A5A9C;  
+      --arancio: #CC7ACE;      
       --arancio-cupo: #9A5A9C;
-      --giallo: #01CDFE;
+      --giallo: #01CDFE;       
       --giallo-cupo: #04B8D8;
-      --testo:   #FFFFFF;
-      --testo-2: #ECBEE6;
-      --testo-3: #C6A1C2;
-      --pericolo: #E85AD0;
-
+      --testo:   #FFFFFF;      
+      --testo-2: #ECBEE6;      
+      --testo-3: #C6A1C2;      
+      --pericolo: #E85AD0;     
+      
       --font-retro: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
     }
     * { box-sizing: border-box; }
-
+    
  button, select, input, textarea { font: inherit; }
  body {
-
+      
  margin: 0; font-family: var(--font-retro); color: var(--testo);
       -webkit-tap-highlight-color: transparent;
-
+      
       background:
         linear-gradient(180deg,
           #150618 0%,
@@ -56,31 +56,33 @@
  min-height: 100vh;
     }
     .wrap { max-width: 560px; margin: 0 auto; padding: 20px 16px 60px; }
-
+    
+    
  h1 { font-family: var(--font-retro); font-size: 27px; text-align: center; margin: 10px 0 2px;
  text-transform: uppercase; letter-spacing: 4px; font-weight: 700; }
  h1 span {
  background-image:
-
+        
  repeating-linear-gradient(180deg,
  transparent 0 3px, rgba(6,13,24,.55) 3px 5px),
-
+        
  linear-gradient(180deg, var(--giallo) 0%, var(--giallo) 34%, var(--cresta) 62%, var(--arancio) 100%);
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent; color: transparent;
-
+      
  filter: drop-shadow(0 0 10px rgba(255,138,43,.40)) drop-shadow(0 0 22px rgba(127,185,240,.28));
     }
-
+    
+    
     body.linguaNonMono, body.linguaNonMono .label, body.linguaNonMono .chip, body.linguaNonMono .sub,
     body.linguaNonMono .recHint, body.linguaNonMono button, body.linguaNonMono .note {
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif !important;
     }
-    .sub { text-align: center; color: var(--testo-2); font-size: 14px; margin-bottom: 18px; }
-    .subNota { display: block; color: var(--testo-3); font-size: 9px; line-height: 1.4; margin-top: 2px; }
-
+    .sub { text-align: center; color: var(--testo-2); font-size: 14px; margin-bottom: 18px; } 
+    .subNota { display: block; color: var(--testo-3); font-size: 9px; line-height: 1.4; margin-top: 2px; } 
+    
     .label, .chip, .fmtChip b, .fmtLabel, .rectime, .recmax, .progTimes,
-
+    
     #recTime, .status {
  font-family: var(--font-retro);
     }
@@ -92,9 +94,9 @@
     .chip { padding: 8px 14px; border-radius: 0; background: var(--blu-3); color: var(--testo-2);
  border: 2px solid var(--blu-4); font-size: 13px; cursor: pointer; user-select: none; transition: background .12s, color .12s; }
     .chip:hover { background: var(--blu-4); }
-
+    
     .chip.on { background: var(--giallo); color: var(--blu-0); font-weight: 700; border-color: var(--testo); box-shadow: 3px 3px 0 var(--testo); }
-
+    
     .chip { position: relative; }
     .chipQ { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px;
  margin-left: 7px; border: 1.5px solid currentColor; border-radius: 50%; font-size: 10px; font-weight: 700;
@@ -104,49 +106,50 @@
  z-index: 40; width: max-content; max-width: 210px; padding: 8px 10px; background: var(--blu-0);
  color: var(--testo); border: 2px solid var(--giallo); box-shadow: 3px 3px 0 var(--testo);
  font-size: 12px; font-weight: 600; line-height: 1.35; white-space: normal; text-align: left; cursor: default; }
-
+    
     .chip.bloccato { opacity: 0.55; border-style: dashed; }
     .chipSub { display: block; font-size: 9px; opacity: 0.7; letter-spacing: 0.02em; }
     .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
  button.big { width: 100%; padding: 16px; border: 3px solid var(--blu-5); box-shadow: 6px 6px 0 var(--cresta); border-radius: 0; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-
+    
     .rec { background: linear-gradient(180deg, var(--arancio), var(--arancio-cupo)); color: #2A1400;
  font-weight: 700; letter-spacing: 1px; }
     .rec:active { background: var(--arancio-cupo); }
-
+    
     .rec.on { background: var(--blu-3); color: var(--giallo); box-shadow: inset 0 0 0 2px var(--arancio); }
-
+    
     .gen { background: linear-gradient(180deg, #FF9E5C, #E5703A); color: #2A1400; }
     .exp { background: linear-gradient(180deg, #FFB36B, #E5703A); color: #2A1400; font-weight: 700; }
-
+    
     .edb { background: linear-gradient(180deg, #FFE066, #F2C312); color: #2A1400; font-weight: 700; }
  button:disabled { opacity: .4; cursor: default; }
  input[type=range] { flex: 1; accent-color: var(--cresta); }
     .status { text-align: center; color: var(--testo-2); font-size: 13px; min-height: 18px; margin-top: 12px; }
     .note { color: var(--testo-3); font-size: 11px; text-align: center; margin-top: 18px; line-height: 1.5; }
-
+    
     .rectime { font-size: 15px; font-weight: 700; color: var(--testo); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
     .recdot { color: var(--pericolo); animation: blink 1s steps(2, start) infinite; }
     .recmax { color: var(--testo-3); font-size: 12px; }
     @keyframes blink { to { visibility: hidden; } }
-
+    
     .wave { display: flex; align-items: center; justify-content: center; gap: 2px; height: 84px; margin: 10px 0 4px; overflow: hidden; }
     .wave .bar { width: 4px; border-radius: 0; background: var(--blu-6); flex: none; }
     .wave .bar.hot { background: var(--pericolo); }
     .waveHint { color: var(--testo-3); font-size: 15px; }
-
-    .recHint { color: var(--testo-2); font-size: 12px; line-height: 1.4; text-align: center; margin: 14px 2px 10px; }
-    .recHint .rh { display: block; margin-top: 1px; color: var(--testo-3); font-size: 9px; line-height: 1.25; }
+    
+    .recHint { color: var(--testo-2); font-size: 12px; line-height: 1.4; text-align: center; margin: 14px 2px 10px; } 
+    .recHint .rh { display: block; margin-top: 1px; color: var(--testo-3); font-size: 9px; line-height: 1.25; } 
     .recHint .rh b { color: var(--testo-2); font-weight: 700; }
-    .recHint .rhMel b { color: var(--testo-2); }
+    .recHint .rhMel b { color: var(--testo-2); } 
     .guidaBox { display: none; margin: 4px 2px 10px; text-align: center; }
     .guidaPasso { color: var(--testo-3); font-size: 11px; }
     .guidaTesto { color: var(--testo); font-size: 20px; font-weight: 700; line-height: 1.3; margin: 4px 0 4px; }
     .guidaTip { color: var(--testo-2); font-size: 12px; line-height: 1.35; margin: 0 4px 8px; }
-
-    .trackName { color: var(--testo-2); font-size: 12px; text-align: center; margin: 10px 0 14px; word-break: break-all; }
-
-    .keepHint { color: var(--testo-3); font-size: 12px; line-height: 1.2; text-align: center; margin: 0 4px 14px; }
+    
+    
+    .trackName { color: var(--testo-2); font-size: 12px; text-align: center; margin: 10px 0 14px; word-break: break-all; } 
+    
+    .keepHint { color: var(--testo-3); font-size: 12px; line-height: 1.2; text-align: center; margin: 0 4px 14px; } 
     .fmtLabel { color: var(--testo-2); font-size: 12px; text-align: center; margin-bottom: 8px; letter-spacing: 1px; }
     .fmtRow { display: flex; gap: 10px; }
     .fmtChip { flex: 1; background: var(--blu-2); border: 2px solid var(--cresta); border-radius: 0; padding: 12px;
@@ -155,7 +158,7 @@
     .fmtChip b { display: block; color: var(--testo-2); font-size: 16px; }
     .fmtChip.on b { color: var(--cresta); }
     .fmtChip span { color: var(--testo-3); font-size: 11px; }
-
+    
     .playProg { display: none; margin: 10px 4px 0; }
     .progHit { padding: 12px 0; cursor: pointer; touch-action: none; }
     .progTrack { height: 5px; border-radius: 0; background: var(--blu-3); overflow: hidden; }
@@ -163,12 +166,13 @@
  width: 0; transition: width .1s linear; }
     .progTimes { display: flex; justify-content: space-between; margin-top: 5px; color: var(--testo-2);
  font-size: 11px; font-variant-numeric: tabular-nums; }
-
+    
+    
     .homeBtn { display: none; position: fixed; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 60; width: 52px; height: 52px;
       border-radius: 50%; border: 2px solid var(--cresta); background: var(--blu-3); color: var(--blu-5); font-size: 24px; font-weight: 800;
       line-height: 1; padding: 0; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,.45); }
     .homeBtn:disabled { opacity: .5; }
-
+    
     body.conMateriale #recHint, body.conMateriale .subNota { display: none; }
     .tipBack { display: none; position: fixed; inset: 0; background: rgba(3,8,16,.78); align-items: center;
  justify-content: center; padding: 22px; z-index: 50; }
@@ -183,16 +187,16 @@
  text-align: center; color: var(--testo-2); font-size: 16px; font-weight: 700; cursor: pointer; user-select: none; }
     .tipChip.on { background: var(--blu-4); border-color: var(--cresta); color: var(--cresta); }
     .tipPay { background: #0070BA; color: #fff; border-radius: 0; padding: 15px; text-align: center;
- font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 14px; }
+ font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 14px; } 
     .tipNo { color: var(--testo-2); font-size: 13px; text-align: center; text-decoration: underline;
  cursor: pointer; margin-bottom: 16px; }
     .tipFine { color: var(--testo-3); font-size: 11px; text-align: center; line-height: 1.45; }
-
+    
     .logoRow { display: flex; align-items: center; justify-content: center; gap: 14px; position: relative; }
-
+    
     .logoRow img.parrot { width: 96px; height: 96px; flex: none; object-fit: contain;
       filter: drop-shadow(0 0 10px rgba(1,205,254,.35)) drop-shadow(0 0 20px rgba(204,122,206,.25)); }
-
+    
     .histPanel { display: none; position: fixed; inset: 0; background: rgba(3,8,16,.82); align-items: center;
       justify-content: center; padding: 18px; z-index: 60; }
     .histCard { background: var(--blu-2); border: 2px solid var(--cresta); border-radius: 0; padding: 16px;
@@ -200,33 +204,35 @@
     .histHead { display: flex; justify-content: space-between; align-items: center; color: var(--testo); font-size: 18px;
       font-weight: 800; margin-bottom: 12px; }
     .histClose { color: var(--testo-3); font-size: 20px; font-weight: 700; cursor: pointer; padding: 0 6px; }
-    .tutBody p { margin: 0 0 11px; color: var(--testo); font-size: 14px; line-height: 1.45; text-align: start; }
+    .tutBody p { margin: 0 0 11px; color: var(--testo); font-size: 14px; line-height: 1.45; text-align: start; } 
     .tutBody .tutRicetta { background: var(--blu-3); padding: 10px 12px; }
-
+    
     .tlInfo { color: var(--giallo); font-size: 12px; font-family: ui-monospace, monospace;
  margin: 2px 0 8px; min-height: 16px; }
     .tlNota { color: var(--testo-3); font-size: 11px; margin-top: 10px; }
     #tlCanvas { display: block; image-rendering: pixelated; cursor: crosshair; max-width: 100%; }
-
+    
     #tlWrap { position: relative; width: 100%; }
-    #tlScroll { overflow-x: auto; overflow-y: hidden; height: 16px; display: none; scrollbar-width: thin; }
+    #tlScroll { overflow-x: auto; overflow-y: hidden; height: 16px; display: none; scrollbar-width: thin; } 
     #tlScrollIn { height: 1px; }
-
+    
+    
     #tlLuci { position: absolute; top: 0; left: 0; pointer-events: none; }
     #tlCursore::before { content: ''; position: absolute; top: 0; left: -6px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 11px solid #FFE066; }
     #tlCursore { position: absolute; top: 0; left: 0; width: 2px; display: none;
       background: #FFE066; box-shadow: 0 0 6px rgba(255,224,102,.9); pointer-events: none;
       will-change: transform; }
-
+    
+    
     #tlPanel { display: none; position: fixed; inset: 0; z-index: 60; overflow-y: auto;
       -webkit-overflow-scrolling: touch; background: var(--blu-1); padding: 0; }
     #tlPanel .histCard { background: none; border: 0; max-width: 1100px; width: 100%;
       max-height: none; padding: 14px 14px 28px; margin: 0 auto; }
-
+    
     #tlPanel .histHead { position: sticky; top: 0; z-index: 2; background: var(--blu-1);
       padding: 10px 0 8px; margin-bottom: 8px; }
     #tlPanel .histBodyScroll { overflow-x: hidden; overflow-y: visible; max-height: none; }
-
+    
     #edPanel { border-top: 1px solid var(--blu-3); margin-top: 10px; padding-top: 8px; }
     .edRiga { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 3px 0;
       border-bottom: 1px solid rgba(154,90,156,.18); }
@@ -241,7 +247,7 @@
     .edSel { background: #1C0A22; color: var(--testo); border: 1px solid var(--blu-3);
       border-radius: 5px; font-size: 10px; padding: 2px 3px; }
     .edLiv { margin-left: auto; color: var(--giallo); font: 10px ui-monospace, monospace; }
-
+    
     .edRiga.suona { background: rgba(255,224,102,.07); box-shadow: inset 3px 0 0 #FFE066; }
     .edRiga.suona .edNome { color: #FFE066 !important; }
     .edEq { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0 6px; }
@@ -250,13 +256,14 @@
     .edBarra button { border-radius: 8px; cursor: pointer; border: 1px solid var(--blu-3);
       background: var(--blu-3); color: var(--blu-5); font-size: 12px; font-weight: 700; padding: 6px 12px; }
     .edBarra button:disabled { opacity: .4; cursor: default; }
-
+    
     .edBarra button.edPronto { background: var(--giallo); color: #1C0A22; border-color: var(--giallo); }
-
+    
     .edBarra button.edEsp { background: linear-gradient(180deg, #FFB36B, #E5703A); color: #2A1400;
       border-color: #E5703A; padding: 8px 16px; }
     #tlPanel .histClose { font-size: 24px; padding: 0 10px 0 0; }
-
+    
+    
     .tlZoomBox { display: flex; align-items: center; gap: 4px; }
     .tlZoomBox button { height: 30px; min-width: 30px; border-radius: 7px; cursor: pointer;
       border: 1px solid var(--blu-3); background: #1C0A22; color: var(--testo); font-size: 14px;
@@ -271,7 +278,7 @@
     #edClip button:disabled, .edStoria button:disabled { opacity: .35; cursor: default; }
     .edStoria { display: flex; gap: 4px; margin-right: 4px; }
     #edStato { color: var(--testo-3); font-size: 11px; }
-
+    
     @media (max-width: 700px) {
       .edNome { width: 46px; font-size: 10px; }
       .edC input[type=range] { width: 52px; }
@@ -290,7 +297,7 @@
     .histActs { display: flex; gap: 4px; flex: none; position: relative; }
     .histA { background: var(--blu-2); color: var(--testo-2); border: 2px solid var(--cresta-cupo); border-radius: 0;
       font-size: 15px; padding: 2px 8px; cursor: pointer; line-height: 1.4; }
-
+    
     .histMenu { display: none; position: absolute; right: 0; top: calc(100% + 4px); z-index: 30;
       background: #000; border: 2px solid var(--cresta-cupo); min-width: 210px; flex-direction: column; }
     .histMenu.open { display: flex; }
@@ -302,6 +309,7 @@
   </style>
 </head>
 <body>
+  
 
   <div class="wrap">
     <h1 class="logoRow"><img class="parrot" src="parrot.png" alt="MC Parrot DJ cockatoo" /><span>MC Parrot</span></h1>
@@ -309,7 +317,7 @@
 
     <div class="card">
       <div class="row" style="justify-content:center"><span id="recTime" style="color:var(--testo-2);font-size:19px;font-weight:700;">Ready to record</span></div>
-
+      
       <div id="recHint" class="recHint">
         <span>Record a mix of sounds. The more musical and varied, the richer the song:</span><br />
         <span class="rh">🥁 <b>Beat</b>: tap objects, clap, knock, tick</span>
@@ -317,26 +325,27 @@
         <span class="rh">🔊 <b>Bass</b>: a low “boom”, a soft thump, a low hum, a punch in the wall or table</span>
         <span class="rh">🎤 <b>Voice</b>: say or sing a short phrase (repeat it a couple of times)</span>
       </div>
-
+      
       <div id="guidaBox" class="guidaBox"><div id="guidaPasso" class="guidaPasso"></div><div id="guidaTesto" class="guidaTesto"></div><div id="guidaTip" class="guidaTip"></div><div class="progTrack"><div id="guidaFill" class="progFill"></div></div></div>
-
+      
       <div id="wave" class="wave"><span class="waveHint">Your waveform will appear here</span></div>
-
+      
       <div style="display:flex;gap:8px;align-items:stretch">
         <button id="recBtn" class="big rec" style="flex:2">● Record</button>
         <button id="pauseBtn" class="big" style="display:none;flex:1;background:var(--pericolo);color:var(--blu-0);margin-top:10px">■ Stop</button>
       </div>
       <button id="recPlayBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5);margin-top:8px">▶ Play recording</button>
-
+      
       <div id="recProg" class="playProg" style="display:none">
         <div id="recHit" class="progHit" title="Click to jump to a point"><div class="progTrack"><div id="recFill" class="progFill"></div></div></div>
         <div class="progTimes"><span id="recNow">0:00</span><span id="recTot">0:00</span></div>
       </div>
     </div>
 
+    
     <div class="card" id="genPanel" style="display:none">
       <button id="surpriseBtn" class="big" style="background:var(--blu-3);color:var(--blu-5);margin-top:0">🎲 Surprise me</button>
-
+      
       <button id="mixBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">🔀 Mix genres</button>
       <div class="label">Genre</div>
       <div id="genres" class="chips"></div>
@@ -346,54 +355,57 @@
       <div id="meters" class="chips"></div>
       <div class="label">Tempo (BPM): <span id="bpmVal">112</span></div>
       <div class="row"><input id="bpm" type="range" min="50" max="200" value="112" /></div>
-
+      
       <div class="label">Length</div>
       <div id="lengths" class="chips">
         <div id="lenShort" class="chip on">1 minute</div>
-
+        
         <div id="lenFull" class="chip bloccato"><span id="lenFullLock">🔒 </span><span>Full song</span><span class="chipSub">2:30 - 3:30</span></div>
       </div>
     </div>
 
+    
     <div id="playProg" class="playProg">
-
+      
       <div id="progHit" class="progHit" title="Click to jump to a point"><div class="progTrack"><div id="progFill" class="progFill"></div></div></div>
       <div class="progTimes"><span id="progNow">0:00</span><span id="progTot">0:00</span></div>
     </div>
 
     <button id="genBtn" class="big gen" style="display:none" disabled>♪ Generate music</button>
-
+    
     <div id="status" class="status"></div>
 
+    
     <div id="result" style="display:none">
       <div id="trackName" class="trackName"></div>
-
+      
       <div id="keepHint" class="keepHint">Like this one? Download or share it now: press Generate again and you'll get a different take, not this one.</div>
     </div>
 
     <button id="expBtn" class="big exp" style="display:none" disabled>⤓ Download</button>
-
+    
     <button id="shareBtn" class="big gen" style="display:none" disabled>⤴ Share</button>
-
+    
     <button id="stemsBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5)" disabled>🎚 Stems (separate tracks)</button>
-
+    
     <div id="videoBox" style="display:none;margin-top:10px">
       <button id="videoBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎬 Make a video</button>
     </div>
 
+    
     <button id="tlBtn" class="big edb" style="display:none">✎ Send to editor</button>
     <div id="tlPanel" class="histPanel">
       <div class="histCard" style="max-width:1100px;width:96vw">
-
+        
         <div class="histHead"><div id="tlClose" class="histClose" title="Back">←</div><span class="edStoria"><button id="edUndo" title="undo" disabled>↶</button><button id="edRedo" title="redo" disabled>↷</button></span><span>✎ Editor</span><span class="tlZoomBox"><button id="tlZoomMeno" title="zoom out">−</button><button id="tlZoomVal" title="fit">1.0×</button><button id="tlZoomPiu" title="zoom in">+</button><button id="edPausa" class="edPlayBtn" style="visibility:hidden" title="pause">⏸</button><button id="edPlay" class="edPlayBtn">▶</button></span></div>
         <div id="tlInfo" class="tlInfo"></div>
-
+        
         <div class="histBodyScroll"><div id="tlWrap"><canvas id="tlCanvas"></canvas><canvas id="tlLuci"></canvas><div id="tlCursore"></div></div><div id="tlScroll"><div id="tlScrollIn"></div></div></div>
         <div class="tlNota">Click a block to see where it came from. Drag it to move it in time (snaps to 1/16).</div>
-
+        
         <div id="edPanel" style="display:none">
           <div id="edRighe"></div>
-
+          
           <div class="edEq">
             <span class="edTit">Track EQ</span>
             <label class="edC"><span>sub cut</span><input type="range" id="edHpf" min="0" max="120" step="5" value="0"><b>off</b></label>
@@ -407,11 +419,11 @@
             <button id="edReset">Reset</button>
             <button id="edSave">Save to history</button>
             <span id="edSwap"><span class="edC">sample</span><button id="edPrev">◀</button><button id="edNext">▶</button></span>
-
+            
             <span id="edClip"><span class="edC" id="edSpostaEt">move</span><button id="edMovSx">◀</button><button id="edMovDx">▶</button><span class="edC" id="edInizioEt">start</span><button id="edIniSx">◀</button><button id="edIniDx">▶</button><span class="edC" id="edFineEt">end</span><button id="edFinSx">◀</button><button id="edFinDx">▶</button></span>
             <span id="edStato"></span>
           </div>
-
+          
           <div class="edBarra">
             <button id="edDl" class="edEsp">⤓ Download WAV</button>
             <button id="edSh" class="edEsp">⤴ Share</button>
@@ -421,13 +433,16 @@
       </div>
     </div>
 
+    
+    
     <button id="tutBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">🎓 Tutorial</button>
 
+    
     <button id="openBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open</button>
-
+    
     <button id="addBtn" class="big" style="display:none;background:var(--blu-3);color:var(--blu-5)">➕ Add files</button>
     <div id="openPerm" class="tipFine" style="margin-top:12px;color:var(--testo-2);font-size:12px">Only use audio you have permission to use.</div>
-
+    
     <button id="homeBtn" class="homeBtn" title="Back" aria-label="Back">←</button>
     <input id="openInput" type="file" multiple accept="audio/*,video/*,.wav,.mp3,.m4a,.aac,.ogg,.flac,.opus,.aiff,.aif,.mp4,.m4v,.mov,.webm,.mkv,.3gp" style="display:none" />
     <div id="histPanel" class="histPanel">
@@ -441,9 +456,9 @@
       <div class="histCard">
         <div class="histHead"><span>🎓 Good sounds, made at home</span><div id="tutClose" class="histClose">✕</div></div>
         <div class="histBodyScroll tutBody">
-          <p>MC Parrot builds the whole song from your recording only. Clean, varied sounds = a richer song. Your kitchen is already a studio.</p>
+          <p>MC Parrot builds the whole song from your sounds only: what you record, or the files you open. Clean, varied sounds = a richer song. Your kitchen is already a studio.</p>
           <p><b>Before you start</b>: a quiet room, no music or TV, phone 20-30 cm away. Make each sound 3-4 times, with a short pause between different sounds.</p>
-
+          
           <button id="tutVia" class="big rec" style="margin:4px 0 10px">🧭 Guided recording</button>
           <p>🎤 <b>Voice</b>: a whole sentence, sung or spoken, 2-3 times, with a pause between sentences. Long phrases become the chorus.</p>
           <p>🎵 <b>Melody</b>: hum, whistle, glasses with different amounts of water tapped with a spoon, blown bottles, any instrument, even a toy.</p>
@@ -452,15 +467,20 @@
           <p>👏 <b>Snare</b>: clap, slam a book shut, a sharp knock on a jar or a pan.</p>
           <p>🧂 <b>Hi-hat</b>: shake a jar of rice or salt, jingle your keys, crumple paper, a “tss” with your mouth.</p>
           <p>💡 More variety = more instruments. Not too soft, not shouting. Files from other apps work too: “Open audio or video files”.</p>
+          
+          <p>📂 <b>Your library</b>: you can also skip recording and open lots of audio files at once (samples, loops, voice notes, songs): the engine picks the best sounds from all of them. Loops that state their tempo in the name are matched to the song.</p>
+          <p>🎬 <b>Videos</b>: open videos too. Their sound becomes the song, and «Make a video → Your videos» edits your clips to the beat, cutting on the sounds they contain.</p>
         </div>
       </div>
     </div>
 
+    
+    
     <div id="src" class="tipBack">
       <div class="tipCard">
         <div id="srcClose" class="tipClose">✕</div>
         <div class="tipTitle">Open from…</div>
-
+        
         <button id="histBtn" class="big" style="background:var(--blu-3);color:var(--blu-5)">⏱ History</button>
         <button id="srcPagina" class="big" style="background:var(--blu-3);color:var(--blu-5)">📂 Open audio or video files</button>
         <button id="srcFiles" class="big" style="background:var(--blu-3);color:var(--blu-5)">📁 Phone folders</button>
@@ -474,6 +494,7 @@
       </div>
     </div>
 
+    
     <div id="fmtSheet" class="tipBack" style="z-index:70">
       <div class="tipCard">
         <div id="fmtClose" class="tipClose">✕</div>
@@ -485,6 +506,7 @@
       </div>
     </div>
 
+    
     <div id="vidSheet" class="tipBack" style="z-index:70">
       <div class="tipCard">
         <div id="vidClose" class="tipClose">✕</div>
@@ -493,7 +515,7 @@
           <div class="chip on" data-modo="onda">📊 Waveform</div>
           <div class="chip" data-modo="timeline">🎞 Timeline</div>
           <div class="chip" data-modo="cerchio">💿 Circle</div>
-
+          
           <div class="chip" data-modo="montaggio" style="display:none">🎥 Your videos</div>
           <div class="chip" data-modo="cerchioVideo" style="display:none">💿 Circle + your videos</div>
         </div>
@@ -505,7 +527,7 @@
         <div id="tipClose" class="tipClose">✕</div>
         <div class="tipParrot"><img class="parrot" src="parrot.png" alt="MC Parrot" style="width:64px;height:64px;object-fit:contain" /></div>
         <div class="tipTitle">Enjoying MC Parrot?</div>
-        <div class="tipBody">The app is free and everything runs in your browser. If it made you smile,
+        <div class="tipBody">The app is free and everything runs on your device. If it made you smile,
  you can support it with whatever you think is fair.</div>
         <div id="tipRow" class="tipRow"></div>
         <div id="tipPay" class="tipPay">Support with PayPal</div>
@@ -514,6 +536,7 @@
       </div>
     </div>
 
+    
     <div id="unlock" class="tipBack">
       <div class="tipCard">
         <div id="unlockClose" class="tipClose">✕</div>
@@ -528,7 +551,8 @@
  style="width:100%;padding:12px;border:2px solid var(--blu-4);background:var(--blu-3);color:var(--testo);font-family:monospace;font-size:15px;letter-spacing:0.08em;text-align:center;border-radius:0;box-sizing:border-box" />
           <div id="unlockGo" class="tipPay" style="margin-top:8px">Confirm</div>
         </div>
-
+        
+        
         <div id="unlockAdultRow" class="tipFine" style="display:none;text-align:left;margin-top:10px">
           <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input id="unlockAdult" type="checkbox" style="margin-top:2px;width:18px;height:18px;flex:none" /><span>I am 18 or older</span></label>
           <div id="unlockMinor" style="margin-top:6px">Purchases are for adults only. If you are under 18, ask a parent or guardian.</div>
@@ -536,28 +560,29 @@
         <div id="unlockBuy" class="tipPay" style="display:none"><span>Buy the full song</span> <span id="unlockPrice"></span></div>
         <div id="unlockAsk" class="tipPay">I have a code</div>
         <div id="unlockMsg" class="tipFine" style="min-height:14px"></div>
-
+        
         <div id="unlockMine" class="tipFine" style="display:none">Your code: <b id="unlockMineVal" style="font-family:monospace;letter-spacing:0.08em"></b></div>
         <div id="unlockRestore" class="tipFine" style="display:none;cursor:pointer;text-decoration:underline">Restore purchase</div>
         <div id="unlockNo" class="tipNo">Close</div>
       </div>
     </div>
 
+    
     <div id="sndRecap" style="display:none;margin-top:10px;padding:8px 10px;border:2px solid var(--blu-3);color:var(--blu-4);font-size:12px;letter-spacing:0.02em"></div>
-
+    
     <pre id="recapFile" style="display:none;margin:4px 0 0;padding:6px 10px;border:2px solid var(--blu-3);color:var(--blu-4);font-size:10px;line-height:1.15;white-space:pre;overflow:auto;max-height:190px"></pre>
     <div class="note">
-      <span>Everything happens in your browser: your audio is never uploaded anywhere. Microphone only.</span><br />
-
+      <span>Everything happens on your device: your sounds and videos are never uploaded anywhere.</span><br />
+      
       <span id="noteRights">The music you make is yours: publish it, release it, sell it, just maybe tag us in the credits and <a href="https://www.paypal.com/paypalme/marcellomassardo" target="_blank" rel="noopener noreferrer" style="color:#F5A524">drop a donation</a>.</span>
       <a href="README.md#licence--in-plain-words" style="color:#54546A">Licence</a>
       <a href="https://marcellomassardo-collab.github.io/mc-parrot/credits.html" target="_blank" rel="noopener noreferrer" style="color:#54546A">Third-party licences</a>
-
+      
       <a id="apkLink" href="MC-Parrot.apk" style="color:#54546A">Android app (.apk, signed)</a>
     </div>
   </div>
   <script src="./bundle.js"></script>
-
+  
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
